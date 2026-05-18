@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import '@/shared/typography/typography.css';
+
 import { golosText, roboto } from '@/shared/fonts/fonts';
 
 export const metadata: Metadata = {
