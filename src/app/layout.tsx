@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { golosText, roboto } from '@/shared/fonts/fonts';
 
 export const metadata: Metadata = {
   title: 'Halvivia',
@@ -12,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full antialiased`}>
+    <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
