@@ -53,3 +53,18 @@ body {
     line-height: 1.15;
   }
 }
+
+@theme {
+  --color-bg-base: rgba(17, 17, 17, 1);
+  --color-bg-surface: rgba(13, 13, 13, 1);
+  --color-bg-inverse: rgba(249, 249, 249, 1);
+
+  --color-primary: rgba(0, 90, 194, 1);
+
+  --color-text-primary: rgba(249, 249, 249, 1);
+  --color-text-inverse: rgba(17, 17, 17, 1);
+  --color-text-muted: rgba(249, 249, 249, 0.5);
+
+  --color-error: rgba(224, 0, 0, 1);
+  --color-success: rgba(18, 214, 0, 1);
+}
