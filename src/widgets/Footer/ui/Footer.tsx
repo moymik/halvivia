@@ -27,8 +27,12 @@ export function Footer() {
 
       {/* Social icons */}
       <div className="flex gap-4.75 md:hidden">
-        <Image src="/discord_logo.svg" width={20} height={17} alt="discord" />
-        <Image src="/telegram_logo.svg" width={19} height={17} alt="telegram" />
+        <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+          <Image src="/discord_logo.svg" width={20} height={17} alt="discord" />
+        </a>
+        <a href="https://t.me" target="_blank" rel="noopener noreferrer">
+          <Image src="/telegram_logo.svg" width={19} height={17} alt="telegram" />
+        </a>
       </div>
     </footer>
   );
