@@ -12,9 +12,14 @@ type FooterNavListProps = {
 export const FooterNavSection = ({ name, links, className }: FooterNavListProps) => {
   return (
     <div className={clsx('flex flex-col gap-4', className)}>
-      <h4 className="h4 text-sm font-bold">{name}</h4>
+      <h4 className="h4 text-sm font-bold lg:text-base">{name}</h4>
 
-      <ul className={clsx('flex flex-col gap-2.25 text-xs md:text-sm lg:text-base')}>
+      <ul
+        className={clsx(
+          'flex flex-col text-xs md:text-sm lg:text-base',
+          name === 'Контакты' ? 'gap-3' : 'gap-2.25',
+        )}
+      >
         {links.map((link) => (
           <li key={link.href} className={clsx('text- text-text-secondary text-xs lg:text-sm')}>
             {link.external ? (
