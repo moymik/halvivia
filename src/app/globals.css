@@ -1,11 +1,9 @@
 @import 'tailwindcss';
 
-:root {
+@theme {
   --font-body: var(--font-roboto);
   --font-heading: var(--font-golos);
-}
 
-@theme {
   /* Breakpoints*/
   --breakpoint-md: 800px;
   --breakpoint-lg: 1280px;
@@ -25,6 +23,11 @@
   --color-text-secondary: rgba(249, 249, 249, 0.6);
   --color-text-muted: rgba(249, 249, 249, 0.3);
   --color-text-inverse: rgba(17, 17, 17, 1);
+
+  /*Links*/
+  --color-link-default: rgba(249, 249, 249, 0.4);
+  --color-link-hover: rgba(249, 249, 249, 1);
+  --color-link-active: rgba(249, 249, 249, 1);
 
   /* Status */
   --color-error: rgba(224, 0, 0, 1);
@@ -70,6 +73,10 @@
   :where(h1, h2, h3, h4) {
     text-wrap: balance;
     font-family: var(--font-heading), sans-serif;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
   }
 }
 
