@@ -1,4 +1,8 @@
-const BurgerIcon = ({ className }: { className?: string }) => {
+type BurgerIconProps = {
+  className?: string;
+};
+
+export function BurgerIcon({ className }: BurgerIconProps) {
   return (
     <svg className={className} viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -10,6 +14,6 @@ const BurgerIcon = ({ className }: { className?: string }) => {
       />
     </svg>
   );
-};
+}
 
 export default BurgerIcon;
