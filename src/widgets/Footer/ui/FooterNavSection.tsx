@@ -9,7 +9,7 @@ type FooterNavListProps = {
   className?: string;
 };
 
-export const FooterNavSection = ({ name, links, className }: FooterNavListProps) => {
+export function FooterNavSection({ name, links, className }: FooterNavListProps) {
   return (
     <div className={clsx('flex flex-col gap-4', className)}>
       <h4 className="h4 text-sm font-bold lg:text-base">{name}</h4>
@@ -47,4 +47,6 @@ export const FooterNavSection = ({ name, links, className }: FooterNavListProps)
       </ul>
     </div>
   );
-};
+}
+
+export default FooterNavSection;

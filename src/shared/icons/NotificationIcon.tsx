@@ -1,4 +1,9 @@
-export function NotificationIcon({ active, className }: { active?: boolean; className?: string }) {
+type NotificationIconProps = {
+  active?: boolean;
+  className?: string;
+};
+
+export function NotificationIcon({ active, className }: NotificationIconProps) {
   return (
     <div className="relative inline-flex">
       <svg viewBox="0 0 23 26" fill="none" className={className}>
@@ -15,3 +20,5 @@ export function NotificationIcon({ active, className }: { active?: boolean; clas
     </div>
   );
 }
+
+export default NotificationIcon;

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import BurgerIcon from '@/shared/icons/BurgerIcon';
 import { NotificationIcon } from '@/shared/icons/NotificationIcon';
 import LogoIcon from '@/shared/icons/LogoIcon';
+import TabPanel from '../../../shared/navigation/ui/TabPanel';
 
 export function Header() {
   return (
@@ -32,29 +33,13 @@ export function Header() {
             Povidlo
           </span>
         </Link>
-
-        <nav className="h-full">
-          <ul className="hidden h-full lg:flex">
-            <li className="border-border-default w-63 border">
-              <Link
-                href="/cinema"
-                className="h4 text-link-default hover:text-link-hover flex h-full w-full items-center justify-center hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
-              >
-                Смотрильня
-              </Link>
-            </li>
-            <li className="border-border-default w-63 border">
-              <Link
-                className={
-                  'h4 text-link-default hover:text-link-hover flex h-full w-full items-center justify-center hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]'
-                }
-                href="/library"
-              >
-                Читальня
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <TabPanel
+          className="h-full"
+          items={[
+            { href: '/cinema', label: 'Смотрильня' },
+            { href: '/library', label: 'Читальня' },
+          ]}
+        />
       </div>
 
       <div className="flex gap-4 lg:gap-6">
@@ -66,7 +51,7 @@ export function Header() {
         </button>
         <button
           className="font-heading rounded-md p-2 font-medium transition hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
-          aria-label="Открыть меню"
+          aria-label="Открыть меню авторизации"
         >
           Войти
         </button>
