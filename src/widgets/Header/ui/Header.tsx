@@ -4,6 +4,7 @@ import BurgerIcon from '@/shared/icons/BurgerIcon';
 import { NotificationIcon } from '@/shared/icons/NotificationIcon';
 import LogoIcon from '@/shared/icons/LogoIcon';
 import TabPanel from '../../../shared/navigation/ui/TabPanel';
+import { headerTabLinks } from '@/widgets/Header/model/headerNavigation';
 
 export function Header() {
   return (
@@ -33,13 +34,7 @@ export function Header() {
             Povidlo
           </span>
         </Link>
-        <TabPanel
-          className="h-full"
-          items={[
-            { href: '/cinema', label: 'Смотрильня' },
-            { href: '/library', label: 'Читальня' },
-          ]}
-        />
+        <TabPanel className="h-full" links={headerTabLinks} />
       </div>
 
       <div className="flex gap-4 lg:gap-6">
