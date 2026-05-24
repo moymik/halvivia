@@ -1,8 +1,8 @@
-type LogoProps = {
-  className?: string;
-};
+import { IconSVGComponentProps } from './types';
 
-export function LogoIcon({ className }: LogoProps) {
+export type LogoIconProps = IconSVGComponentProps;
+
+export function LogoIcon({ className }: LogoIconProps) {
   return (
     <svg viewBox="0 0 18 31" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
       <path
