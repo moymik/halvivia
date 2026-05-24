@@ -1,8 +1,10 @@
 import Link from 'next/link';
+
+import { LogoIcon } from '@/shared/icons';
+
+import { SocialLinksContainer } from './SocialLinksContainer';
 import { FooterNavSection } from './FooterNavSection';
 import { footerSections, isContactSection } from '../model/footerNavigation';
-import LogoIcon from '@/shared/icons/LogoIcon';
-import { SocialLinks } from '@/widgets/Footer/ui/SocialLinks';
 
 export function Footer() {
   return (
@@ -27,7 +29,7 @@ export function Footer() {
       </div>
 
       {/* Social icons */}
-      <SocialLinks className={'md:hidden'}></SocialLinks>
+      <SocialLinksContainer className={'md:hidden'}></SocialLinksContainer>
     </footer>
   );
 }
