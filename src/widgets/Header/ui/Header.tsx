@@ -1,10 +1,8 @@
-import React from 'react';
-import Link from 'next/link';
-import BurgerIcon from '@/shared/icons/BurgerIcon';
-import { NotificationIcon } from '@/shared/icons/NotificationIcon';
-import LogoIcon from '@/shared/icons/LogoIcon';
-import TabPanel from '../../../shared/navigation/ui/TabPanel';
+import TabPanel from './TabPanel';
 import { headerTabLinks } from '@/widgets/Header/model/headerNavigation';
+import Icon from '@/shared/ui/icon/Icon';
+import AppLink from '@/shared/ui/app-link/AppLink';
+import { navigationLinks } from '@/shared/config/navigation';
 
 export function Header() {
   return (
@@ -18,22 +16,23 @@ export function Header() {
         aria-label="Открыть меню"
         aria-controls="main-navigation"
       >
-        <BurgerIcon className="w-4 md:w-5.5"></BurgerIcon>
+        <Icon name={'BurgerIcon'} className="w-4 md:w-5.5"></Icon>
       </button>
 
       <div className="absolute top-1/2 left-1/2 flex h-full -translate-x-1/2 -translate-y-1/2 items-center justify-between lg:static lg:translate-0">
-        <Link
-          href="/"
+        <AppLink
+          link={navigationLinks.home}
           className="mr-19 flex items-center gap-2"
           aria-label="Halva and Povidlo homepage"
+          hideLabel
         >
-          <LogoIcon className="w-4 md:w-4.5 lg:w-6" />
+          <Icon name={'LogoIcon'} className="w-4 md:w-4.5 lg:w-6"></Icon>
           <span className="hidden leading-none md:inline-block">
             Halva&
             <br />
             Povidlo
           </span>
-        </Link>
+        </AppLink>
         <TabPanel className="h-full" links={headerTabLinks} />
       </div>
 
@@ -42,7 +41,7 @@ export function Header() {
           className="flex items-center rounded-md transition hover:bg-white/10"
           aria-label="Уведомления"
         >
-          <NotificationIcon className="w-4 lg:w-5.5"></NotificationIcon>
+          <Icon name={'NotificationIcon'} active={true} className="w-4 lg:w-5.5"></Icon>
         </button>
         <button
           className="font-heading rounded-md p-2 font-medium transition hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"

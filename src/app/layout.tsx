@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import './globals.css';
-import '@/shared/typography/typography.css';
 
-import { golosText, roboto } from '@/shared/fonts/fonts';
+import { golosText, roboto } from '@/shared/fonts';
 import { Footer } from '@/widgets/Footer';
 import { Header } from '@/widgets/Header';
+
+import './globals.css';
+import '@/shared/typography/typography.css';
 
 export const metadata: Metadata = {
   title: 'Halvivia',

@@ -1,42 +1,51 @@
+import { ROUTES } from './routes';
 import type { NavigationLink } from './types';
 
 export const navigationLinks = {
+  home: {
+    id: 'home',
+    label: 'Home',
+    href: ROUTES.HOME,
+  },
   cinema: {
+    id: 'cinema',
     label: 'Смотрильня',
-    href: '/cinema',
+    href: ROUTES.CINEMA,
   },
 
   library: {
+    id: 'library',
     label: 'Читальня',
-    href: '/library',
+    href: ROUTES.LIBRARY,
   },
 
   terms: {
+    id: 'terms',
     label: 'Пользовательское соглашение',
-    href: '/terms',
+    href: ROUTES.TERMS,
   },
 
   privacy: {
+    id: 'privacy',
     label: 'Политика конфиденциальности',
-    href: '/privacy',
+    href: ROUTES.PRIVACY,
+  },
+
+  email: {
+    id: 'email',
+    label: 'halva-povidlo@gmail.com',
+    href: 'mailto:halva-povidlo@gmail.com',
   },
 
   discord: {
+    id: 'discord',
     label: 'Discord',
     href: 'https://discord.com',
   },
 
   telegram: {
+    id: 'telegram',
     label: 'Telegram',
     href: 'https://t.me',
   },
-
-  email: {
-    label: 'Halva-povidlo@gmail.com',
-    href: 'mailto:Halva-povidlo@gmail.com',
-  },
 } as const satisfies Record<string, NavigationLink>;
-
-export function isExternalLink(href: string) {
-  return href.startsWith('http') || href.startsWith('mailto:');
-}

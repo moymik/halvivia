@@ -1,21 +1,26 @@
-import { NavigationLink } from '@/shared/navigation';
-import { navigationLinks } from '@/shared/navigation';
-
-export type FooterNavigationLink = NavigationLink & {
-  hidden?: {
-    mobile?: boolean;
-    tablet?: boolean;
-    desktop?: boolean;
-  };
-};
+import { NavigationLink } from '@/shared/config/navigation';
+import { navigationLinks } from '@/shared/config/navigation';
+import { IconLinkProps } from '@/shared/ui/icon-link';
 
 export type FooterSectionId = 'sections' | 'important' | 'contacts';
 
 export type FooterSection = {
   id: FooterSectionId;
   title: string;
-  links: FooterNavigationLink[];
+  links: NavigationLink[];
 };
+
+export const socialLinks: IconLinkProps[] = [
+  {
+    link: navigationLinks.discord,
+    icon: 'DiscordIcon',
+  },
+
+  {
+    link: navigationLinks.telegram,
+    icon: 'TelegramIcon',
+  },
+];
 
 export const footerSections = [
   {
@@ -32,30 +37,9 @@ export const footerSections = [
   {
     id: 'contacts',
     title: 'Контакты',
-    links: [
-      navigationLinks.discord,
-      navigationLinks.telegram,
-      { ...navigationLinks.email, hidden: { tablet: true } },
-    ],
+    links: [...socialLinks.map((SocialLink) => SocialLink.link)],
   },
 ] satisfies readonly FooterSection[];
-
-export const footerSocialLinksWithImage = [
-  {
-    ...navigationLinks.discord,
-    image: './discord_logo.svg',
-    alt: 'discord link',
-    imageWidth: 20,
-    imageHeight: 17,
-  },
-  {
-    ...navigationLinks.telegram,
-    image: './telegram_logo.svg',
-    alt: 'telegram link',
-    imageWidth: 19,
-    imageHeight: 17,
-  },
-];
 
 export function isContactSection(section: Pick<FooterSection, 'id'>) {
   return section.id === 'contacts';

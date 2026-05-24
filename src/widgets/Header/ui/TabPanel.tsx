@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import React from 'react';
-import { NavigationLink } from '@/shared/navigation';
+
+import { NavigationLink } from '@/shared/config/navigation';
 
 type Props = {
   links: NavigationLink[];
