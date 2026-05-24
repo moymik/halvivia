@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@commitlint/types':
-        specifier: ^21.0.1
-        version: 21.0.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -28,6 +25,9 @@ importers:
         specifier: ^21.0.1
         version: 21.0.1(@types/node@20.19.41)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
       '@commitlint/config-conventional':
+        specifier: ^21.0.1
+        version: 21.0.1
+      '@commitlint/types':
         specifier: ^21.0.1
         version: 21.0.1
       '@tailwindcss/postcss':

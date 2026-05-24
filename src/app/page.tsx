@@ -1,5 +1,3 @@
-import LogoIcon from '../shared/icons/LogoIcon';
-
 export default function Home() {
   return (
     <div>
