@@ -8,7 +8,7 @@ export function Header() {
   return (
     <header
       className={
-        'border-border-default bg-bg-surface sticky top-0 z-1000 flex h-18 w-full flex-row items-center justify-between border-b px-4 md:px-8.5 lg:h-23 lg:px-20 xl:px-25.5 2xl:px-75'
+        'border-border-default bg-bg-surface sticky top-0 z-1000 flex h-18 w-full flex-row items-center justify-between border-b px-4 md:px-8.5 lg:h-23 lg:px-20 xl:px-25.5 2xl:px-[15%]'
       }
     >
       <button
