@@ -2,7 +2,7 @@ import { NavigationLink } from '@/shared/config/navigation';
 import { navigationLinks } from '@/shared/config/navigation';
 import { IconLinkProps } from '@/shared/ui/icon-link';
 
-export type FooterSectionId = 'sections' | 'important' | 'contacts';
+type FooterSectionId = 'sections' | 'important' | 'contacts';
 
 export type FooterSection = {
   id: FooterSectionId;
