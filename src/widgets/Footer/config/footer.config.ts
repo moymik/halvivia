@@ -22,7 +22,7 @@ export const SOCIAL_LINKS: IconLinkProps[] = [
   },
 ];
 
-export const footerSections = [
+export const FOOTER_SECTIONS = [
   {
     id: 'sections',
     title: 'Разделы',
