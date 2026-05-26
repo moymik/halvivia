@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
-import { golosText, roboto } from '@/shared/config';
-import { Footer } from '@/widgets/Footer';
-import { Header } from '@/widgets/Header';
+import { golosText, roboto } from 'src/shared/config';
+import { Footer } from 'src/widgets/Footer';
+import { Header } from 'src/widgets/Header';
 
-import './globals.css';
-import '@/shared/typography/typography.css';
+import 'src/app/styles/globals.css';
+import 'src/app/styles/typography.css';
 
 export const metadata: Metadata = {
   title: 'Halvivia',
