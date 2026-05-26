@@ -1,9 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import { AppLink } from '@/shared/ui/app-link/AppLink';
+import { AppLink } from '@/shared/ui/app-link';
 
 import { FooterSection, isContactSection } from '../model/footerNavigation';
-import { navigationLinks } from '@/shared/config/navigation/links';
+import { navigationLinks } from '@/shared/config';
 
 type FooterNavListProps = FooterSection & {
   className?: string;

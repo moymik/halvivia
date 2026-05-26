@@ -1,8 +1,8 @@
 import TabPanel from './TabPanel';
 import { headerTabLinks } from '@/widgets/Header/model/headerNavigation';
-import Icon from '@/shared/ui/icon/Icon';
-import AppLink from '@/shared/ui/app-link/AppLink';
-import { navigationLinks } from '@/shared/config/navigation';
+import { Icon } from '@/shared/ui/icon';
+import { AppLink } from '@/shared/ui/app-link';
+import { navigationLinks } from '@/shared/config';
 
 export function Header() {
   return (

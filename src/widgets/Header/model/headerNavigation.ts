@@ -1,4 +1,4 @@
-import { NavigationLink, navigationLinks } from '@/shared/config/navigation';
+import { type NavigationLink, navigationLinks } from '@/shared/config';
 
 export const headerTabLinks = [
   navigationLinks.cinema,
