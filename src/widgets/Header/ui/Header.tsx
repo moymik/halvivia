@@ -1,8 +1,8 @@
 import TabPanel from './TabPanel';
-import { headerTabLinks } from '@/widgets/Header/model/headerNavigation';
+import { headerTabLinks } from '../config/header.config';
 import { Icon } from '@/shared/ui/icon';
 import { AppLink } from '@/shared/ui/app-link';
-import { navigationLinks } from '@/shared/config';
+import { NAVIGATION_LINKS } from '@/shared/config';
 
 export function Header() {
   return (
@@ -21,7 +21,7 @@ export function Header() {
 
       <div className="absolute top-1/2 left-1/2 flex h-full -translate-x-1/2 -translate-y-1/2 items-center justify-between lg:static lg:translate-0">
         <AppLink
-          link={navigationLinks.home}
+          link={NAVIGATION_LINKS.home}
           className="mr-19 flex items-center gap-2"
           aria-label="Halva and Povidlo homepage"
           hideLabel

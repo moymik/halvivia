@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { golosText, roboto } from '@/shared/fonts';
+import { golosText, roboto } from '@/shared/config';
 import { Footer } from '@/widgets/Footer';
 import { Header } from '@/widgets/Header';
 

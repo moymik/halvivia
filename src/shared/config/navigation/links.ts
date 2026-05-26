@@ -1,7 +1,7 @@
 import { ROUTES } from './routes';
 import type { NavigationLink } from './types';
 
-export const navigationLinks = {
+export const NAVIGATION_LINKS = {
   home: {
     id: 'home',
     label: 'Home',
