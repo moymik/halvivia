@@ -1,5 +1,5 @@
-import { NavigationLink } from '@/shared/config/navigation';
-import { navigationLinks } from '@/shared/config/navigation';
+import type { NavigationLink } from '@/shared/config';
+import { navigationLinks } from '@/shared/config';
 import { IconLinkProps } from '@/shared/ui/icon-link';
 
 type FooterSectionId = 'sections' | 'important' | 'contacts';
@@ -13,12 +13,12 @@ export type FooterSection = {
 export const socialLinks: IconLinkProps[] = [
   {
     link: navigationLinks.discord,
-    icon: 'DiscordIcon',
+    iconName: 'DiscordIcon',
   },
 
   {
     link: navigationLinks.telegram,
-    icon: 'TelegramIcon',
+    iconName: 'TelegramIcon',
   },
 ];
 

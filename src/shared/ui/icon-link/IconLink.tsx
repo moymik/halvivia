@@ -1,16 +1,16 @@
-import { Icon, IconName } from '@/shared/ui/icon';
 import { NavigationLink } from '@/shared/config/navigation';
-import { AppLink } from '@/shared/ui/app-link';
+import { Icon, type IconName } from '../icon/Icon';
+import { AppLink } from '../app-link';
 
 export type IconLinkProps = {
   link: NavigationLink;
-  icon: IconName;
+  iconName: IconName;
 };
 
 export const IconLink = (props: IconLinkProps) => {
   return (
     <AppLink hideLabel link={props.link}>
-      <Icon name={props.icon}></Icon>
+      <Icon name={props.iconName}></Icon>
     </AppLink>
   );
 };
