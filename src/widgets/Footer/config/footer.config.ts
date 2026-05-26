@@ -1,6 +1,6 @@
-import type { NavigationLink } from '@/shared/config';
-import { navigationLinks } from '@/shared/config';
-import { IconLinkProps } from '@/shared/ui/icon-link';
+import type { NavigationLink } from 'src/shared/config';
+import { NAVIGATION_LINKS } from 'src/shared/config';
+import { IconLinkProps } from 'src/shared/ui/icon-link';
 
 type FooterSectionId = 'sections' | 'important' | 'contacts';
 
@@ -10,14 +10,14 @@ export type FooterSection = {
   links: NavigationLink[];
 };
 
-export const socialLinks: IconLinkProps[] = [
+export const SOCIAL_LINKS: IconLinkProps[] = [
   {
-    link: navigationLinks.discord,
+    link: NAVIGATION_LINKS.discord,
     iconName: 'DiscordIcon',
   },
 
   {
-    link: navigationLinks.telegram,
+    link: NAVIGATION_LINKS.telegram,
     iconName: 'TelegramIcon',
   },
 ];
@@ -26,18 +26,18 @@ export const footerSections = [
   {
     id: 'sections',
     title: 'Разделы',
-    links: [navigationLinks.cinema, navigationLinks.library],
+    links: [NAVIGATION_LINKS.cinema, NAVIGATION_LINKS.library],
   },
   {
     id: 'important',
     title: 'Важное',
-    links: [navigationLinks.terms, navigationLinks.privacy],
+    links: [NAVIGATION_LINKS.terms, NAVIGATION_LINKS.privacy],
   },
 
   {
     id: 'contacts',
     title: 'Контакты',
-    links: [...socialLinks.map((SocialLink) => SocialLink.link)],
+    links: [...SOCIAL_LINKS.map((SocialLink) => SocialLink.link)],
   },
 ] satisfies readonly FooterSection[];
 
