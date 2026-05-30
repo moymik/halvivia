@@ -23,7 +23,6 @@
   --color-text-secondary: rgba(249, 249, 249, 0.6);
   --color-text-muted: rgba(249, 249, 249, 0.3);
   --color-text-inverse: rgba(17, 17, 17, 1);
-
   /*Links*/
   --color-link-default: rgba(249, 249, 249, 0.4);
   --color-link-hover: rgba(249, 249, 249, 1);
@@ -32,6 +31,7 @@
   /* Status */
   --color-error: rgba(224, 0, 0, 1);
   --color-success: rgba(18, 214, 0, 1);
+  --color-warning: rgba(227, 38, 54, 1);
 
   /* Borders */
   --color-border-default: rgba(77, 77, 79, 1);
