@@ -4,6 +4,10 @@ import { hash } from 'bcryptjs';
 import { registerSchema } from '../model/types';
 import { createUser } from '@/entities/user';
 import { isPgError } from '@/shared/lib/db';
+import { createAccessToken, createRefreshToken } from '@/shared/lib/auth/jwt';
+import { insertRefreshToken } from '@/shared/lib/auth/refresh_token.db';
+import { setSessionCookies } from '@/shared/lib/auth/cookies';
+import { redirect } from 'next/navigation';
 
 export type RegisterState = {
   errors?: string[];
@@ -14,14 +18,13 @@ export async function registerUser(
   prevState: RegisterState,
   formData: FormData,
 ): Promise<RegisterState> {
-  // 1. raw input
   const raw = {
     name: String(formData.get('name') ?? ''),
     email: String(formData.get('email') ?? ''),
     password: String(formData.get('password') ?? ''),
   };
 
-  // 2. validation
+  // validation
   const parsed = registerSchema.safeParse(raw);
 
   if (!parsed.success) {
@@ -35,21 +38,31 @@ export async function registerUser(
 
   const normalizedEmail = email ? email : null;
 
-  // 4. hash password (shared responsibility)
   const passwordHash = await hash(password, 10);
 
-  // 5. create user
   try {
-    await createUser({
+    //1. create user
+    const user = await createUser({
       name,
       email: normalizedEmail,
       passwordHash,
     });
+    // 2. create tokens
 
-    return {
-      success: true,
-    };
+    const accessToken = await createAccessToken({ userId: user.id });
+    const refreshToken = await createRefreshToken({ userId: user.id });
+
+    // 3. store refresh token in DB
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    await insertRefreshToken({
+      token: refreshToken,
+      userId: user.id,
+      expiresAt,
+    });
+
+    await setSessionCookies({ accessToken, refreshToken });
   } catch (e: unknown) {
+    console.error(e);
     // PostgreSQL unique violation
     if (isPgError(e) && e.code === '23505') {
       const detail = e?.detail || '';
@@ -75,6 +88,5 @@ export async function registerUser(
       errors: ['Ошибка сервера, попробуйте позже'],
     };
   }
-
-  //Todo:setcookie+redirect
+  redirect('/');
 }
