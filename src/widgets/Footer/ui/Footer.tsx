@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { LogoIcon } from '@/shared/icons';
+import { LogoIcon } from '../../../shared/ui/icons';
 
 import { SocialLinksContainer } from './SocialLinksContainer';
 import { FooterNavSection } from './FooterNavSection';
-import { footerSections, isContactSection } from '../model/footerNavigation';
+import { FOOTER_SECTIONS, isContactSection } from '../config/footer.config';
 
 export function Footer() {
   return (
@@ -17,7 +17,7 @@ export function Footer() {
 
       {/* Navigation */}
       <div className="md:gap:33.5 mt-2 flex h-20.5 justify-between gap-23 md:mt-0 lg:gap-48.5 xl:gap-53 2xl:gap-61">
-        {footerSections.map((section) => (
+        {FOOTER_SECTIONS.map((section) => (
           <FooterNavSection
             key={section.id}
             id={section.id}

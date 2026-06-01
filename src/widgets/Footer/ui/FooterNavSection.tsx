@@ -1,9 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import { AppLink } from '@/shared/ui/app-link/AppLink';
+import { AppLink } from '@/shared/ui/app-link';
 
-import { FooterSection, isContactSection } from '../model/footerNavigation';
-import { navigationLinks } from '@/shared/config/navigation/links';
+import { FooterSection, isContactSection } from '../config/footer.config';
+import { NAVIGATION_LINKS } from '@/shared/config';
 
 type FooterNavListProps = FooterSection & {
   className?: string;
@@ -25,7 +25,7 @@ export function FooterNavSection({ id, title, links, className }: FooterNavListP
             key={link.href}
             className={clsx(
               'text- text-text-secondary text-xs lg:text-sm',
-              link.id === navigationLinks.email.id && 'invisible lg:visible',
+              link.id === NAVIGATION_LINKS.email.id && 'invisible lg:visible',
             )}
           >
             <AppLink link={link}></AppLink>

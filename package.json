@@ -14,16 +14,27 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@imagekit/next": "^2.1.5",
+    "@neondatabase/serverless": "^1.1.0",
+    "@tanstack/react-query": "^5.100.14",
+    "@vercel/blob": "^2.4.0",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "jose": "^6.2.3",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "use-debounce": "^10.1.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@commitlint/types": "^21.0.1",
+    "@babel/preset-typescript": "^7.29.7",
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
+    "@commitlint/types": "^21.0.1",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.100.14",
+    "@tanstack/react-query-devtools": "^5.100.14",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -39,9 +50,12 @@
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "lint-staged": "^17.0.5",
+    "postcss": "^8.5.15",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "steiger": "^0.5.12",
     "tailwindcss": "^4",
+    "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
     "typescript": "^5"
   },

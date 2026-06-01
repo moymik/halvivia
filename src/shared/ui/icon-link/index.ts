@@ -1,1 +1,1 @@
-export * from './IconLink';
+export { IconLink, type IconLinkProps } from './IconLink';

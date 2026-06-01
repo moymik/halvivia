@@ -1,0 +1,46 @@
+import type { NavigationLink } from 'src/shared/config';
+import { NAVIGATION_LINKS } from 'src/shared/config';
+import { IconLinkProps } from 'src/shared/ui/icon-link';
+
+type FooterSectionId = 'sections' | 'important' | 'contacts';
+
+export type FooterSection = {
+  id: FooterSectionId;
+  title: string;
+  links: NavigationLink[];
+};
+
+export const SOCIAL_LINKS: IconLinkProps[] = [
+  {
+    link: NAVIGATION_LINKS.discord,
+    iconName: 'DiscordIcon',
+  },
+
+  {
+    link: NAVIGATION_LINKS.telegram,
+    iconName: 'TelegramIcon',
+  },
+];
+
+export const FOOTER_SECTIONS = [
+  {
+    id: 'sections',
+    title: 'Разделы',
+    links: [NAVIGATION_LINKS.cinema, NAVIGATION_LINKS.library],
+  },
+  {
+    id: 'important',
+    title: 'Важное',
+    links: [NAVIGATION_LINKS.terms, NAVIGATION_LINKS.privacy],
+  },
+
+  {
+    id: 'contacts',
+    title: 'Контакты',
+    links: [...SOCIAL_LINKS.map((SocialLink) => SocialLink.link)],
+  },
+] satisfies readonly FooterSection[];
+
+export function isContactSection(section: Pick<FooterSection, 'id'>) {
+  return section.id === 'contacts';
+}
