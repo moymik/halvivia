@@ -3,8 +3,10 @@ import { headerTabLinks } from '../config/header.config';
 import { Icon } from '@/shared/ui/icon';
 import { AppLink } from '@/shared/ui/app-link';
 import { NAVIGATION_LINKS } from '@/shared/config';
+import HeaderUserBar from '@/widgets/Header/ui/HeaderUserBar';
+import { Suspense } from 'react';
 
-export function Header() {
+export async function Header() {
   return (
     <header
       className={
@@ -35,21 +37,9 @@ export function Header() {
         </AppLink>
         <TabPanel className="h-full" links={headerTabLinks} />
       </div>
-
-      <div className="flex gap-4 lg:gap-6">
-        <button
-          className="flex items-center rounded-md transition hover:bg-white/10"
-          aria-label="Уведомления"
-        >
-          <Icon name={'NotificationIcon'} active={true} className="w-4 lg:w-5.5"></Icon>
-        </button>
-        <button
-          className="font-heading rounded-md p-2 font-medium transition hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
-          aria-label="Открыть меню авторизации"
-        >
-          Войти
-        </button>
-      </div>
+      <Suspense fallback={'loading...'}>
+        <HeaderUserBar></HeaderUserBar>
+      </Suspense>
     </header>
   );
 }

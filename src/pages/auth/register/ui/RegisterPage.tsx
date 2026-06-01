@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 import { ChangeEvent, useActionState, useState } from 'react';
-import { registerUser } from '../api/registerUser';
+import { registerAction } from '../api/registerAction';
 
 import { useDebouncedCallback } from 'use-debounce';
 import { registerSchema } from '@/pages/auth/register/model/types';
@@ -45,7 +45,7 @@ export function RegisterPage() {
     }
   };
 
-  const [state, formAction, pending] = useActionState(registerUser, { success: false });
+  const [state, formAction, pending] = useActionState(registerAction, { success: false });
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">

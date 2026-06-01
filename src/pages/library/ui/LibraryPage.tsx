@@ -1,7 +1,5 @@
-//export type LibraryPageProps = {};
-
-export const LibraryPage = ({}: LibraryPageProps) => {
+export function LibraryPage() {
   return <div>LibraryPage</div>;
-};
+}
 
 export default LibraryPage;

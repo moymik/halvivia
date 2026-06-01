@@ -16,7 +16,7 @@ import { setSessionCookies } from '@/shared/lib/auth/cookies';
 
 export type SessionResult =
   | { status: 'authenticated'; userId: string }
-  | { status: 'refreshed'; userId: string }
+  | { status: 'refreshable'; userId: string }
   | { status: 'unauthenticated' };
 
 export async function issueRefreshToken(payload: SessionPayload) {
@@ -33,14 +33,18 @@ export async function issueRefreshToken(payload: SessionPayload) {
   return token;
 }
 
-async function rotateSession(userId: string, oldToken: string) {
-  // 1. удаляем старый refresh
+export async function issueSession(userId: string, oldToken?: string) {
+  if (oldToken !== undefined) {
+    await deleteRefreshToken(oldToken);
+  }
 
-  await deleteRefreshToken(oldToken);
-
-  // 2. создаём новые токены
   const accessToken = await createAccessToken({ userId });
   const refreshToken = await issueRefreshToken({ userId });
+
+  await setSessionCookies({
+    accessToken,
+    refreshToken,
+  });
 
   return { accessToken, refreshToken };
 }
@@ -51,7 +55,6 @@ export const verifySession = cache(async (): Promise<SessionResult> => {
   const accessToken = cookieStore.get('access_token')?.value;
   const refreshToken = cookieStore.get('refresh_token')?.value;
 
-  // 1. Проверка access
   if (accessToken) {
     const session = await verifyAccessToken(accessToken);
     if (session) {
@@ -59,30 +62,17 @@ export const verifySession = cache(async (): Promise<SessionResult> => {
     }
   }
 
-  // 2. Если access истёк → пробуем refresh
   if (!refreshToken) {
     return { status: 'unauthenticated' };
   }
 
   const refreshSession = await verifyRefreshToken(refreshToken);
-
   if (!refreshSession) {
     return { status: 'unauthenticated' };
   }
 
-  // 3. Ротация токенов
-  try {
-    const newSession = await rotateSession(refreshSession.userId, refreshToken);
-    await setSessionCookies({
-      accessToken: newSession.accessToken,
-      refreshToken: newSession.refreshToken,
-    });
-  } catch {
-    return { status: 'unauthenticated' };
-  }
-
   return {
-    status: 'refreshed',
+    status: 'refreshable',
     userId: refreshSession.userId,
   };
 });
