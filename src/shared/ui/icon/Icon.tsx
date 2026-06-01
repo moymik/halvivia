@@ -7,10 +7,10 @@ export type IconProps = {
   name: IconName;
 } & IconSVGComponentProps;
 
-export const Icon = ({ name, ...props }: IconProps) => {
+export function Icon({ name, ...props }: IconProps) {
   const IconComponent: IconSVGComponent = icons[name];
 
   return <IconComponent {...props} />;
-};
+}
 
 export default Icon;

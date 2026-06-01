@@ -18,7 +18,6 @@ export async function findRefreshToken(token: string) {
     WHERE token = ${token}
     LIMIT 1
   `;
-
   return result[0] ?? null;
 }
 

@@ -2,26 +2,25 @@
 import { hash } from 'bcryptjs';
 
 import { registerSchema } from '../model/types';
-import { createUser } from '@/entities/user';
 import { isPgError } from '@/shared/lib/db';
-import { createAccessToken, createRefreshToken } from '@/shared/lib/auth/jwt';
-import { insertRefreshToken } from '@/shared/lib/auth/refresh_token.db';
-import { setSessionCookies } from '@/shared/lib/auth/cookies';
+
 import { redirect } from 'next/navigation';
+import { issueSession } from '@/shared/lib/auth/dal';
+import { createUser } from '@/entities/user';
 
 export type RegisterState = {
   errors?: string[];
   success: boolean;
 };
 
-export async function registerUser(
+export async function registerAction(
   prevState: RegisterState,
   formData: FormData,
 ): Promise<RegisterState> {
   const raw = {
-    name: String(formData.get('name') ?? ''),
-    email: String(formData.get('email') ?? ''),
-    password: String(formData.get('password') ?? ''),
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
   };
 
   // validation
@@ -48,19 +47,7 @@ export async function registerUser(
       passwordHash,
     });
     // 2. create tokens
-
-    const accessToken = await createAccessToken({ userId: user.id });
-    const refreshToken = await createRefreshToken({ userId: user.id });
-
-    // 3. store refresh token in DB
-    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-    await insertRefreshToken({
-      token: refreshToken,
-      userId: user.id,
-      expiresAt,
-    });
-
-    await setSessionCookies({ accessToken, refreshToken });
+    await issueSession(user.id);
   } catch (e: unknown) {
     console.error(e);
     // PostgreSQL unique violation

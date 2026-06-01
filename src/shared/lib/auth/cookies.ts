@@ -1,3 +1,4 @@
+'use server';
 import { cookies } from 'next/headers';
 
 export async function setSessionCookies(params: { accessToken: string; refreshToken: string }) {
@@ -24,12 +25,12 @@ export async function clearSessionCookies() {
   cookieStore.set('access_token', '', {
     httpOnly: true,
     path: '/',
-    maxAge: 0,
+    maxAge: 3600,
   });
 
   cookieStore.set('refresh_token', '', {
     httpOnly: true,
     path: '/',
-    maxAge: 0,
+    maxAge: 30 * 24 * 3600,
   });
 }

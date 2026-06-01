@@ -25,7 +25,6 @@ export async function createRefreshToken(payload: SessionPayload) {
 export async function verifyAccessToken(token: string) {
   try {
     const { payload } = await jwtVerify(token, accessSecret, {
-      // { userId: '1', iat: 1780086557, exp: 1780090157 }
       algorithms: ['HS256'],
     });
 
@@ -38,7 +37,6 @@ export async function verifyAccessToken(token: string) {
 export async function verifyRefreshToken(token: string) {
   try {
     const { payload } = await jwtVerify(token, refreshSecret, { algorithms: ['HS256'] });
-
     const dbToken = await findRefreshToken(token);
     if (!dbToken) return null;
 

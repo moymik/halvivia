@@ -20,3 +20,5 @@ export function SocialLinksContainer({ className }: SocialLinksProps) {
     </div>
   );
 }
+
+export default SocialLinksContainer;

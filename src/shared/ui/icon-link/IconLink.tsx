@@ -7,12 +7,12 @@ export type IconLinkProps = {
   iconName: IconName;
 };
 
-export const IconLink = (props: IconLinkProps) => {
+export function IconLink(props: IconLinkProps) {
   return (
     <AppLink hideLabel link={props.link}>
       <Icon name={props.iconName}></Icon>
     </AppLink>
   );
-};
+}
 
 export default IconLink;

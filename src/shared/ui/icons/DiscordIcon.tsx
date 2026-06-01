@@ -2,7 +2,7 @@ import { IconSVGComponentProps } from './types';
 
 export type DiscordIconProps = IconSVGComponentProps;
 
-export const DiscordIcon = ({ className = '' }: DiscordIconProps) => {
+export function DiscordIcon({ className = '' }: DiscordIconProps) {
   return (
     <svg
       className={className}
@@ -33,6 +33,6 @@ export const DiscordIcon = ({ className = '' }: DiscordIconProps) => {
       />
     </svg>
   );
-};
+}
 
 export default DiscordIcon;
