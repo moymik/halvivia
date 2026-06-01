@@ -8,6 +8,7 @@ export async function setSessionCookies(params: { accessToken: string; refreshTo
     httpOnly: true,
     sameSite: 'lax',
     secure: true,
+    maxAge: 3600,
     path: '/',
   });
 
@@ -16,6 +17,7 @@ export async function setSessionCookies(params: { accessToken: string; refreshTo
     sameSite: 'lax',
     secure: true,
     path: '/',
+    maxAge: 3600 * 24 * 7,
   });
 }
 
@@ -25,12 +27,12 @@ export async function clearSessionCookies() {
   cookieStore.set('access_token', '', {
     httpOnly: true,
     path: '/',
-    maxAge: 3600,
+    maxAge: 0,
   });
 
   cookieStore.set('refresh_token', '', {
     httpOnly: true,
     path: '/',
-    maxAge: 30 * 24 * 3600,
+    maxAge: 0,
   });
 }

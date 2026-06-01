@@ -1,3 +1,4 @@
+import 'server-only';
 import { sql } from '../db';
 
 export async function insertRefreshToken(params: {

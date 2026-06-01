@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { sql } from '@/shared/lib/db';
 import type { AuthUser, CreatedUser, CreateUserData, User } from '../model/types';
 

@@ -44,7 +44,7 @@ export async function verifyRefreshToken(token: string) {
       return null;
     }
 
-    return { userId: payload.userId as string };
+    return { userId: dbToken.user_id as string };
   } catch {
     return null;
   }
