@@ -8,6 +8,7 @@ import { findAuthUserByName } from '@/entities/user';
 
 import { issueSession } from '@/shared/lib/auth/dal';
 import { redirect } from 'next/navigation';
+import { ROUTES } from '@/shared/config/navigation';
 
 export async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState> {
   const name = formData.get('name'),
@@ -62,5 +63,5 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
     console.error(e);
     return { success: false, errors: { server: 'Ошибка сервера, попробуйте позже' } };
   }
-  redirect('/');
+  redirect(ROUTES.HOME);
 }

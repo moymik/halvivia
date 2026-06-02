@@ -12,6 +12,22 @@ export async function insertRefreshToken(params: {
   `;
 }
 
+export async function rotateRefreshToken(params: { oldToken: string; newToken: string }) {
+  const { oldToken, newToken } = params;
+
+  const result = await sql`
+    UPDATE refresh_tokens
+    SET
+      token = ${newToken}
+    WHERE
+      token = ${oldToken}
+      AND expires_at > NOW()
+    RETURNING user_id
+  `;
+
+  return result[0] ?? null;
+}
+
 export async function findRefreshToken(token: string) {
   const result = await sql`
     SELECT user_id, expires_at

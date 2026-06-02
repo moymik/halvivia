@@ -10,7 +10,7 @@ export async function createAccessToken(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('1h')
+    .setExpirationTime('30m')
     .sign(accessSecret);
 }
 
@@ -18,7 +18,7 @@ export async function createRefreshToken(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('30d')
+    .setExpirationTime('7d')
     .sign(refreshSecret);
 }
 
@@ -29,7 +29,8 @@ export async function verifyAccessToken(token: string) {
     });
 
     return payload as SessionPayload;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return null;
   }
 }
@@ -45,7 +46,8 @@ export async function verifyRefreshToken(token: string) {
     }
 
     return { userId: dbToken.user_id as string };
-  } catch {
+  } catch (e) {
+    console.error(e);
     return null;
   }
 }

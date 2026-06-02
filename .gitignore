@@ -42,3 +42,5 @@ next-env.d.ts
 
 #JetBrains settings(WebStorm, IntelliJ IDEA, etc.)
 .idea/
+
+./initDB.ts

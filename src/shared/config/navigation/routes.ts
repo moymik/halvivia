@@ -4,6 +4,8 @@ export const ROUTES = {
   LIBRARY: '/library',
   TERMS: '/terms',
   PRIVACY: '/privacy',
+  LOGIN: '/auth/login',
+  REGISTER: '/auth/register',
 } as const;
 
 // type Route = "/" | "/cinema" | "/library" | "/terms" | "/privacy"
