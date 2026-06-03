@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { findUserByDiscordId } from '@/entities/user/api/db';
 import { DiscordUser } from '../types';
 import { withAuth } from '@/shared/lib/auth/dal';
-import { linkDiscordAccount } from '@/features/auth/db';
+import { linkDiscordAccount } from '@/features/auth/model/db';
 import { NAVIGATION_LINKS } from '@/shared/config';
 
 export async function handleLink(discordUser: DiscordUser) {

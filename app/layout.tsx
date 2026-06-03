@@ -6,6 +6,8 @@ import { Header } from 'src/widgets/Header';
 
 import 'src/app/styles/globals.css';
 import 'src/app/styles/typography.css';
+import { AuthModal } from '@/features/auth/ui/AuthModal';
+import AuthForm from '@/features/auth/ui/AuthForm';
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -21,6 +23,9 @@ export function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
       <body className="flex min-h-full flex-col justify-between">
         <Header></Header>
+        <AuthModal>
+          <AuthForm></AuthForm>
+        </AuthModal>
         {children}
         <Footer></Footer>
       </body>
