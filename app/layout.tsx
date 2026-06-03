@@ -7,7 +7,7 @@ import { Header } from 'src/widgets/Header';
 import 'src/app/styles/globals.css';
 import 'src/app/styles/typography.css';
 import { AuthModal } from '@/features/auth/ui/AuthModal';
-import AuthForm from '@/features/auth/ui/AuthForm';
+import { AuthForm } from '@/features/auth/ui/AuthForm';
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;

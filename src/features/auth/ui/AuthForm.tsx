@@ -1,14 +1,24 @@
 import { Button } from '@/shared/ui/Button';
-
-export default async function AuthForm() {
+import Image from 'next/image';
+import Link from 'next/link';
+import { NAVIGATION_LINKS } from '@/shared/config';
+export async function AuthForm() {
   return (
-    <form
-      className={
-        'border-[rgba(249, 249, 249, 0.5)] lg:bg-bg-surface flex flex-col items-center justify-center gap-11 rounded-2xl border-2 lg:min-h-[28vh] lg:min-w-[24vw]'
-      }
-    >
-      <h2 className={'text-3xl font-bold'}>Войти</h2>
-      <Button>Войти через дискорд</Button>
+    <form className="border-[rgba(249, 249, 249, 0.5)] bg-bg-surface absolute top-0 left-0 flex h-full w-screen flex-col items-center justify-center gap-12 lg:relative lg:h-77 lg:w-[24vw] lg:min-w-115 lg:rounded-2xl lg:border-2">
+      <Image
+        src="/Remove-bg.ai_1748294333413.png"
+        alt="Remove"
+        width={312}
+        height={378}
+        className="absolute top-1/4 left-0 w-1/3 lg:top-0 lg:bottom-10"
+      />
+
+      <h2 className={'top-45 text-xl font-semibold lg:text-3xl lg:font-bold'}>Войти</h2>
+      <a href={NAVIGATION_LINKS.DISCORD_LOGIN.href}>
+        <Button type="button" className="z-0 w-full max-w-84">
+          Войти через Discord
+        </Button>
+      </a>
     </form>
   );
 }

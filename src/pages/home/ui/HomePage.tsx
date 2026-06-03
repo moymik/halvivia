@@ -2,6 +2,7 @@ import { withAuth } from '@/shared/lib/auth/dal';
 import Link from 'next/link';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import { AppLink } from '@/shared/ui/app-link';
+import { Button } from '@/shared/ui/Button';
 
 export async function testAuthAction() {
   'use server';
