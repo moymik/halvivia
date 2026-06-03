@@ -23,7 +23,7 @@ export async function Header() {
 
       <div className="absolute top-1/2 left-1/2 flex h-full -translate-x-1/2 -translate-y-1/2 items-center justify-between lg:static lg:translate-0">
         <AppLink
-          link={NAVIGATION_LINKS.home}
+          link={NAVIGATION_LINKS.HOME}
           className="mr-19 flex items-center gap-2"
           aria-label="Halva and Povidlo homepage"
           hideLabel

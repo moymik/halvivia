@@ -100,6 +100,7 @@ export async function refreshSession(oldRefreshToken: string) {
     refreshToken: newRefreshToken,
   };
 }
+
 export async function withAuth(): Promise<{ userId: string }> {
   const cookieStore = await cookies();
 

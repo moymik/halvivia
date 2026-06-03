@@ -6,7 +6,7 @@ import { isPgError } from '@/shared/lib/db';
 
 import { redirect } from 'next/navigation';
 import { issueSession } from '@/shared/lib/auth/dal';
-import { createUser } from '@/entities/user';
+import { createUser } from '@/features/auth';
 
 export type RegisterState = {
   errors?: string[];

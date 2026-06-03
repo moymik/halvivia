@@ -12,12 +12,12 @@ export type FooterSection = {
 
 export const SOCIAL_LINKS: IconLinkProps[] = [
   {
-    link: NAVIGATION_LINKS.discord,
+    link: NAVIGATION_LINKS.DISCORD,
     iconName: 'DiscordIcon',
   },
 
   {
-    link: NAVIGATION_LINKS.telegram,
+    link: NAVIGATION_LINKS.TELEGRAM,
     iconName: 'TelegramIcon',
   },
 ];
@@ -26,12 +26,12 @@ export const FOOTER_SECTIONS = [
   {
     id: 'sections',
     title: 'Разделы',
-    links: [NAVIGATION_LINKS.cinema, NAVIGATION_LINKS.library],
+    links: [NAVIGATION_LINKS.CINEMA, NAVIGATION_LINKS.LIBRARY],
   },
   {
     id: 'important',
     title: 'Важное',
-    links: [NAVIGATION_LINKS.terms, NAVIGATION_LINKS.privacy],
+    links: [NAVIGATION_LINKS.TERMS, NAVIGATION_LINKS.PRIVACY],
   },
 
   {

@@ -12,8 +12,9 @@ async function createUserTable() {
     (
       id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       name          VARCHAR(20) UNIQUE,
-      email         CITEXT      NOT NULL UNIQUE,
-      password_hash TEXT        NOT NULL
+      email         CITEXT      UNIQUE,
+      password_hash TEXT        NOT NULL,
+      discord_id    VARCHAR(20) UNIQUE,
     );
   `;
 }

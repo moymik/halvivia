@@ -25,7 +25,7 @@ export function FooterNavSection({ id, title, links, className }: FooterNavListP
             key={link.href}
             className={clsx(
               'text- text-text-secondary text-xs lg:text-sm',
-              link.id === NAVIGATION_LINKS.email.id && 'invisible lg:visible',
+              link.id === NAVIGATION_LINKS.EMAIL.id && 'invisible lg:visible',
             )}
           >
             <AppLink link={link}></AppLink>

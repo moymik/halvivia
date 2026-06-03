@@ -2,6 +2,7 @@
 import { loginAction } from '@/pages/auth/login/loginAction';
 import { useActionState } from 'react';
 import Link from 'next/link';
+import { NAVIGATION_LINKS } from '@/shared/config';
 
 export function LoginPage() {
   const [state, dispatchLoginAction, isPending] = useActionState(loginAction, { success: false });
@@ -42,10 +43,7 @@ export function LoginPage() {
         >
           {isPending ? 'Ожидание...' : 'Войти'}
         </button>
-        <Link href="https://discord.com/oauth2/authorize?client_id=1511191352887611452&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&scope=identify">
-          {' '}
-          войти через дискорд
-        </Link>
+        <a href={NAVIGATION_LINKS.DISCORD_LOGIN.href}>войти через дискорд</a>
       </form>
     </div>
   );

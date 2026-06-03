@@ -4,7 +4,7 @@ import { loginSchema, LoginState } from '@/pages/auth/login/types';
 
 import bcrypt from 'bcryptjs';
 
-import { findAuthUserByName } from '@/entities/user';
+import { findAuthUserByName } from '@/features/auth';
 
 import { issueSession } from '@/shared/lib/auth/dal';
 import { redirect } from 'next/navigation';
@@ -45,7 +45,7 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
 
     const passwordIsCorrect = await bcrypt.compare(
       String(validationResult.data.password),
-      user.password_hash,
+      user.passwordHash,
     );
 
     if (!passwordIsCorrect) {

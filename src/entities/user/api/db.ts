@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { sql } from '@/shared/lib/db';
-import type { AuthUser, CreatedUser, CreateUserData, User } from '../model/types';
+import { User } from '../model/types';
 
 export async function findUserByName(name: string): Promise<User | null> {
   const [user] = await sql`
@@ -25,23 +25,23 @@ export async function findUserByEmail(email: string): Promise<User | null> {
   return (user as User | undefined) ?? null;
 }
 
-export async function findAuthUserByName(name: string): Promise<AuthUser | null> {
+export async function findUserByDiscordId(discordId: string): Promise<User | null> {
   const [user] = await sql`
-    SELECT id, name, email, password_hash
+    SELECT id, name, email, discord_id
     FROM users
-    WHERE name = ${name}
+    WHERE discord_id = ${discordId}
     LIMIT 1
   `;
 
-  return (user as AuthUser | undefined) ?? null;
+  return (user as User | undefined) ?? null;
 }
-
-export async function createUser(data: CreateUserData): Promise<CreatedUser> {
+export async function linkDiscordAccount(userId: string, discordId: string) {
   const [user] = await sql`
-    INSERT INTO users (name, email, password_hash)
-    VALUES (${data.name}, ${data.email}, ${data.passwordHash})
-    RETURNING id, name, email
+    UPDATE users
+    SET discord_id = ${discordId}
+    WHERE id = ${userId}
+    RETURNING id, name, discord_id
   `;
 
-  return user as CreatedUser;
+  return user ?? null;
 }
