@@ -1,11 +1,15 @@
 import { withAuth } from '@/shared/lib/auth/dal';
-import { startDiscordLinkAction } from '@/features/auth/api/startDiscordAuthAction';
+import { startDiscordLinkAction } from '@/features/auth/discord/startDiscordAuthAction';
+import { findUserById } from '@/entities/user/api/db';
 
 export async function testAuthAction() {
   'use server';
   const session = await withAuth();
 
   console.log('SESSION:', session);
+  const user = await findUserById(session.userId);
+
+  console.log(user);
 }
 export function HomePage() {
   return (
@@ -15,6 +19,7 @@ export function HomePage() {
         <form action={testAuthAction}>
           <button type="submit">Test Auth</button>
         </form>
+
         <img
           src={`https://ik.imagekit.io/k6zwwjwel/default-image.jpg?updatedAt=1779799773460`}
         ></img>

@@ -1,7 +1,7 @@
 import { DiscordGuild, DiscordToken, DiscordUser } from './types';
 import { findUserByDiscordId } from '@/entities/user/api/db';
 import { createDiscordUser } from '@/features/auth';
-import { generateRandomPassword } from './utils';
+import { generateRandomPassword, isMember } from './utils';
 import { issueSession, withAuth } from '@/shared/lib/auth/dal';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config/navigation';
@@ -9,26 +9,31 @@ import { NAVIGATION_LINKS } from '@/shared/config';
 import { DISCORD_ENDPOINTS } from './constraints';
 import { linkDiscordAccount } from '@/features/auth/model/db';
 
-export async function handleDiscordAuth(state: string | null, discordUser: DiscordUser) {
+export async function handleDiscordAuth(
+  state: string | null,
+  discordUser: DiscordUser,
+  guilds: DiscordGuild[],
+) {
   if (state === 'login') {
-    return loginWithDiscord(discordUser);
+    return loginWithDiscord(discordUser, guilds);
   }
 
   if (state === 'link') {
-    return linkDiscord(discordUser);
+    return linkDiscord(discordUser, guilds);
   }
 
   return Response.json({ error: 'Invalid state' }, { status: 400 });
 }
 
-async function loginWithDiscord(discordUser: DiscordUser) {
+async function loginWithDiscord(discordUser: DiscordUser, guilds: DiscordGuild[]) {
   let user = await findUserByDiscordId(discordUser.id);
 
   if (!user) {
     user = await createDiscordUser({
-      name: discordUser.username,
+      name: discordUser.username + '))000))0',
       discordId: discordUser.id,
       password_hash: generateRandomPassword(12),
+      role: isMember(guilds) ? 'MEMBER' : 'GUEST',
     });
   }
 
@@ -37,7 +42,7 @@ async function loginWithDiscord(discordUser: DiscordUser) {
   return redirect(ROUTES.HOME);
 }
 
-async function linkDiscord(discordUser: DiscordUser) {
+async function linkDiscord(discordUser: DiscordUser, guilds: DiscordGuild[]) {
   const { userId } = await withAuth();
 
   if (!userId) {
@@ -55,7 +60,9 @@ async function linkDiscord(discordUser: DiscordUser) {
     );
   }
 
-  const res = await linkDiscordAccount(userId, discordUser.id);
+  const role: string = isMember(guilds) ? 'MEMBER' : 'GUEST';
+  const res = await linkDiscordAccount(userId, discordUser.id, role);
+
   if (!res) {
     return Response.json({ error: 'Failed to link discord account' }, { status: 500 });
   }

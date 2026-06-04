@@ -5,6 +5,7 @@ export type User = {
   name: string | null;
   discordId: string | null;
   email: string | null;
+  role: string | null;
 };
 
 export const UserSchema = z.object({

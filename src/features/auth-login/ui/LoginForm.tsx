@@ -3,7 +3,8 @@ import { loginAction } from '../api/loginAction';
 import { useActionState } from 'react';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import Link from 'next/link';
-import { startDiscordLoginAction } from '@/features/auth/api/startDiscordAuthAction';
+import { startDiscordLoginAction } from '@/features/auth/discord/startDiscordAuthAction';
+import { Button } from '@/shared/ui/Button';
 
 export function LoginForm() {
   const [state, dispatchLoginAction, isPending] = useActionState(loginAction, { success: false });
@@ -56,7 +57,10 @@ export function LoginForm() {
         </div>
         <div>
           <button
-            formAction={startDiscordLoginAction}
+            type="button"
+            onClick={() => {
+              startDiscordLoginAction();
+            }}
             className={
               'text-text-muted hover:text-text-primary text-sm font-medium transition-[color] ease-out'
             }

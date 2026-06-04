@@ -16,8 +16,8 @@ export async function findAuthUserByName(name: string): Promise<AuthUser | null>
 
 export async function createUser(data: RegisterUser): Promise<User> {
   const [row] = await sql`
-    INSERT INTO users (name, email, password_hash)
-    VALUES (${data.name}, ${data.email}, ${data.passwordHash})
+    INSERT INTO users (name, email, password_hash, role)
+    VALUES (${data.name}, ${data.email}, ${data.passwordHash}, ${'GUEST'})
     RETURNING id, name, email, discord_id
   `;
 
@@ -33,10 +33,11 @@ export async function createDiscordUser(data: {
   name: string;
   discordId: string;
   password_hash: string;
+  role: string;
 }): Promise<User> {
   const [row] = await sql`
-    INSERT INTO users (name, discord_id, password_hash)
-    VALUES (${data.name}, ${data.discordId}, ${data.password_hash})
+    INSERT INTO users (name, discord_id, password_hash, role)
+    VALUES (${data.name}, ${data.discordId}, ${data.password_hash}, ${data.role})
     RETURNING id, name,email, discord_id
   `;
 
@@ -48,10 +49,10 @@ export async function createDiscordUser(data: {
   };
 }
 
-export async function linkDiscordAccount(userId: string, discordId: string) {
+export async function linkDiscordAccount(userId: string, discordId: string, role: string) {
   const [row] = await sql`
     UPDATE users
-    SET discord_id = ${discordId}
+    SET discord_id = ${discordId}, role = ${role}
     WHERE id = ${userId}
     RETURNING id, name,email, discord_id
   `;

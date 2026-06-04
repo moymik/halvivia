@@ -5,7 +5,7 @@ import { NAVIGATION_LINKS } from '@/shared/config';
 
 import Link from 'next/link';
 import { useAuthModalStore } from '@/features/auth/model/store';
-import { startDiscordLoginAction } from '@/features/auth/api/startDiscordAuthAction';
+import { startDiscordLoginAction } from '@/features/auth/discord/startDiscordAuthAction';
 
 export function AuthForm() {
   const { closeModal } = useAuthModalStore();

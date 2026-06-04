@@ -13,7 +13,6 @@ export async function startDiscordAuthAction(state: DiscordAuthState, _formData?
     redirect_uri: NAVIGATION_LINKS.DISCORD_REDIRECT.href,
     state,
   });
-
   redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
 }
 export const startDiscordLoginAction = startDiscordAuthAction.bind(null, 'login');

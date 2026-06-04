@@ -14,6 +14,17 @@ export async function findUserByName(name: string): Promise<User | null> {
   return (user as User | undefined) ?? null;
 }
 
+export async function findUserById(id: string): Promise<User | null> {
+  const [user] = await sql`
+    SELECT id, name, email, discord_id, role
+    FROM users
+    WHERE id = ${id}
+    LIMIT 1
+  `;
+
+  return (user as User | undefined) ?? null;
+}
+
 export async function findUserByEmail(email: string): Promise<User | null> {
   const [user] = await sql`
     SELECT id, name, email
@@ -34,14 +45,4 @@ export async function findUserByDiscordId(discordId: string): Promise<User | nul
   `;
 
   return (user as User | undefined) ?? null;
-}
-export async function linkDiscordAccount(userId: string, discordId: string) {
-  const [user] = await sql`
-    UPDATE users
-    SET discord_id = ${discordId}
-    WHERE id = ${userId}
-    RETURNING id, name, discord_id
-  `;
-
-  return user ?? null;
 }
