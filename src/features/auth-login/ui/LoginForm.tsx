@@ -52,12 +52,12 @@ export function LoginForm() {
           </Link>
         </div>
         <div>
-          <Link
+          <a
             className={'text-text-muted hover:text-text-primary text-sm font-medium'}
             href={NAVIGATION_LINKS.DISCORD_LOGIN.href}
           >
             Войти через дискорд
-          </Link>
+          </a>
         </div>
       </form>
     </div>

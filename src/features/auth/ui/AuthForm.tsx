@@ -19,14 +19,14 @@ export function AuthForm() {
 
       <h2 className={'top-45 text-xl font-semibold lg:text-3xl lg:font-bold'}>Войти</h2>
       <div className={'flex w-full flex-col items-center gap-2'}>
-        <Link
+        <a
           href={NAVIGATION_LINKS.DISCORD_LOGIN.href}
           className="flex w-full max-w-84 justify-center"
         >
           <Button type="button" className="w-full">
             Войти через Discord
           </Button>
-        </Link>
+        </a>
         <Link
           className={'text-text-muted hover:text-text-primary text-sm font-medium'}
           href={NAVIGATION_LINKS.LOGIN.href}
