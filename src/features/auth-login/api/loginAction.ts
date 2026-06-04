@@ -1,6 +1,6 @@
 'use server';
 import { z } from 'zod';
-import { loginSchema, LoginState } from '@/pages/auth/login/types';
+import { loginSchema, LoginState } from '../model/types';
 
 import bcrypt from 'bcryptjs';
 

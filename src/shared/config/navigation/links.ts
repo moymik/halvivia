@@ -65,12 +65,25 @@ export const NAVIGATION_LINKS = {
   },
   DISCORD_LOGIN: {
     id: 'discordLogin',
-    label: 'Войти через DISCORD;',
+    label: 'Войти через Discord;',
     href: ROUTES.DISCORD_LOGIN,
   },
+
   DISCORD_LINK_ACCOUNT: {
     id: 'discordLogin',
-    label: 'Войти через DISCORD;',
+    label: 'Привязать Discord;',
     href: ROUTES.DISCORD_LINK_ACCOUNT,
+  },
+
+  LOGIN: {
+    id: 'login',
+    href: ROUTES.LOGIN,
+    label: 'Войти',
+  },
+
+  REGISTER: {
+    id: 'register',
+    href: ROUTES.REGISTER,
+    label: 'Зарегистрироваться',
   },
 } as const satisfies Record<string, NavigationLink>;
