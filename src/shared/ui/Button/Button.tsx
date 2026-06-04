@@ -8,7 +8,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const baseStyles =
-  'btn inline-flex items-center justify-center gap-4 h-[44px] px-5 rounded-[60px] transition-all duration-300 ease-out whitespace-nowrap opacity-75 hover:opacity-100 font-medium disabled:opacity-40 ';
+  'btn inline-flex items-center justify-center gap-4 h-[44px] px-5 rounded-[60px]  whitespace-nowrap opacity-75 hover:opacity-100 font-medium disabled:opacity-40 transition-[background-color,border-color,color,opacity] duration-300 ease-out ';
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-primary',

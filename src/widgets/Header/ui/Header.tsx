@@ -14,7 +14,7 @@ export async function Header() {
       }
     >
       <button
-        className="rounded-md p-2 transition hover:bg-white/10 lg:hidden"
+        className="transition-hover rounded-md p-2 hover:bg-white/10 lg:hidden"
         aria-label="Открыть меню"
         aria-controls="main-navigation"
       >

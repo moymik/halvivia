@@ -15,7 +15,7 @@ export function TabPanel({ links, className }: Props) {
           <li key={l.href} className="border-border-default w-63 border">
             <Link
               href={l.href}
-              className="h4 text-link-default hover:text-link-hover flex h-full w-full items-center justify-center hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
+              className="h4 text-link-default hover:text-link-hover flex h-full w-full items-center justify-center transition-[shadow,color] duration-300 ease-out hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
             >
               {l.label}
             </Link>

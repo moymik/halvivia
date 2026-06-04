@@ -21,7 +21,7 @@ export function LoginForm() {
             name="name"
             required
             placeholder="Имя пользователя"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition outline-none focus:border-zinc-500"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition-colors ease-out outline-none focus:border-zinc-500"
           />
           {state?.errors?.name && <p>Имя пользователя введено неверно</p>}
         </div>
@@ -31,7 +31,7 @@ export function LoginForm() {
             name="password"
             type="password"
             placeholder="Password"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition outline-none focus:border-zinc-500"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition-colors ease-out outline-none focus:border-zinc-500"
             required
           />
           {state?.errors?.password && <p>Пароль введен неверно</p>}
@@ -39,13 +39,15 @@ export function LoginForm() {
         <button
           //disabled={pending}
           type="submit"
-          className="w-full rounded-lg bg-white px-4 py-3 font-medium text-black transition hover:opacity-90 disabled:opacity-50"
+          className="w-full rounded-lg bg-white px-4 py-3 font-medium text-black transition-opacity ease-out hover:opacity-90 disabled:opacity-50"
         >
           {isPending ? 'Ожидание...' : 'Войти'}
         </button>
         <div>
           <Link
-            className={'text-text-muted hover:text-text-primary text-sm font-medium'}
+            className={
+              'text-text-muted hover:text-text-primary text-sm font-medium transition-[color] ease-out'
+            }
             href={NAVIGATION_LINKS.REGISTER.href}
           >
             Зарегистрироваться
@@ -53,7 +55,9 @@ export function LoginForm() {
         </div>
         <div>
           <a
-            className={'text-text-muted hover:text-text-primary text-sm font-medium'}
+            className={
+              'text-text-muted hover:text-text-primary text-sm font-medium transition-[color] ease-out'
+            }
             href={NAVIGATION_LINKS.DISCORD_LOGIN.href}
           >
             Войти через дискорд

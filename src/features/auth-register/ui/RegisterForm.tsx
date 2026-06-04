@@ -64,7 +64,7 @@ export function RegisterForm() {
           <input
             name="name"
             placeholder="Имя пользователя"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition outline-none focus:border-zinc-500"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition-colors outline-none focus:border-zinc-500"
             value={formData.name}
             onChange={handleChange}
           />
@@ -77,7 +77,7 @@ export function RegisterForm() {
             name="email"
             type="email"
             placeholder="Email (по желанию)"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition outline-none focus:border-zinc-500"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white transition-colors outline-none focus:border-zinc-500"
             value={formData.email}
             onChange={handleChange}
           />

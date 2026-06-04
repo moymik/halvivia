@@ -8,7 +8,7 @@ export async function HeaderUserBar() {
   return (
     <div className="flex gap-4 lg:gap-6">
       <button
-        className="flex items-center rounded-md transition hover:bg-white/10"
+        className="transition-hover flex items-center rounded-md hover:bg-white/10"
         aria-label="Уведомления"
       >
         <Icon name={'NotificationIcon'} active={true} className="w-4 lg:w-5.5"></Icon>

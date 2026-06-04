@@ -13,7 +13,6 @@ export function AuthModal({ children }: AuthModalProps) {
     <div
       className="bg-bg-overlay z:50 backdrop-blur-2xs fixed inset-0 flex justify-center pt-[27vh] lg:z-1000"
       onClick={(e) => {
-        console.log(1111);
         if (e.target === e.currentTarget) {
           closeModal();
         }

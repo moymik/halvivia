@@ -8,11 +8,11 @@ export type LoginButtonProps = {
 
 export function LoginButton({ sessionStatus }: LoginButtonProps) {
   const openModal = useAuthModalStore((s) => s.openModal);
-  const { open, closeModal } = useAuthModalStore();
+  const { open } = useAuthModalStore();
 
   return sessionStatus === 'unauthenticated' ? (
     <button
-      className="font-heading rounded-md p-2 font-medium transition hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
+      className="font-heading rounded-md p-2 font-medium transition-shadow hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
       aria-label="Открыть меню авторизации"
       onClick={() => {
         openModal();
@@ -23,7 +23,7 @@ export function LoginButton({ sessionStatus }: LoginButtonProps) {
     </button>
   ) : (
     <button
-      className="font-heading rounded-md p-2 font-medium transition hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
+      className="font-heading rounded-md p-2 font-medium transition-shadow hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
       aria-label="Выйти из аккаунта"
       onClick={logout}
     >
