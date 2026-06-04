@@ -5,7 +5,7 @@ import { NAVIGATION_LINKS } from '@/shared/config';
 
 export type DiscordAuthState = 'login' | 'link';
 
-export async function startDiscordAuthAction(state: DiscordAuthState, _formData?: FormData) {
+export async function startDiscordAuthAction(state: DiscordAuthState) {
   const params = new URLSearchParams({
     client_id: process.env.DISCORD_CLIENT_ID!,
     response_type: 'code',

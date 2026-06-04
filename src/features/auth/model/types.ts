@@ -1,4 +1,5 @@
 export type AuthUser = {
+  role: 'MEMBER' | 'GUEST' | null;
   id: string;
   name: string;
   email: string | null;
@@ -9,6 +10,7 @@ export type RegisterUser = {
   name: string;
   email: string | null;
   passwordHash: string;
+  role: 'USER' | 'GUEST' | null;
 };
 
 export type AuthModalState = {

@@ -16,7 +16,6 @@ export function LoginButton({ sessionStatus }: LoginButtonProps) {
       aria-label="Открыть меню авторизации"
       onClick={() => {
         openModal();
-        console.log(open);
       }}
     >
       Войти

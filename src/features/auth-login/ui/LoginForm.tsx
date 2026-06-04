@@ -4,7 +4,6 @@ import { useActionState } from 'react';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import Link from 'next/link';
 import { startDiscordLoginAction } from '@/features/auth/discord/startDiscordAuthAction';
-import { Button } from '@/shared/ui/Button';
 
 export function LoginForm() {
   const [state, dispatchLoginAction, isPending] = useActionState(loginAction, { success: false });

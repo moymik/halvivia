@@ -1,4 +1,5 @@
 import 'server-only';
+import { UserRole } from '@/shared/model/auth/types';
 
 export type DBUser = {
   id: string; // UUID
@@ -6,6 +7,7 @@ export type DBUser = {
   email: string | null; // CITEXT UNIQUE
   password_hash: string; // NOT NULL
   discord_id: string | null; // VARCHAR(20) UNIQUE
+  role: UserRole;
 };
 
 export type DBRefreshToken = {

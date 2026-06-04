@@ -5,7 +5,7 @@ import { User } from '../model/types';
 
 export async function findUserByName(name: string): Promise<User | null> {
   const [user] = await sql`
-    SELECT id, name, email
+    SELECT id, name, email, discord_id, role
     FROM users
     WHERE name = ${name}
     LIMIT 1
@@ -27,7 +27,7 @@ export async function findUserById(id: string): Promise<User | null> {
 
 export async function findUserByEmail(email: string): Promise<User | null> {
   const [user] = await sql`
-    SELECT id, name, email
+    SELECT id, name, email, discord_id, role
     FROM users
     WHERE email = ${email}
     LIMIT 1
@@ -38,7 +38,7 @@ export async function findUserByEmail(email: string): Promise<User | null> {
 
 export async function findUserByDiscordId(discordId: string): Promise<User | null> {
   const [user] = await sql`
-    SELECT id, name, email, discord_id
+    SELECT id, name, email, discord_id, role
     FROM users
     WHERE discord_id = ${discordId}
     LIMIT 1

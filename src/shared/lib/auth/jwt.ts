@@ -1,6 +1,6 @@
 import 'server-only';
 import { SignJWT, jwtVerify } from 'jose';
-import { SessionPayload } from './types';
+import { SessionPayload } from '../../model/auth/types';
 import { findRefreshToken } from '@/shared/lib/auth/refresh_token.db';
 
 export const accessSecret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!);
@@ -22,7 +22,7 @@ export async function createRefreshToken(payload: SessionPayload) {
     .sign(refreshSecret);
 }
 
-export async function verifyAccessToken(token: string) {
+export async function verifyAccessToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, accessSecret, {
       algorithms: ['HS256'],
@@ -35,7 +35,7 @@ export async function verifyAccessToken(token: string) {
   }
 }
 
-export async function verifyRefreshToken(token: string) {
+export async function verifyRefreshToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, refreshSecret, { algorithms: ['HS256'] });
     const dbToken = await findRefreshToken(token);
@@ -45,7 +45,7 @@ export async function verifyRefreshToken(token: string) {
       return null;
     }
 
-    return { userId: dbToken.user_id as string };
+    return payload as SessionPayload;
   } catch (e) {
     console.error(e);
     return null;

@@ -7,5 +7,6 @@ export function mapDBUserToUser(db: DBUser): User {
     name: db.name,
     email: db.email,
     discordId: db.discord_id,
+    role: db.role,
   };
 }

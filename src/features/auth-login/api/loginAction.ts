@@ -42,7 +42,6 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
         },
       };
     }
-
     const passwordIsCorrect = await bcrypt.compare(
       String(validationResult.data.password),
       user.passwordHash,
@@ -58,7 +57,7 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
     }
 
     //if everything is ok
-    await issueSession(user.id);
+    await issueSession({ userId: user.id, role: user.role });
   } catch (e) {
     console.error(e);
     return { success: false, errors: { server: 'Ошибка сервера, попробуйте позже' } };

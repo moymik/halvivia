@@ -14,11 +14,11 @@ import { ROUTES } from '@/shared/config/navigation';
 import { setSessionCookies } from '@/shared/lib/auth/cookies';
 import { insertRefreshToken, rotateRefreshToken } from './refresh_token.db';
 
-import { SessionPayload } from './types';
+import { SessionPayload } from '@/shared/model';
 
 export type SessionResult =
-  | { status: 'authenticated'; userId: string }
-  | { status: 'refreshable'; userId: string }
+  | { status: 'authenticated'; payload: SessionPayload }
+  | { status: 'refreshable'; payload: SessionPayload }
   | { status: 'unauthenticated' };
 
 // Для входа и регистрации
@@ -34,10 +34,9 @@ export async function issueRefreshToken(payload: SessionPayload) {
   return token;
 }
 
-export async function issueSession(userId: string) {
-  const accessToken = await createAccessToken({ userId });
-  const refreshToken = await issueRefreshToken({ userId });
-
+export async function issueSession(payload: SessionPayload) {
+  const accessToken = await createAccessToken(payload);
+  const refreshToken = await issueRefreshToken(payload);
   await setSessionCookies({
     accessToken,
     refreshToken,
@@ -56,7 +55,7 @@ export const verifySession = cache(async (): Promise<SessionResult> => {
   if (accessToken) {
     const session = await verifyAccessToken(accessToken);
     if (session) {
-      return { status: 'authenticated', userId: session.userId };
+      return { status: 'authenticated', payload: session };
     }
   }
 
@@ -71,7 +70,7 @@ export const verifySession = cache(async (): Promise<SessionResult> => {
 
   return {
     status: 'refreshable',
-    userId: refreshSession.userId,
+    payload: refreshSession,
   };
 });
 
@@ -88,20 +87,22 @@ export async function refreshSession(oldRefreshToken: string) {
     oldToken: oldRefreshToken,
     newToken: newRefreshToken,
   });
+
   if (!user) {
     return null; // invalid / expired / already used
   }
   const accessToken = await createAccessToken({
-    userId: user.user_id,
+    userId: session.userId,
+    role: session.role,
   });
   return {
-    userId: user.user_id,
+    session: session,
     accessToken,
     refreshToken: newRefreshToken,
   };
 }
 
-export async function withAuth(): Promise<{ userId: string }> {
+export async function withAuth(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
 
   const accessToken = cookieStore.get('access_token')?.value;
@@ -113,7 +114,7 @@ export async function withAuth(): Promise<{ userId: string }> {
       const session = await verifyAccessToken(accessToken);
 
       if (session) {
-        return { userId: session.userId };
+        return session;
       }
     } catch {
       redirect(ROUTES.LOGIN);
@@ -142,5 +143,5 @@ export async function withAuth(): Promise<{ userId: string }> {
 
   await setSessionCookies(refreshed);
 
-  return { userId: refreshed.userId };
+  return refreshed.session;
 }

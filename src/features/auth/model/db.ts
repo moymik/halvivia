@@ -5,9 +5,9 @@ import { User } from '@/entities/user';
 
 export async function findAuthUserByName(name: string): Promise<AuthUser | null> {
   const rows = (await sql`
-    SELECT id, name, email, password_hash as "passwordHash"
-    FROM users 
-    WHERE name = ${name} 
+    SELECT id, name, email, password_hash as "passwordHash", role
+    FROM users
+    WHERE name = ${name}
     LIMIT 1
   `) as AuthUser[];
 
@@ -17,15 +17,15 @@ export async function findAuthUserByName(name: string): Promise<AuthUser | null>
 export async function createUser(data: RegisterUser): Promise<User> {
   const [row] = await sql`
     INSERT INTO users (name, email, password_hash, role)
-    VALUES (${data.name}, ${data.email}, ${data.passwordHash}, ${'GUEST'})
-    RETURNING id, name, email, discord_id
+    VALUES (${data.name}, ${data.email}, ${data.passwordHash}, ${data.role})
+    RETURNING id, name, email, discord_id, role
   `;
-
   return {
     id: row.id,
     name: row.name,
     email: row.email,
     discordId: row.discord_id,
+    role: row.role,
   };
 }
 
@@ -46,6 +46,7 @@ export async function createDiscordUser(data: {
     name: row.name,
     email: row.email,
     discordId: row.discord_id,
+    role: row.role,
   };
 }
 

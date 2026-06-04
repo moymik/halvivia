@@ -36,7 +36,6 @@ export async function registerAction(
   const { name, email, password } = parsed.data;
 
   const normalizedEmail = email ? email : null;
-
   const passwordHash = await hash(password, 10);
 
   try {
@@ -45,9 +44,10 @@ export async function registerAction(
       name,
       email: normalizedEmail,
       passwordHash,
+      role: 'GUEST',
     });
     // 2. create tokens
-    await issueSession(user.id);
+    await issueSession({ userId: user.id, role: user.role });
   } catch (e: unknown) {
     console.error(e);
     // PostgreSQL unique violation
