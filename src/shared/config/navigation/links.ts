@@ -63,18 +63,6 @@ export const NAVIGATION_LINKS = {
     //href: 'https://halvivia.vercel.app/auth/discord/'
     //href: 'http://localhost:3000/auth/discord/'
   },
-  DISCORD_LOGIN: {
-    id: 'discordLogin',
-    label: 'Войти через Discord;',
-    href: ROUTES.DISCORD_LOGIN,
-  },
-
-  DISCORD_LINK_ACCOUNT: {
-    id: 'discordLogin',
-    label: 'Привязать Discord;',
-    href: ROUTES.DISCORD_LINK_ACCOUNT,
-  },
-
   LOGIN: {
     id: 'login',
     href: ROUTES.LOGIN,

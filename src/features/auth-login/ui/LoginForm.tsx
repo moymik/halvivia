@@ -3,6 +3,7 @@ import { loginAction } from '../api/loginAction';
 import { useActionState } from 'react';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import Link from 'next/link';
+import { startDiscordLoginAction } from '@/features/auth/api/startDiscordAuthAction';
 
 export function LoginForm() {
   const [state, dispatchLoginAction, isPending] = useActionState(loginAction, { success: false });
@@ -54,14 +55,14 @@ export function LoginForm() {
           </Link>
         </div>
         <div>
-          <a
+          <button
+            formAction={startDiscordLoginAction}
             className={
               'text-text-muted hover:text-text-primary text-sm font-medium transition-[color] ease-out'
             }
-            href={NAVIGATION_LINKS.DISCORD_LOGIN.href}
           >
             Войти через дискорд
-          </a>
+          </button>
         </div>
       </form>
     </div>

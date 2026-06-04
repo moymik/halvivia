@@ -1,8 +1,5 @@
 import { withAuth } from '@/shared/lib/auth/dal';
-import Link from 'next/link';
-import { NAVIGATION_LINKS } from '@/shared/config';
-import { AppLink } from '@/shared/ui/app-link';
-import { Button } from '@/shared/ui/Button';
+import { startDiscordLinkAction } from '@/features/auth/api/startDiscordAuthAction';
 
 export async function testAuthAction() {
   'use server';
@@ -21,7 +18,9 @@ export function HomePage() {
         <img
           src={`https://ik.imagekit.io/k6zwwjwel/default-image.jpg?updatedAt=1779799773460`}
         ></img>
-        <a href={NAVIGATION_LINKS.DISCORD_LINK_ACCOUNT.href}>ПОДКЛЮЧИТЬ ДИСКОРД АККАУНТ</a>
+        <form action={startDiscordLinkAction}>
+          <button type="submit">ПОДКЛЮЧИТЬ ДИСКОРД АККАУНТ</button>
+        </form>
         <div className={'h-240'}>home page</div>
         <div className={'h-540'}>home page</div>
       </main>

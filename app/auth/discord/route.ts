@@ -1,6 +1,4 @@
-import { exchangeCode, getGuilds, getDiscordUser } from './api';
-import { handleLogin } from './login/api';
-import { handleLink } from './link_discord/api';
+import { exchangeCode, getDiscordUser, getGuilds, handleDiscordAuth } from './api';
 
 export async function GET(request: Request) {
   try {
@@ -16,16 +14,9 @@ export async function GET(request: Request) {
     const token = await exchangeCode(code);
 
     const discordUser = await getDiscordUser(token.access_token);
-
-    if (state === 'login') {
-      return handleLogin(discordUser);
-    }
-
-    if (state === 'link') {
-      return handleLink(discordUser);
-    }
-
-    return Response.json({ error: 'Invalid state' }, { status: 400 });
+    const guilds = await getGuilds(token.access_token);
+    console.log(guilds);
+    return handleDiscordAuth(state, discordUser);
   } catch (err) {
     return Response.json(
       {

@@ -6,8 +6,6 @@ export const ROUTES = {
   PRIVACY: '/privacy',
   LOGIN: '/auth/login',
   REGISTER: '/auth/register',
-  DISCORD_LOGIN: '/auth/discord/login',
-  DISCORD_LINK_ACCOUNT: '/auth/discord/link_discord',
 } as const;
 
 // type Route = "/" | "/cinema" | "/library" | "/terms" | "/privacy"
