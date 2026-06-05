@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthModalStore } from '../model/store';
+import { useAuthModalStore } from '../model/AuthModalStore';
 type AuthModalProps = Readonly<{
   children: React.ReactNode;
 }>;

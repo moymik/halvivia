@@ -1,5 +1,5 @@
 import 'server-only';
-import { AuthUser, RegisterUser } from './types';
+import { AuthUser, RegisterUser } from '../model/types';
 import { sql } from '@/shared/lib/db';
 import { User } from '@/entities/user';
 

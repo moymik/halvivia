@@ -1,6 +1,6 @@
-import { withAuth } from '@/shared/lib/auth/dal';
-import { startDiscordLinkAction } from '@/features/auth/discord/startDiscordAuthAction';
-import { findUserById } from '@/entities/user/api/db';
+import { withAuth } from '@/shared/lib/auth';
+import { startDiscordLinkAction } from '@/features/auth';
+import { findUserById } from '@/entities/user';
 
 export async function testAuthAction() {
   'use server';

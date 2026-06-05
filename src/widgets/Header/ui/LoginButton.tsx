@@ -1,6 +1,6 @@
 'use client';
-import { logout } from '@/widgets/Header/lib/logout';
-import { useAuthModalStore } from '../model/store';
+import { logout } from '@/features/auth';
+import { useAuthModalStore } from '@/features/auth/';
 
 export type LoginButtonProps = {
   sessionStatus: 'unauthenticated' | 'authenticated' | 'refreshable';

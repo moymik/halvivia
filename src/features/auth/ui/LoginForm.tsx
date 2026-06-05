@@ -3,7 +3,7 @@ import { loginAction } from '../api/loginAction';
 import { useActionState } from 'react';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import Link from 'next/link';
-import { startDiscordLoginAction } from '@/features/auth/discord/startDiscordAuthAction';
+import { startDiscordLoginAction } from '@/features/auth/api/startDiscordAuthAction';
 
 export function LoginForm() {
   const [state, dispatchLoginAction, isPending] = useActionState(loginAction, { success: false });

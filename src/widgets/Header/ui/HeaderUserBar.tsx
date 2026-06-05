@@ -1,6 +1,6 @@
 import { verifySession } from '@/shared/lib/auth';
 import { Icon } from '@/shared/ui/icon';
-import { LoginButton } from '@/features/auth/ui/LoginButton';
+import { LoginButton } from './LoginButton';
 
 export async function HeaderUserBar() {
   const session = await verifySession();

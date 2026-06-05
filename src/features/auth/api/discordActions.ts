@@ -1,13 +1,16 @@
-import { DiscordGuild, DiscordToken, DiscordUser } from './types';
-import { findUserByDiscordId } from '@/entities/user/api/db';
-import { createDiscordUser } from '@/features/auth';
-import { generateRandomPassword, isMember } from './utils';
-import { issueSession, withAuth } from '@/shared/lib/auth/dal';
+'use server';
 import { redirect } from 'next/navigation';
-import { ROUTES } from '@/shared/config/navigation';
+
+import { ROUTES } from '@/shared/config';
 import { NAVIGATION_LINKS } from '@/shared/config';
-import { DISCORD_ENDPOINTS } from './constraints';
-import { linkDiscordAccount } from '@/features/auth/model/db';
+import { findUserByDiscordId } from '@/entities/user';
+import { issueSession, withAuth } from '@/shared/lib/auth';
+
+import { createDiscordUser } from './db';
+import { DISCORD_ENDPOINTS } from '../model/discordConstraints';
+import { linkDiscordAccount } from './db';
+import { generateRandomPassword, isMember } from '../lib/utils';
+import { DiscordGuild, DiscordToken, DiscordUser } from '../model/discordTypes';
 
 export async function handleDiscordAuth(
   state: string | null,

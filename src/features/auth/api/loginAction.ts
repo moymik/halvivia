@@ -4,11 +4,11 @@ import { loginSchema, LoginState } from '../model/types';
 
 import bcrypt from 'bcryptjs';
 
-import { findAuthUserByName } from '@/features/auth';
+import { findAuthUserByName } from './db';
 
-import { issueSession } from '@/shared/lib/auth/dal';
+import { issueSession } from '@/shared/lib/auth';
 import { redirect } from 'next/navigation';
-import { ROUTES } from '@/shared/config/navigation';
+import { ROUTES } from '@/shared/config';
 
 export async function loginAction(prevState: LoginState, formData: FormData): Promise<LoginState> {
   const name = formData.get('name'),

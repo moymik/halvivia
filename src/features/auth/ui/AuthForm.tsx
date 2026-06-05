@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { NAVIGATION_LINKS } from '@/shared/config';
 
 import Link from 'next/link';
-import { useAuthModalStore } from '@/features/auth/model/store';
-import { startDiscordLoginAction } from '@/features/auth/discord/startDiscordAuthAction';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
+import { startDiscordLoginAction } from '@/features/auth/api/startDiscordAuthAction';
 
 export function AuthForm() {
   const { closeModal } = useAuthModalStore();

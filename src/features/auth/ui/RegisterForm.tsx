@@ -1,13 +1,13 @@
 'use client';
 import { z } from 'zod';
-
-import { ChangeEvent, useActionState, useState } from 'react';
-import { registerAction } from '../api/registerAction';
-
-import { useDebouncedCallback } from 'use-debounce';
-import { registerSchema } from '../model/types';
 import Link from 'next/link';
+import { ChangeEvent, useActionState, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+
 import { NAVIGATION_LINKS } from '@/shared/config';
+
+import { registerAction } from '../api/registerAction';
+import { registerSchema } from '../model/types';
 
 type ClientErrors = {
   name?: string[];

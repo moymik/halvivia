@@ -1,4 +1,4 @@
-import { DiscordGuild } from '@/features/auth/discord/types';
+import { DiscordGuild } from '@/features/auth/model/discordTypes';
 
 export function generateRandomPassword(length: number) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -1,4 +1,4 @@
-import { RegisterForm } from '@/features/auth-register';
+import { RegisterForm } from '@/features/auth';
 
 export function RegisterPage() {
   return <RegisterForm />;

@@ -3,7 +3,7 @@ import {
   getDiscordUser,
   getGuilds,
   handleDiscordAuth,
-} from '@/features/auth/discord/api';
+} from '@/features/auth/api/discordActions';
 
 export async function GET(request: Request) {
   try {

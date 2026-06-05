@@ -5,8 +5,8 @@ import { registerSchema } from '../model/types';
 import { isPgError } from '@/shared/lib/db';
 
 import { redirect } from 'next/navigation';
-import { issueSession } from '@/shared/lib/auth/dal';
-import { createUser } from '@/features/auth';
+import { issueSession } from '@/shared/lib/auth';
+import { createUser } from './db';
 
 export type RegisterState = {
   errors?: string[];
