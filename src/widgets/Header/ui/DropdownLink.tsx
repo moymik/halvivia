@@ -13,13 +13,12 @@ export function DropdownLink({ icon, setOpen, link, children, ...props }: Dropdo
   return (
     <AppLink
       link={link}
-      className={
-        'hover:text-primary text-text-secondary block w-full px-2 text-left text-base/tight'
-      }
+      className={'hover:text-primary text-text-secondary px-2 text-left text-base/tight'}
       onClick={() => {
         setOpen(false);
       }}
       {...props}
+      hideLabel={true}
     >
       <Icon className={'mr-2 inline-block'} name={icon}></Icon>
       {children}

@@ -4,3 +4,7 @@ export { LogoIcon } from './LogoIcon';
 export { NotificationIcon } from './NotificationIcon';
 export { TelegramIcon } from './TelegramIcon';
 export { LogoutIcon } from './LogoutIcon';
+export { ProfileIcon } from './ProfileIcon';
+export { DownloadIcon } from './DownloadIcon';
+export { StarIcon } from './StarIcon';
+export { AddIcon } from './AddIcon';

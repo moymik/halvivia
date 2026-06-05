@@ -4,11 +4,8 @@ import { useState } from 'react';
 import { dropdownLinks } from '@/widgets/Header/config/dropdown.config';
 import DropdownLink from '@/widgets/Header/ui/DropdownLink';
 import { User } from '@/entities/user';
-import LoginButton from '@/widgets/Header/ui/LoginButton';
 import { logout } from '@/features/auth';
-import { NAVIGATION_LINKS, ROUTES } from '@/shared/config';
-import { redirect } from 'next/navigation';
-import LogoutIcon from '@/shared/ui/icons/LogoutIcon';
+import { NAVIGATION_LINKS } from '@/shared/config';
 
 type HeaderProps = React.ComponentPropsWithoutRef<'div'> & {
   user: User;
@@ -19,38 +16,35 @@ export function HeaderDropdown({ user }: HeaderProps) {
   console.log(user.name);
 
   return (
-    <div className="relative inline-block">
+    <div className="flex flex-col items-end">
       <button onClick={() => setOpen(!open)} className="rounded border px-4 py-2">
         {user.name}
       </button>
 
       {open && (
-        <div className="bg-bg-base border-border-default fixed left-0 mt-4 flex h-screen flex-col border-t">
-          <div className={'flex h-41 flex-col items-center justify-center'}>
+        <div className="bg-bg-base md:border-border-default border-t-border-default absolute top-full left-0 flex h-screen w-screen flex-col rounded-b-lg border-t py-5 md:left-auto md:h-auto md:w-[min(30vw,339px)] md:border">
+          <div className={'flex flex-col items-center justify-center pb-5'}>
             <div>тут будет картинка</div>
             <p>{user.name}</p>
           </div>
-          <div className="flex h-41 w-screen flex-col gap-3">
+          <div className="border-border-second flex w-screen flex-col gap-3 border-t py-5 md:w-auto md:items-start">
             {dropdownLinks.map((link) => (
               <DropdownLink
                 setOpen={setOpen}
                 link={link.link}
-                icon={'LogoutIcon'}
+                icon={link.iconName}
                 key={link.link.id}
-              />
+              >
+                {link.link.label}
+              </DropdownLink>
             ))}
           </div>
-          <div className="flex h-41 w-screen flex-col gap-3">
-            <DropdownLink
-              setOpen={setOpen}
-              hideLabel
-              link={NAVIGATION_LINKS.LOGIN}
-              icon={'LogoutIcon'}
-            >
+          <div className="border-t-border-second flex w-screen flex-col gap-3 border-t pt-5 md:w-auto">
+            <DropdownLink setOpen={setOpen} link={NAVIGATION_LINKS.LOGIN} icon={'AddIcon'}>
               Сменить аккаунт
             </DropdownLink>
             <button
-              className={'hover:text-primary block w-full text-left text-base/tight'}
+              className={'hover:text-primary block w-screen text-left text-base/tight md:w-auto'}
               onClick={logout}
             >
               <DropdownLink
@@ -59,7 +53,6 @@ export function HeaderDropdown({ user }: HeaderProps) {
                 onClick={(e) => {
                   e.preventDefault();
                 }}
-                hideLabel
                 link={NAVIGATION_LINKS.LOGIN}
               >
                 Выйти
