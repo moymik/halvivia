@@ -74,4 +74,21 @@ export const NAVIGATION_LINKS = {
     href: ROUTES.REGISTER,
     label: 'Зарегистрироваться',
   },
+
+  PROFILE: {
+    id: 'profile',
+    href: ROUTES.PROFILE,
+    label: 'Профиль',
+  },
+
+  REVIEWS: {
+    id: 'reviews',
+    href: ROUTES.REVIEWS,
+    label: 'Оценки',
+  },
+  DOWNLOADS: {
+    id: 'downloads',
+    href: ROUTES.DOWNLOADS,
+    label: 'Загрузки',
+  },
 } as const satisfies Record<string, NavigationLink>;

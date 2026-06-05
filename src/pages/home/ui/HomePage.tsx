@@ -16,7 +16,7 @@ export function HomePage() {
   return (
     <div>
       <main>
-        <div className={'h-40'}>home page</div>
+        <h1 className={'text text-[min(10vw,70px)]'}>home page</h1>
         <form action={testAuthAction}>
           <button type="submit">Test Auth</button>
         </form>

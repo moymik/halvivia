@@ -1,9 +1,15 @@
-import { verifySession } from '@/shared/lib/auth';
 import { Icon } from '@/shared/ui/icon';
 import { LoginButton } from './LoginButton';
-
+import { HeaderDropdown } from './HeaderDropdown';
+import { findUserById, User } from '@/entities/user';
+import { verifySession } from '@/shared/lib/auth';
 export async function HeaderUserBar() {
   const session = await verifySession();
+  let user: User | null = null;
+  if (session.status !== 'unauthenticated') {
+    user = await findUserById(session.payload.userId);
+    console.log(user);
+  }
 
   return (
     <div className="flex gap-4 lg:gap-6">
@@ -14,6 +20,7 @@ export async function HeaderUserBar() {
         <Icon name={'NotificationIcon'} active={true} className="w-4 lg:w-5.5"></Icon>
       </button>
       <LoginButton sessionStatus={session.status} />
+      {user && <HeaderDropdown user={user} />}
     </div>
   );
 }

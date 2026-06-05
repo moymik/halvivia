@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import React from 'react';
+import { cn } from '@/shared';
 
 type ButtonVariant = 'primary' | 'outline' | 'outlineBlue';
 
@@ -28,7 +28,7 @@ export function Button({
   return (
     <button
       disabled={disabled}
-      className={clsx(baseStyles, variants[variant], className)}
+      className={cn(baseStyles, variants[variant], className)}
       {...props}
     />
   );
