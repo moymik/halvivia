@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export type User = {
   id: string;
-  name: string;
+  name: string | null;
   discordId: string | null;
   email: string | null;
   role: 'MEMBER' | 'GUEST' | null;
