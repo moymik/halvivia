@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       new URL('https://i.pinimg.com/**'),
       new URL(`https://${process.env.NEXT_PUBLIC_BLOB_ID}.public.blob.vercel-storage.com/**`),
+      new URL(`https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}/**`),
     ],
   },
   /* config options here */

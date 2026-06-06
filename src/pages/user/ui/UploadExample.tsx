@@ -8,10 +8,15 @@ import {
   upload,
 } from '@imagekit/next';
 
-import { useRef, useState } from 'react';
+import { ComponentPropsWithoutRef, useRef, useState } from 'react';
 import { getUploadAuth } from '../api/ImageKitAuth';
+import { setUserAvatarUrl } from '@/entities/user/api/actions';
 
-export const UploadExample = () => {
+type UploadExampleProps = {
+  folder: '/avatars' | '/posters' | '/books';
+} & ComponentPropsWithoutRef<'div'>;
+
+export function UploadExample({ folder, className }: UploadExampleProps) {
   const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -20,9 +25,8 @@ export const UploadExample = () => {
   const authenticator = async () => {
     try {
       const data = await getUploadAuth();
-
-      const { signature, expire, token, publicKey } = data;
-      return { signature, expire, token, publicKey };
+      const { signature, expire, token, publicKey, userId } = data;
+      return { signature, expire, token, publicKey, userId };
     } catch (error) {
       console.error('Authentication error:', error);
       throw new Error('Authentication request failed');
@@ -48,7 +52,7 @@ export const UploadExample = () => {
       return;
     }
 
-    const { signature, expire, token, publicKey } = authParams;
+    const { signature, expire, token, publicKey, userId } = authParams;
 
     try {
       const uploadResponse = await upload({
@@ -58,14 +62,16 @@ export const UploadExample = () => {
         expire,
         token,
         publicKey,
-
+        folder: folder,
         onProgress: (event) => {
           setProgress((event.loaded / event.total) * 100);
         },
-
         abortSignal: abortController.signal,
       });
-
+      console.log(userId);
+      if (uploadResponse.filePath && folder === '/avatars')
+        await setUserAvatarUrl(uploadResponse.filePath);
+      ///uploadResponse.path; user avatarurl authparams
       console.log('Upload response:', uploadResponse);
     } catch (error) {
       if (error instanceof ImageKitAbortError) {
@@ -83,15 +89,36 @@ export const UploadExample = () => {
   };
 
   return (
-    <>
+    <div className={className}>
       <input type="file" ref={fileInputRef} />
       <button type="button" onClick={handleUpload}>
         Upload file
       </button>
       <br />
       Upload progress: <progress value={progress} max={100} />
-    </>
+    </div>
   );
-};
+}
 
 export default UploadExample;
+/*
+*
+*
+* {
+    "fileId": "6a2492135c7cd75eb8dec7cb",
+    "name": "Magnificentws_Elephant_b-VPEgMsyP.jpg",
+    "size": 190361,
+    "versionInfo": {
+        "id": "6a2492135c7cd75eb8dec7cb",
+        "name": "Version 1"
+    },
+    "filePath": "/Magnificentws_Elephant_b-VPEgMsyP.jpg",
+    "url": "https://ik.imagekit.io/k6zwwjwel/Magnificentws_Elephant_b-VPEgMsyP.jpg",
+    "fileType": "image",
+    "height": 1313,
+    "width": 736,
+    "thumbnailUrl": "https://ik.imagekit.io/k6zwwjwel/tr:n-ik_ml_thumbnail/Magnificentws_Elephant_b-VPEgMsyP.jpg",
+    "AITags": null,
+    "description": null
+}
+* */

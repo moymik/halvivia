@@ -2,7 +2,9 @@ import { findUserById } from '@/entities/user';
 import { verifySession } from '@/shared/lib/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
-import UserAvatar from '@/entities/user/ui/UserAvatar';
+import { UserAvatarFull } from '@/entities/user/ui/userAvatarFull';
+import DiscordLinkButton from '@/features/auth/ui/DiscordLinkButton';
+import { UploadExample } from './UploadExample';
 
 export type UserPageProps = {
   params: Promise<{
@@ -23,18 +25,17 @@ export async function UserPage({ params }: UserPageProps) {
   }
 
   return (
-    <div className="w-full max-w-3xl space-y-6">
+    <div className="flex w-full flex-col gap-5 space-y-6 md:flex-row">
       {/* Profile header */}
-      <div className="flex items-center gap-5 rounded-2xl bg-gray-900 p-6 shadow-lg">
-        <UserAvatar user={user} className={'h-30 w-30 rounded-sm'}></UserAvatar>
-
-        <div className="flex flex-col">
+      <div className="flex w-max flex-col items-center gap-5 rounded-2xl bg-gray-900 p-6 shadow-lg">
+        <div className={'flex-col'}>
+          <UserAvatarFull user={user}></UserAvatarFull>
           <h1 className="text-xl font-semibold">{user.name}</h1>
           <p className="text-sm text-gray-400">{user.role}</p>
           <p className="text-sm text-gray-500">{user.email ?? 'Email не указан'}</p>
         </div>
+        <UploadExample folder={'/avatars'} />
       </div>
-
       {/* Info cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="rounded-xl bg-gray-900 p-5">
@@ -42,9 +43,10 @@ export async function UserPage({ params }: UserPageProps) {
           <p className="text-sm break-all">{user.id}</p>
         </div>
 
-        <div className="rounded-xl bg-gray-900 p-5">
+        <div className="flex flex-col gap-5 rounded-xl bg-gray-900 p-5">
           <h2 className="mb-2 text-sm text-gray-400">Discord ID</h2>
           <p className="text-sm">{user.discordId}</p>
+          <DiscordLinkButton />
         </div>
 
         <div className="rounded-xl bg-gray-900 p-5 md:col-span-2">

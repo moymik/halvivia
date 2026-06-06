@@ -7,29 +7,21 @@ export type UserAvatarProps = {
   user: User;
 } & ComponentPropsWithoutRef<'img'>;
 
-export function UserAvatar({ user, className }: UserAvatarProps) {
+export function UserAvatarMini({ user, className }: UserAvatarProps) {
   return user.avatarUrl ? (
     <div>
       <Image
         urlEndpoint={`https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`} // New prop
-        src="/avatars/ravi-sharma-OZkjKLwgWX0-unsplash.jpg"
+        src={user.avatarUrl}
         className={cn('border-primary h-15 w-15 rounded-full border-2', className)}
-        width={800}
-        height={600}
-        sizes="(min-width: 1920px) 800px, 50vw"
+        width={100}
+        height={100}
         alt="Picture of the author"
-      />{' '}
+      />
     </div>
   ) : (
-    /*<img
-      className={cn('border-primary w-15 rounded-full border-2', className)}
-      src={user.avatarUrl}
-      alt={'Аватарка' + user.name}
-    />*/
-    <div
-      className={cn('border-primary h-15 w-15 rounded-full border-2 bg-gray-500', className)}
-    ></div>
+    <div className={'border-primary h-15 w-15 rounded-full border-2 bg-gray-500'}></div>
   );
 }
 
-export default UserAvatar;
+export default UserAvatarMini;

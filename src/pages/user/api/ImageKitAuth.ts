@@ -1,15 +1,22 @@
 'use server';
 
-import ImageKit from 'imagekit';
+import { getUploadAuthParams } from '@imagekit/next/server';
+import { withAuth } from '@/shared/lib/auth';
 
-const imagekit = new ImageKit({
-  publicKey: process.env.IMAGEKIT_PUBLIC_KEY!,
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
-  urlEndpoint: `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`,
-});
+export async function getUploadAuth() {
+  // здесь можно добавить проверку пользователя (cookies/session)
+  const session = await withAuth();
+  if (!session) throw new Error('unauthorized');
+  const { token, expire, signature } = getUploadAuthParams({
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string,
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY as string,
+  });
 
-export async function getImageKitAuth() {
-  const authParams = imagekit.getAuthenticationParameters();
-
-  return authParams;
+  return {
+    token,
+    expire,
+    signature,
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY as string,
+    userId: session.userId,
+  };
 }

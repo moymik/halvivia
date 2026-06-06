@@ -50,3 +50,14 @@ export async function findUserByDiscordId(discordId: string): Promise<User | nul
   if (!user) return null;
   return mapDBUserToUser(user as DBPublicUser);
 }
+
+export async function setAvatar(userId: string, url: string): Promise<User | null> {
+  const [user] = await sql`
+    UPDATE users
+    SET avatar_url = ${url}
+    WHERE id = ${userId}
+      RETURNING id, name, email, discord_id, avatar_url
+  `;
+  if (!user) return null;
+  else return mapDBUserToUser(user as DBPublicUser);
+}

@@ -7,7 +7,7 @@ import { User } from '@/entities/user';
 import { logout } from '@/features/auth';
 import { NAVIGATION_LINKS, ROUTES } from '@/shared/config';
 import Link from 'next/link';
-import { UserAvatar } from '@/entities/user/ui/UserAvatar';
+import { UserAvatarMini } from '@/entities/user/ui/UserAvatarMini';
 
 type HeaderProps = React.ComponentPropsWithoutRef<'div'> & {
   user: User;
@@ -20,14 +20,14 @@ export function HeaderDropdown({ user }: HeaderProps) {
   return (
     <div className="flex flex-col items-end">
       <button onClick={() => setOpen(!open)} className={'border-primary rounded-full border-2'}>
-        <UserAvatar user={user}></UserAvatar>
+        <UserAvatarMini user={user}></UserAvatarMini>
       </button>
 
       {open && (
         <div className="bg-bg-base md:border-border-default border-t-border-default absolute top-full left-0 flex h-screen w-screen flex-col rounded-b-lg border-t py-5 md:left-auto md:h-auto md:w-[min(30vw,339px)] md:border">
           <div className={'flex flex-col items-center justify-center pb-5'}>
             <Link href={ROUTES.PROFILE + user.id}>
-              <UserAvatar user={user} className={'h-24 w-24'}></UserAvatar>
+              <UserAvatarMini user={user} className={'h-24 w-24'}></UserAvatarMini>
             </Link>
             <p>{user.name}</p>
           </div>
