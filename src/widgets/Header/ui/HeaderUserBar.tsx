@@ -8,7 +8,6 @@ export async function HeaderUserBar() {
   let user: User | null = null;
   if (session.status !== 'unauthenticated') {
     user = await findUserById(session.payload.userId);
-    console.log(user);
   }
 
   return (

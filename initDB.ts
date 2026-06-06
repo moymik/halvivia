@@ -15,7 +15,8 @@ async function createUserTable() {
       email         CITEXT      UNIQUE,
       password_hash TEXT        NOT NULL,
       discord_id    VARCHAR(20) UNIQUE,
-      role          VARCHAR(20)
+      role          VARCHAR(20),
+      avatar_url    VARCHAR(255)
     );
   `;
 }

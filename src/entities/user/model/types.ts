@@ -2,10 +2,11 @@ import { z } from 'zod';
 
 export type User = {
   id: string;
-  name: string | null;
+  name: string;
   discordId: string | null;
   email: string | null;
   role: 'MEMBER' | 'GUEST' | null;
+  avatarUrl: string | null;
 };
 
 export const UserSchema = z.object({

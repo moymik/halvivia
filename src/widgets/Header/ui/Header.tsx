@@ -6,7 +6,7 @@ import { NAVIGATION_LINKS } from '@/shared/config';
 import HeaderUserBar from '@/widgets/Header/ui/HeaderUserBar';
 import { Suspense } from 'react';
 
-export async function Header() {
+export async function Header({ children }: { children: React.ReactNode }) {
   return (
     <header
       className={
@@ -40,6 +40,7 @@ export async function Header() {
       <Suspense fallback={'loading...'}>
         <HeaderUserBar></HeaderUserBar>
       </Suspense>
+      {children}
     </header>
   );
 }

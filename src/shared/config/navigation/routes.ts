@@ -6,9 +6,9 @@ export const ROUTES = {
   PRIVACY: '/privacy',
   LOGIN: '/auth/login',
   REGISTER: '/auth/register',
-  PROFILE: '/user',
-  REVIEWS: '/user/reviews',
-  DOWNLOADS: '/user/downloads',
+  PROFILE: '/user/',
+  REVIEWS: '/reviews',
+  DOWNLOADS: '/downloads',
 } as const;
 
 // type Route = "/" | "/cinema" | "/library" | "/terms" | "/privacy"

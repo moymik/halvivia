@@ -22,11 +22,13 @@ export function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
       <body className="flex min-h-full flex-col justify-between">
-        <Header></Header>
-        <AuthModal>
-          <AuthForm></AuthForm>
-        </AuthModal>
-        {children}
+        <Header>
+          <AuthModal>
+            <AuthForm></AuthForm>
+          </AuthModal>
+        </Header>
+
+        <main className="flex-1">{children}</main>
         <Footer></Footer>
       </body>
     </html>

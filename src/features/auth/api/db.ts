@@ -18,7 +18,7 @@ export async function createUser(data: RegisterUser): Promise<User> {
   const [row] = await sql`
     INSERT INTO users (name, email, password_hash, role)
     VALUES (${data.name}, ${data.email}, ${data.passwordHash}, ${data.role})
-    RETURNING id, name, email, discord_id, role
+    RETURNING id, name, email, discord_id, role, avatar_url
   `;
   return {
     id: row.id,
@@ -26,6 +26,7 @@ export async function createUser(data: RegisterUser): Promise<User> {
     email: row.email,
     discordId: row.discord_id,
     role: row.role,
+    avatarUrl: row.avatar_url,
   };
 }
 
@@ -47,6 +48,7 @@ export async function createDiscordUser(data: {
     email: row.email,
     discordId: row.discord_id,
     role: row.role,
+    avatarUrl: row.avatar_url,
   };
 }
 
@@ -63,5 +65,6 @@ export async function linkDiscordAccount(userId: string, discordId: string, role
     name: row.name,
     email: row.email,
     discordId: row.discord_id,
+    avatarUrl: row.avatar_url,
   };
 }
