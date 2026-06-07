@@ -14,6 +14,7 @@ export type UserPageProps = {
 //TODO: перенести текущее отображение в user/edit роут а на его месте сверстать по дизайну
 export async function UserPage({ params }: UserPageProps) {
   const session = await verifySession();
+
   if (session.status === 'unauthenticated') {
     redirect(ROUTES.LOGIN);
   }

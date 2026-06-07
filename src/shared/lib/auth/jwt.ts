@@ -10,7 +10,7 @@ export async function createAccessToken(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('30m')
+    .setExpirationTime('1h')
     .sign(accessSecret);
 }
 
@@ -30,7 +30,7 @@ export async function verifyAccessToken(token: string): Promise<SessionPayload |
 
     return payload as SessionPayload;
   } catch (e) {
-    console.error(e);
+    console.log('Access token failed, it will be refreshed soon if possible');
     return null;
   }
 }
