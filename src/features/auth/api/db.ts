@@ -2,6 +2,7 @@ import 'server-only';
 import { AuthUser, RegisterUser } from '../model/types';
 import { sql } from '@/shared/lib/db';
 import { User } from '@/entities/user';
+import { DEFAULT_AVATAR_URL } from '../model/auth.config';
 
 export async function findAuthUserByName(name: string): Promise<AuthUser | null> {
   const rows = (await sql`
@@ -16,8 +17,8 @@ export async function findAuthUserByName(name: string): Promise<AuthUser | null>
 
 export async function createUser(data: RegisterUser): Promise<User> {
   const [row] = await sql`
-    INSERT INTO users (name, email, password_hash, role)
-    VALUES (${data.name}, ${data.email}, ${data.passwordHash}, ${data.role})
+    INSERT INTO users (name, email, password_hash, role, avatar_url)
+    VALUES (${data.name}, ${data.email}, ${data.passwordHash}, ${data.role}, ${DEFAULT_AVATAR_URL})
     RETURNING id, name, email, discord_id, role, avatar_url
   `;
   return {
@@ -37,8 +38,8 @@ export async function createDiscordUser(data: {
   role: string;
 }): Promise<User> {
   const [row] = await sql`
-    INSERT INTO users (name, discord_id, password_hash, role)
-    VALUES (${data.name}, ${data.discordId}, ${data.password_hash}, ${data.role})
+    INSERT INTO users (name, discord_id, password_hash, role, avatar_url)
+    VALUES (${data.name}, ${data.discordId}, ${data.password_hash}, ${data.role}, ${DEFAULT_AVATAR_URL})
     RETURNING id, name,email, discord_id
   `;
 

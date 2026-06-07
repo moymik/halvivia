@@ -15,7 +15,6 @@ type HeaderProps = React.ComponentPropsWithoutRef<'div'> & {
 
 export function HeaderDropdown({ user }: HeaderProps) {
   const [open, setOpen] = useState(false);
-  console.log(user.name);
 
   return (
     <div className="flex flex-col items-end">

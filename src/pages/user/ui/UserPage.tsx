@@ -4,14 +4,14 @@ import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
 import { UserAvatarFull } from '@/entities/user/ui/userAvatarFull';
 import DiscordLinkButton from '@/features/auth/ui/DiscordLinkButton';
-import { UploadExample } from './UploadExample';
+import { ImageKitUploader } from '@/widgets/ImageKitUploader';
 
 export type UserPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
-
+//TODO: перенести текущее отображение в user/edit роут а на его месте сверстать по дизайну
 export async function UserPage({ params }: UserPageProps) {
   const session = await verifySession();
   if (session.status === 'unauthenticated') {
@@ -34,7 +34,7 @@ export async function UserPage({ params }: UserPageProps) {
           <p className="text-sm text-gray-400">{user.role}</p>
           <p className="text-sm text-gray-500">{user.email ?? 'Email не указан'}</p>
         </div>
-        <UploadExample folder={'/avatars'} />
+        <ImageKitUploader folder={'/avatars'} />
       </div>
       {/* Info cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

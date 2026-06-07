@@ -19,6 +19,7 @@ async function createUserTable() {
       avatar_url    VARCHAR(255)
     );
   `;
+  // (на самом деле это avatar uri а не url)
 }
 
 async function createRefreshTokensTable() {

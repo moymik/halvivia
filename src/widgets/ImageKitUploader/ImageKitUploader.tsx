@@ -8,17 +8,20 @@ import {
   upload,
 } from '@imagekit/next';
 
-import { ComponentPropsWithoutRef, useRef, useState } from 'react';
-import { getUploadAuth } from '../api/ImageKitAuth';
+import { ComponentPropsWithoutRef, useState } from 'react';
+import { getUploadAuth } from './ImageKitAuth';
 import { setUserAvatarUrl } from '@/entities/user/api/actions';
+import { Folder } from './imageKitUploader.config';
+import { Button } from '@/shared/ui/Button';
+import { FileUploader } from '@/shared/ui/FileUploader/FileUploader';
 
 type UploadExampleProps = {
-  folder: '/avatars' | '/posters' | '/books';
+  folder: Folder;
 } & ComponentPropsWithoutRef<'div'>;
 
-export function UploadExample({ folder, className }: UploadExampleProps) {
+export function ImageKitUploader({ folder, className }: UploadExampleProps) {
   const [progress, setProgress] = useState(0);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const abortController = new AbortController();
 
@@ -34,17 +37,8 @@ export function UploadExample({ folder, className }: UploadExampleProps) {
   };
 
   const handleUpload = async () => {
-    const fileInput = fileInputRef.current;
-
-    if (!fileInput?.files?.length) {
-      alert('Please select a file to upload');
-      return;
-    }
-
-    const file = fileInput.files[0];
-
     let authParams;
-
+    if (!file) return null;
     try {
       authParams = await authenticator();
     } catch (err) {
@@ -52,7 +46,7 @@ export function UploadExample({ folder, className }: UploadExampleProps) {
       return;
     }
 
-    const { signature, expire, token, publicKey, userId } = authParams;
+    const { signature, expire, token, publicKey } = authParams;
 
     try {
       const uploadResponse = await upload({
@@ -68,11 +62,13 @@ export function UploadExample({ folder, className }: UploadExampleProps) {
         },
         abortSignal: abortController.signal,
       });
-      console.log(userId);
+      //TODO: тут по хорошему функцию удаление старого файла по uri нужно написать, которая будет вызываться опционально в handleUpload(через imagekit/nodejs)
+
       if (uploadResponse.filePath && folder === '/avatars')
         await setUserAvatarUrl(uploadResponse.filePath);
-      ///uploadResponse.path; user avatarurl authparams
       console.log('Upload response:', uploadResponse);
+      setFile(null);
+      setProgress(0);
     } catch (error) {
       if (error instanceof ImageKitAbortError) {
         console.error('Upload aborted:', error.reason);
@@ -87,38 +83,24 @@ export function UploadExample({ folder, className }: UploadExampleProps) {
       }
     }
   };
-
   return (
     <div className={className}>
-      <input type="file" ref={fileInputRef} />
-      <button type="button" onClick={handleUpload}>
-        Upload file
-      </button>
-      <br />
-      Upload progress: <progress value={progress} max={100} />
+      <FileUploader handleFileChange={setFile} />
+      {file !== null && (
+        <>
+          <Button type={'button'} variant={'primary'} onClick={handleUpload}>
+            save
+          </Button>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-blue-100 shadow-inner">
+            <div
+              className="h-full bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600 shadow-[0_0_10px_rgba(59,130,246,0.6)] transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-export default UploadExample;
-/*
-*
-*
-* {
-    "fileId": "6a2492135c7cd75eb8dec7cb",
-    "name": "Magnificentws_Elephant_b-VPEgMsyP.jpg",
-    "size": 190361,
-    "versionInfo": {
-        "id": "6a2492135c7cd75eb8dec7cb",
-        "name": "Version 1"
-    },
-    "filePath": "/Magnificentws_Elephant_b-VPEgMsyP.jpg",
-    "url": "https://ik.imagekit.io/k6zwwjwel/Magnificentws_Elephant_b-VPEgMsyP.jpg",
-    "fileType": "image",
-    "height": 1313,
-    "width": 736,
-    "thumbnailUrl": "https://ik.imagekit.io/k6zwwjwel/tr:n-ik_ml_thumbnail/Magnificentws_Elephant_b-VPEgMsyP.jpg",
-    "AITags": null,
-    "description": null
-}
-* */
+export default ImageKitUploader;
