@@ -42,8 +42,73 @@ async function createRefreshTokensTable() {
   `;
 }
 
-async function main() {
-  //
+async function createFilmsTable() {
+  await sql`
+    CREATE TABLE films
+    (
+      id                          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+
+      kinopoisk_id                INTEGER     NOT NULL,
+      kinopoisk_hd_id             TEXT,
+      imdb_id                     TEXT,
+
+      name_ru                     TEXT,
+      name_en                     TEXT,
+      name_original               TEXT,
+
+      poster_url                  TEXT        NOT NULL,
+      poster_url_preview          TEXT        NOT NULL,
+
+      rating_imdb                 NUMERIC,
+
+      rating_kinopoisk            NUMERIC,
+  
+
+      web_url                     TEXT        NOT NULL,
+
+      year                        INTEGER,
+      film_length                 INTEGER,
+
+      slogan                      TEXT,
+      description                 TEXT,
+
+      type                        TEXT        NOT NULL,
+
+      rating_age_limits           TEXT,
+
+      last_sync                   TIMESTAMP   NOT NULL,
+
+      countries                   TEXT[]      NOT NULL DEFAULT '{}',
+
+      start_year                  INTEGER,
+      end_year                    INTEGER,
+
+      serial                      BOOLEAN,
+      short_film                  BOOLEAN,
+      completed                   BOOLEAN,
+      created_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE INDEX idx_films_created_at
+      ON films (created_at DESC);
+  `;
+
+  await sql`CREATE TABLE genres (
+                                  id SERIAL PRIMARY KEY,
+                                  name TEXT NOT NULL UNIQUE
+            );`;
+
+  await sql`CREATE TABLE film_genres (
+                                       film_id TEXT NOT NULL REFERENCES films(id) ON DELETE CASCADE,
+                                       genre_id INTEGER NOT NULL REFERENCES genres(id) ON DELETE CASCADE,
+
+                                       PRIMARY KEY (film_id, genre_id)
+            );
+  CREATE INDEX idx_film_genres_genre_id
+    ON film_genres (genre_id);
+
+`;
 }
+
+async function main() {}
 
 main();
