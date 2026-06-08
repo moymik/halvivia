@@ -1,7 +1,6 @@
 'use server';
-
-import { getUploadAuthParams } from '@imagekit/next/server';
 import { withAuth } from '@/shared/lib/auth';
+import { getUploadAuthParams } from '@imagekit/next/server';
 
 export async function getUploadAuth() {
   // здесь можно добавить проверку пользователя (cookies/session)

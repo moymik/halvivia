@@ -1,9 +1,13 @@
 import 'server-only';
 
 import { addFilm } from '@/entities/films/api/db';
-import { KinopoiskFilm } from '@/features/addKinopoiskFilm/model/types';
-import { KinopoiskFilmSchema } from '@/features/addKinopoiskFilm/model/schemas';
+import { KinopoiskFilm, KinopoiskSearchFIlm } from '@/features/addKinopoiskFilm/model/types';
+import {
+  KinopoiskFilmSchema,
+  KinopoiskSearchFilmSchema,
+} from '@/features/addKinopoiskFilm/model/schemas';
 import { mapKinopoiskFilmToFilm } from '@/features/addKinopoiskFilm/model/mappers';
+import { imagekitClient } from '@/shared/api/imagekit/client';
 
 export async function getKinopoiskFilmById(id: number = 41519): Promise<KinopoiskFilm> {
   try {
@@ -35,10 +39,25 @@ export async function getKinopoiskFilmById(id: number = 41519): Promise<Kinopois
   }
 }
 
+//переделать через edge handlers? или перенести на клиент, но тогда будет больше перенаправлений или хотебя таймер сделать
 export async function addFilmByKinopoiskId(id: number): Promise<void> {
   const kFilm = await getKinopoiskFilmById(id);
 
-  const film = mapKinopoiskFilmToFilm(kFilm);
+  let film = mapKinopoiskFilmToFilm(kFilm);
+  let res = null;
+  // пытаемся подгрузить постер
+  try {
+    res = await imagekitClient.files.upload({
+      file: film.posterUrl,
+      fileName: film.kinopoiskId.toString(),
+      folder: '/posters',
+    });
+    if (typeof res.filePath == 'string') film.posterUrl = res.filePath;
+  } catch (err) {
+    film = { ...film, posterUrl: 'defaultposter.png' };
+    console.log('не вышло загрузить постер');
+  }
 
+  console.log(res);
   await addFilm(film);
 }

@@ -2,6 +2,7 @@
 
 import { getFilmByIdAction } from '@/entities/films/model/actions';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
+import { searchKinopoiskFilmsByKeyword } from '@/features/addKinopoiskFilm/api/actions';
 
 export function CinemaPage() {
   return (
@@ -16,11 +17,19 @@ export function CinemaPage() {
       </button>
       <button
         onClick={async () => {
-          const film = await addKinopoiskFilmAction(301);
-          console.log('getFilmById', film);
+          const film = await addKinopoiskFilmAction(1143242);
+          console.log('ответ', film);
         }}
       >
         добавить кинопоиск фильм по айди
+      </button>
+      <button
+        onClick={async () => {
+          const films = await searchKinopoiskFilmsByKeyword('тор');
+          console.log('ответ', films);
+        }}
+      >
+        найти фильмы по kyword
       </button>
     </div>
   );

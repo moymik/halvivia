@@ -9,11 +9,12 @@ import {
 } from '@imagekit/next';
 
 import { ComponentPropsWithoutRef, useState } from 'react';
-import { getUploadAuth } from './ImageKitAuth';
 import { setUserAvatarUrl } from '@/entities/user/api/actions';
-import { Folder } from './imageKitUploader.config';
 import { Button } from '@/shared/ui/Button';
 import { FileUploader } from '@/shared/ui/FileUploader/FileUploader';
+
+import { getUploadAuth } from '@/features/imageKitUpload/api';
+import { Folder } from '@/features/imageKitUpload/types';
 
 type UploadExampleProps = {
   folder: Folder;

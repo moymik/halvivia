@@ -80,3 +80,20 @@ export const KinopoiskFilmSchema = z.object({
   shortFilm: z.boolean().nullable(),
   completed: z.boolean().nullable(),
 });
+
+/// апи v2.1
+export const KinopoiskSearchFilmSchema = z.object({
+  filmId: z.number(),
+  nameRu: z.string().nullable().optional(),
+  nameEn: z.string().nullable().optional(),
+  type: FilmTypeSchema.optional(),
+  year: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  filmLength: z.string().nullable().optional(),
+  countries: z.array(KinopoiskCountrySchema).optional(),
+  genres: z.array(GenreSchema).optional(),
+  rating: z.string().nullable().optional(),
+  ratingVoteCount: z.number().nullable().optional(),
+  posterUrl: z.string().url().optional(),
+  posterUrlPreview: z.string().url().optional(),
+});
