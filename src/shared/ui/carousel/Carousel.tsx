@@ -5,8 +5,8 @@ import { ArrowIcon } from '@/shared/ui/icons';
 
 export type CarouselProps = {
   children?: ReactNode[];
-  label: string;
-  href: string;
+  label?: string;
+  href?: string;
   className?: string;
 };
 
