@@ -11,7 +11,9 @@
     "prepare": "husky",
     "commitlint": "commitlint --edit",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@imagekit/next": "^2.1.5",
@@ -60,7 +62,20 @@
     "tailwindcss": "^4",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "storybook": "^10.4.2",
+    "@storybook/nextjs-vite": "^10.4.2",
+    "@chromatic-com/storybook": "^5.2.1",
+    "@storybook/addon-vitest": "^10.4.2",
+    "@storybook/addon-a11y": "^10.4.2",
+    "@storybook/addon-docs": "^10.4.2",
+    "@storybook/addon-onboarding": "^10.4.2",
+    "vite": "^8.0.16",
+    "eslint-plugin-storybook": "^10.4.2",
+    "vitest": "^4.1.8",
+    "playwright": "^1.60.0",
+    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.8"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

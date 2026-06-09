@@ -44,3 +44,5 @@ next-env.d.ts
 .idea/
 
 ./initDB.ts
+*storybook.log
+storybook-static
