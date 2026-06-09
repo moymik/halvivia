@@ -4,11 +4,59 @@ import { getFilmByIdAction } from '@/entities/films/model/actions';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
 import { searchKinopoiskFilmsByKeyword } from '@/features/addKinopoiskFilm/api/actions';
 import FilmCard from '@/entities/films/ui/FilmCard';
+import Carousel from '@/shared/ui/carousel/Carousel';
 
 export function CinemaPage() {
   return (
     <div className="flex flex-col gap-4">
-      <FilmCard />
+      <Carousel>
+        <FilmCard key={1} />
+        <FilmCard key={2} />
+        <FilmCard key={3} />
+        <FilmCard key={4} />
+        <FilmCard key={5} />
+        <FilmCard key={6} />
+        <FilmCard key={7} />
+        <FilmCard key={8} />
+        <FilmCard key={9} />
+        <FilmCard key={10} />
+      </Carousel>
+      <Carousel>
+        <FilmCard key={1} />
+        <FilmCard key={2} />
+        <FilmCard key={3} />
+        <FilmCard key={4} />
+        <FilmCard key={5} />
+        <FilmCard key={6} />
+        <FilmCard key={7} />
+        <FilmCard key={8} />
+        <FilmCard key={9} />
+        <FilmCard key={10} />
+      </Carousel>
+      <Carousel>
+        <FilmCard key={1} />
+        <FilmCard key={2} />
+        <FilmCard key={3} />
+        <FilmCard key={4} />
+        <FilmCard key={5} />
+        <FilmCard key={6} />
+        <FilmCard key={7} />
+        <FilmCard key={8} />
+        <FilmCard key={9} />
+        <FilmCard key={10} />
+      </Carousel>
+      <Carousel>
+        <FilmCard key={1} />
+        <FilmCard key={2} />
+        <FilmCard key={3} />
+        <FilmCard key={4} />
+        <FilmCard key={5} />
+        <FilmCard key={6} />
+        <FilmCard key={7} />
+        <FilmCard key={8} />
+        <FilmCard key={9} />
+        <FilmCard key={10} />
+      </Carousel>
       <button
         className={'mt-100'}
         onClick={async () => {
