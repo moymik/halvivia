@@ -6,7 +6,7 @@ import { KinopoiskSearchFilmSchema } from '@/features/addKinopoiskFilm/model/sch
 
 export async function addKinopoiskFilmAction(id: number) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 15000);
   try {
     await addFilmByKinopoiskId(id);
     return {

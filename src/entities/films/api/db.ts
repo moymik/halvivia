@@ -1,7 +1,7 @@
 'use server';
 
 import { DbFilmWithGenres, Film } from '@/entities/films/model/types';
-import { pool } from '@/shared/lib/db';
+import { pool, sql } from '@/shared/lib/db';
 
 export async function addFilm(film: Film): Promise<string> {
   const client = await pool.connect();
@@ -123,8 +123,7 @@ export async function addFilm(film: Film): Promise<string> {
 }
 
 export async function getDBFilmWithGenresById(id: string): Promise<DbFilmWithGenres | null> {
-  const result = await pool.query<DbFilmWithGenres>(
-    `
+  const rows = await sql`
     SELECT
       f.*,
       COALESCE(
@@ -141,11 +140,12 @@ export async function getDBFilmWithGenresById(id: string): Promise<DbFilmWithGen
       ON fg.film_id = f.id
     LEFT JOIN genres g
       ON g.id = fg.genre_id
-    WHERE f.id = $1
+    WHERE f.id =  ${id}
     GROUP BY f.id
-    `,
-    [id],
-  );
-  console.log('dbwithgenres:', result.rows[0]);
-  return result.rows[0] ?? null;
+    `;
+  const film = rows[0] ?? null;
+
+  console.log('dbwithgenres:', film);
+
+  return film as DbFilmWithGenres;
 }

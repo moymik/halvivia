@@ -84,7 +84,7 @@ export const KinopoiskFilmSchema = z.object({
 /// апи v2.1
 export const KinopoiskSearchFilmSchema = z.object({
   filmId: z.number(),
-  nameRu: z.string().nullable().optional(),
+  nameRu: z.string().nullable(),
   nameEn: z.string().nullable().optional(),
   type: FilmTypeSchema.optional(),
   year: z.string().nullable().optional(),
