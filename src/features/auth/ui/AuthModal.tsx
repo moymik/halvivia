@@ -11,7 +11,7 @@ export function AuthModal({ children }: AuthModalProps) {
 
   return (
     <div
-      className="bg-bg-overlay z:50 backdrop-blur-2xs fixed inset-0 flex justify-center pt-[27vh] lg:z-1000"
+      className="bg-bg-overlay backdrop-blur-2xs fixed inset-0 top-18 flex justify-center pt-[27vh] lg:top-0.5 lg:z-1000"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           closeModal();
