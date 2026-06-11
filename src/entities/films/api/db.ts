@@ -1,4 +1,4 @@
-'use server';
+'server-only';
 
 import { DbFilmWithGenres, Film } from '@/entities/films/model/types';
 import { pool, sql } from '@/shared/lib/db';

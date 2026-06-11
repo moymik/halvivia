@@ -1,11 +1,8 @@
 import 'server-only';
 
 import { addFilm } from '@/entities/films/api/db';
-import { KinopoiskFilm, KinopoiskSearchFIlm } from '@/features/addKinopoiskFilm/model/types';
-import {
-  KinopoiskFilmSchema,
-  KinopoiskSearchFilmSchema,
-} from '@/features/addKinopoiskFilm/model/schemas';
+import { KinopoiskFilm } from '@/features/addKinopoiskFilm/model/types';
+import { KinopoiskFilmSchema } from '@/features/addKinopoiskFilm/model/schemas';
 import { mapKinopoiskFilmToFilm } from '@/features/addKinopoiskFilm/model/mappers';
 import { imagekitClient } from '@/shared/api/imagekit/client';
 
@@ -40,7 +37,7 @@ export async function getKinopoiskFilmById(id: number = 41519): Promise<Kinopois
 }
 
 //переделать через edge handlers? или перенести на клиент, но тогда будет больше перенаправлений или хотебя таймер сделать
-export async function addFilmByKinopoiskId(id: number): Promise<void> {
+export async function addFilmByKinopoiskId(id: number): Promise<string> {
   const kFilm = await getKinopoiskFilmById(id);
 
   let film = mapKinopoiskFilmToFilm(kFilm);
@@ -58,6 +55,5 @@ export async function addFilmByKinopoiskId(id: number): Promise<void> {
     console.log('не вышло загрузить постер');
   }
 
-  console.log(res);
-  await addFilm(film);
+  return addFilm(film);
 }

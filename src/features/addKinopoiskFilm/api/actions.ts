@@ -3,14 +3,27 @@
 import { addFilmByKinopoiskId } from '@/features/addKinopoiskFilm/api/api';
 import { KinopoiskSearchFIlm } from '@/features/addKinopoiskFilm/model/types';
 import { KinopoiskSearchFilmSchema } from '@/features/addKinopoiskFilm/model/schemas';
+import { withAuth } from '@/shared/lib/auth';
+import { redirect } from 'next/navigation';
+import { ROUTES } from '@/shared/config';
 
 export async function addKinopoiskFilmAction(id: number) {
   const controller = new AbortController();
+  const session = await withAuth();
+
+  if (!session) {
+    redirect(ROUTES.LOGIN);
+  }
+  if (session.role !== 'MEMBER') {
+    return { success: false, error: 'Unauthorized' };
+  }
+
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
-    await addFilmByKinopoiskId(id);
+    const filmId = await addFilmByKinopoiskId(id);
     return {
       success: true,
+      filmId: filmId,
     } as const;
   } catch (err) {
     console.error(err);
