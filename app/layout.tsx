@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: 'Home page',
 };
 
-export function RootLayout({ children }: RootLayoutProps) {
+function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
       <body className="flex min-h-full flex-col justify-between">

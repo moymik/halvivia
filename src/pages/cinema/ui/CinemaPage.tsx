@@ -5,10 +5,33 @@ import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions'
 import { searchKinopoiskFilmsByKeyword } from '@/features/addKinopoiskFilm/api/actions';
 import FilmCard from '@/entities/films/ui/FilmCard';
 import Carousel from '@/shared/ui/carousel/Carousel';
+import { Button } from '@/shared/ui/Button';
+import { useState } from 'react';
+import Dialog from '@/shared/ui/Dialog/Dialog';
+import KinopoiskForm from '@/features/addKinopoiskFilm/ui/KinopoiskForm';
 
 export function CinemaPage() {
+  const [filmDialogOpen, setFilmDialogOpen] = useState(true);
   return (
     <div className="flex flex-col gap-4">
+      <Dialog
+        title={'Загрузи фильм'}
+        closeLabel={'Поиск фильмов'}
+        isOpen={filmDialogOpen}
+        onClose={() => setFilmDialogOpen(false)}
+      >
+        <KinopoiskForm />
+      </Dialog>
+      <Button
+        variant={'primary'}
+        className={'w-fit'}
+        onClick={() => {
+          setFilmDialogOpen(true);
+        }}
+      >
+        добавить фильм
+      </Button>
+
       <Carousel>
         <FilmCard key={1} />
         <FilmCard key={2} />

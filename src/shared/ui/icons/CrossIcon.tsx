@@ -16,7 +16,7 @@ export function CrossIcon({ className, ...props }: CloseIconProps) {
       <path
         d="M1.00029 0.999954L12.8407 12.8404M1.00029 12.8404L12.8407 0.999954"
         stroke="currentColor"
-        stroke-opacity="0.2"
+        strokeOpacity="0.2"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

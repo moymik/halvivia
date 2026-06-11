@@ -29,7 +29,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "node_modules/.pnpm/storybook@10.4.2_@testing-l_112b8187c977778782479318ed52c943/node_modules/storybook/dist/manager/runtime.js"
   ],
   "exclude": ["node_modules"]
 }

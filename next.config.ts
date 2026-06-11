@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
 
   webpack(config) {
     // Grab the existing rule that handles SVG imports
+    // @ts-expect-error - this is a private property that is not typed
     const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'));
 
     config.module.rules.push(

@@ -32,7 +32,7 @@ export function FilmCard({
           width={166}
           height={93}
           src={posterUrl}
-          objectFit="cover"
+          loading={'lazy'}
           sizes={
             '(max-width:390) 42vw,(max-width:800) 22vw, (max-width:1400)17vw,(max-width:1920)15vw'
           }
