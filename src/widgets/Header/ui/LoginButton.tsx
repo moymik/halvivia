@@ -3,12 +3,12 @@ import { logout } from '@/features/auth';
 import { useAuthModalStore } from '@/features/auth/';
 
 export type LoginButtonProps = {
-  sessionStatus: 'unauthenticated' | 'authenticated' | 'refreshable';
+  isLoggedIn: boolean;
 };
 
-export function LoginButton({ sessionStatus }: LoginButtonProps) {
+export function LoginButton() {
   const openModal = useAuthModalStore((s) => s.openModal);
-  return sessionStatus === 'unauthenticated' ? (
+  return (
     <button
       className="font-heading rounded-md p-2 font-medium transition-shadow hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
       aria-label="Открыть меню авторизации"
@@ -17,14 +17,6 @@ export function LoginButton({ sessionStatus }: LoginButtonProps) {
       }}
     >
       Войти
-    </button>
-  ) : (
-    <button
-      className="font-heading hidden rounded-md p-2 font-medium transition-shadow hover:shadow-[0_6px_20px_-10px_rgba(255,255,255,0.6)]"
-      aria-label="Выйти из аккаунта"
-      onClick={logout}
-    >
-      Выйти
     </button>
   );
 }

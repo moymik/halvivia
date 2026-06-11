@@ -9,12 +9,14 @@ import {
   verifyRefreshToken,
   createAccessToken,
   createRefreshToken,
+  refreshSecret,
 } from './jwt';
 import { ROUTES } from '@/shared/config/navigation';
 import { setSessionCookies } from '@/shared/lib/auth/cookies';
 import { insertRefreshToken, rotateRefreshToken } from './refresh_token.db';
 
 import { SessionPayload } from '@/shared/model';
+import { jwtVerify } from 'jose';
 
 export type SessionResult =
   | { status: 'authenticated'; payload: SessionPayload }
@@ -63,15 +65,16 @@ export const verifySession = cache(async (): Promise<SessionResult> => {
     return { status: 'unauthenticated' };
   }
 
-  const refreshSession = await verifyRefreshToken(refreshToken);
-  if (!refreshSession) {
+  try {
+    const refreshSession = await jwtVerify(refreshToken, refreshSecret, { algorithms: ['HS256'] });
+    return {
+      status: 'refreshable',
+      payload: refreshSession.payload as SessionPayload,
+    };
+  } catch (e) {
+    console.error(e);
     return { status: 'unauthenticated' };
   }
-
-  return {
-    status: 'refreshable',
-    payload: refreshSession,
-  };
 });
 
 // для обновления serverActions и route handlers(uncached)
