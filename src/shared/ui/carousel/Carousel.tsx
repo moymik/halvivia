@@ -13,7 +13,7 @@ export type CarouselProps = {
 export function Carousel({
   children,
   label = 'Комедии',
-  href = '/library',
+  href = '/cinema',
   className,
 }: CarouselProps) {
   return (

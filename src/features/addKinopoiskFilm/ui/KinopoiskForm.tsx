@@ -1,30 +1,43 @@
 'use client';
-/*
-export type KinopoiskFormProps = {
 
-}*/
 import Input from '@/shared/ui/Input/Input';
 import { Button } from '@/shared/ui/Button';
-import { ChangeEvent, useState, useEffect } from 'react';
+import { ChangeEvent, useState, useTransition, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
-import { redirect } from 'next/navigation';
 
 //TODO: убрать /film/ из обязательных
 export function parseKinopoiskFilmId(url: string): number | null {
   if (typeof url !== 'string') return null;
 
-  const match = url.match(/kinopoisk\.ru\/film\/(\d+)\b/);
+  const match = url.match(/kinopoisk\.ru\/[^/]+\/(\d+)\b/);
   return match ? Number(match[1]) : null;
 }
 
 export function KinopoiskForm() {
   const [currentRef, setCurrentRef] = useState('');
   const [isValidOrEmpty, setValidOrEmpty] = useState<boolean>(true);
+  const [isPending, startTransition] = useTransition();
+  const [status, setStatus] = useState<string>('');
+
+  function onSubmit() {
+    startTransition(async function () {
+      if (!isValidOrEmpty) {
+        return;
+      }
+      const parsed = parseKinopoiskFilmId(currentRef);
+      if (parsed === null) return;
+
+      const res = await addKinopoiskFilmAction(parsed);
+      if (res.success) setStatus('Фильм успешно добавлен!');
+      else setStatus('Не удалось добавить фильм :(');
+    });
+  }
 
   const debounced = useDebouncedCallback((value: string) => {
     if (currentRef == '') {
       setValidOrEmpty(true);
+      setStatus('');
     } else setValidOrEmpty(Boolean(parseKinopoiskFilmId(value)));
   }, 500);
 
@@ -71,23 +84,15 @@ export function KinopoiskForm() {
         </label>
       </div>
       <Button
-        onClick={async () => {
-          if (!isValidOrEmpty) {
-            return null;
-          }
-          const parsed = parseKinopoiskFilmId(currentRef);
-          if (parsed === null) return null;
-
-          const res = await addKinopoiskFilmAction(parsed);
-          console.log(res);
-          if (res.success) redirect(`/cinema/${res.filmId}`);
-        }}
+        disabled={isPending}
+        onClick={onSubmit}
         type="button"
         variant="primaryOnLight"
         className="w-full lg:text-xl"
       >
-        Добавить
+        {isPending ? 'Добавление...' : 'Добавить'}
       </Button>
+      {status ? <div className={'text-primary'}>{status}</div> : ''}
     </form>
   );
 }
