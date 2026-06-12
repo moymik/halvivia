@@ -5,6 +5,7 @@ import {
   FilmType,
   FilmWithoutGenres,
 } from '@/entities/films/model/types';
+import { FilmCardProps } from '@/entities/films/ui/FilmCard';
 
 export function mapDbFilmToFilmWothoutGenres(db: DbFilm): FilmWithoutGenres {
   return {
@@ -93,5 +94,13 @@ export function mapDbFilmWithGenresToFilm(db: DbFilmWithGenres): Film {
     serial: db.serial,
     shortFilm: db.short_film,
     completed: db.completed,
+  };
+}
+
+export function mapDbFilmToFilmCardProps(film: DbFilm): FilmCardProps {
+  return {
+    id: film.id,
+    name: film.name_ru,
+    posterUrl: film.poster_url,
   };
 }

@@ -1,6 +1,6 @@
 'server-only';
 
-import { DbFilmWithGenres, Film } from '@/entities/films/model/types';
+import { DbFilm, DbFilmWithGenres, Film } from '@/entities/films/model/types';
 import { pool, sql } from '@/shared/lib/db';
 
 export async function addFilm(film: Film): Promise<string> {
@@ -146,4 +146,71 @@ export async function getDBFilmWithGenresById(id: string): Promise<DbFilmWithGen
   const film = rows[0] ?? null;
 
   return film as DbFilmWithGenres;
+}
+///TODO: Можно разделить на два запроса и не новинки жестко кешировать
+export async function getInitialCinemaFilms() {
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+    const recentlyAddedResponse = await client.query<DbFilm>(
+      `SELECT *
+       from films
+       ORDER BY created_at DESC 
+       LIMIT 10
+      `,
+    );
+
+    const filmsResponse = await client.query<DbFilm>(
+      `SELECT *
+       from films
+       WHERE type = 'FILM'
+       ORDER BY created_at DESC
+       LIMIT 10
+      `,
+    );
+
+    const seriesResponse = await client.query<DbFilm>(
+      `SELECT *
+       from films
+       WHERE type IN ('TV_SERIES', 'MINI_SERIES')
+       ORDER BY created_at DESC
+       LIMIT 10
+      `,
+    );
+
+    ////NOTE: Тут genreId пришлось захардкодить потому что у меня изначально нет списка всех возможных жанров и они на ходу генерятся
+    const animeResponse = await client.query<DbFilm>(
+      `SELECT f.*
+       from films f
+       JOIN film_genres fg ON fg.film_id= f.id
+       WHERE fg.genre_id = 28
+       ORDER BY created_at DESC
+       LIMIT 10
+      `,
+    );
+
+    const cartoonsResponse = await client.query<DbFilm>(
+      `SELECT f.*
+       from films f
+       JOIN film_genres fg ON fg.film_id= f.id
+       WHERE fg.genre_id = 27
+       ORDER BY created_at DESC
+       LIMIT 10
+      `,
+    );
+
+    const recentlyAdded = recentlyAddedResponse.rows;
+    const films = filmsResponse.rows;
+    const series = seriesResponse.rows;
+    const anime = animeResponse.rows;
+    const cartoons = cartoonsResponse.rows;
+
+    return { recentlyAdded, films, series, anime, cartoons };
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }

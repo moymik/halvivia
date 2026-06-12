@@ -5,8 +5,8 @@ import { StarIcon } from '@/shared/ui/icons';
 import Link from 'next/link';
 import { ROUTES } from '@/shared/config';
 
-type FilmCardProps = {
-  id?: string;
+export type FilmCardProps = {
+  id: string;
   name?: string;
   posterUrl?: string;
   ///averageRating

@@ -6,6 +6,7 @@ import { KinopoiskSearchFilmSchema } from '@/features/addKinopoiskFilm/model/sch
 import { withAuth } from '@/shared/lib/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
+import { revalidatePath } from 'next/cache';
 
 export async function addKinopoiskFilmAction(id: number) {
   const controller = new AbortController();
@@ -19,6 +20,7 @@ export async function addKinopoiskFilmAction(id: number) {
   }
 
   const timeout = setTimeout(() => controller.abort(), 15000);
+  revalidatePath(ROUTES.CINEMA);
   try {
     const filmId = await addFilmByKinopoiskId(id);
     return {
