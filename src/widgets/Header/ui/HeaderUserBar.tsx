@@ -2,9 +2,9 @@ import { Icon } from '@/shared/ui/icon';
 import { LoginButton } from './LoginButton';
 import { HeaderDropdown } from './HeaderDropdown';
 import { getCurrentAuthUser } from '@/features/auth/api/getCurrentAuthUser';
+
 export async function HeaderUserBar() {
   const user = await getCurrentAuthUser();
-
   return (
     <div className="flex gap-4 lg:gap-6">
       <button

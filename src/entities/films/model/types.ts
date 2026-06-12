@@ -9,7 +9,7 @@ export interface Film {
   kinopoiskId: number;
   kinopoiskHDId: string | null;
   imdbId: string | null;
-  nameRu: string | null;
+  nameRu: string;
   nameEn: string | null;
   nameOriginal: string | null;
   posterUrl: string;
@@ -43,7 +43,7 @@ export type DbFilm = {
   kinopoisk_hd_id: string | null;
   imdb_id: string | null;
 
-  name_ru: string | null;
+  name_ru: string;
   name_en: string | null;
   name_original: string | null;
 

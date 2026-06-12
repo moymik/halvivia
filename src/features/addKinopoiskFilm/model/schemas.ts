@@ -18,7 +18,7 @@ export const KinopoiskFilmSchema = z.object({
   kinopoiskHDId: z.string().nullable(),
   imdbId: z.string().nullable(),
 
-  nameRu: z.string().nullable(),
+  nameRu: z.string(),
   nameEn: z.string().nullable(),
   nameOriginal: z.string().nullable(),
 

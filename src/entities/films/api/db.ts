@@ -145,7 +145,5 @@ export async function getDBFilmWithGenresById(id: string): Promise<DbFilmWithGen
     `;
   const film = rows[0] ?? null;
 
-  console.log('dbwithgenres:', film);
-
   return film as DbFilmWithGenres;
 }

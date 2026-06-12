@@ -8,9 +8,9 @@ import { Button } from '@/shared/ui/Button';
 import { ChangeEvent, useState, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
-import * as url from 'node:url';
 import { redirect } from 'next/navigation';
 
+//TODO: убрать /film/ из обязательных
 export function parseKinopoiskFilmId(url: string): number | null {
   if (typeof url !== 'string') return null;
 
@@ -20,10 +20,12 @@ export function parseKinopoiskFilmId(url: string): number | null {
 
 export function KinopoiskForm() {
   const [currentRef, setCurrentRef] = useState('');
-  const [isValid, setValid] = useState<boolean>(true);
+  const [isValidOrEmpty, setValidOrEmpty] = useState<boolean>(true);
 
   const debounced = useDebouncedCallback((value: string) => {
-    setValid(Boolean(parseKinopoiskFilmId(value)));
+    if (currentRef == '') {
+      setValidOrEmpty(true);
+    } else setValidOrEmpty(Boolean(parseKinopoiskFilmId(value)));
   }, 500);
 
   useEffect(() => {
@@ -40,33 +42,37 @@ export function KinopoiskForm() {
           type="text"
           disabled={true}
         />
-        <label className="text-text-inverse-500 text-sm">Введи название фильма</label>
+        <label className="text-text-inverse-500 text-xs lg:text-sm">Введи название фильма</label>
       </div>
       <div className="space-between text-text-inverse-200 flex flex-row items-center gap-4 text-sm md:text-lg">
         <hr className="flex-1" />
         или
         <hr className="flex-1" />
       </div>
-      <div className="flex flex-col items-center gap-3.5">
-        <Input
-          value={currentRef}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setCurrentRef(e.target.value);
-          }}
-          placeholder="https://"
-          className="text-sm md:text-base lg:text-xl"
-          type="text"
-        />
-        {!isValid && (
-          <label className={'text-error'}>
+      <div className="flex flex-col items-center gap-2.5 lg:gap-3">
+        <div className="flex min-h-14 w-full flex-col items-center gap-1 lg:h-17.5">
+          <Input
+            value={currentRef}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setCurrentRef(e.target.value);
+            }}
+            placeholder="https://"
+            className="text-sm md:text-base lg:text-xl"
+            type="text"
+          />
+          <label
+            className={`text-error block w-fit text-[10px] transition-opacity duration-200 lg:text-xs ${isValidOrEmpty ? '-translate-y-1 opacity-0' : 'translate-y-0 opacity-100'} `}
+          >
             *Видеосервис не поддерживается или ссылка некорректная
           </label>
-        )}
-        <label className="text-text-inverse-500 text-sm">Укажи ссылку на фильм на Кинопоиске</label>
+        </div>
+        <label className="text-text-inverse-500 text-xs lg:text-sm">
+          Укажи ссылку на фильм на Кинопоиске
+        </label>
       </div>
       <Button
         onClick={async () => {
-          if (!isValid) {
+          if (!isValidOrEmpty) {
             return null;
           }
           const parsed = parseKinopoiskFilmId(currentRef);

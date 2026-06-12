@@ -5,6 +5,7 @@ import { getDBFilmWithGenresById } from '@/entities/films/api/db';
 import { mapDbFilmWithGenresToFilm } from '@/entities/films/model/mappers';
 
 export async function getFilmByIdAction(id: string): Promise<Film | null> {
+  'use cache';
   const res = await getDBFilmWithGenresById(id);
 
   if (!res) return null;
