@@ -10,7 +10,6 @@ export async function CinemaPage() {
   const cardProps = await getInitialCardsAction();
   return (
     <div className="flex flex-col gap-4">
-      <Link href="/cinema/db09b127-557d-476f-a05e-45ac9dca1b75">Naruto</Link>
       <Carousel label={'Новинки'}>
         {cardProps.recentCards.map((prop) => (
           <FilmCard key={prop.id} {...prop} />

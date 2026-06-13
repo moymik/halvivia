@@ -15,14 +15,15 @@ export async function addKinopoiskFilmAction(id: number) {
   if (!session) {
     redirect(ROUTES.LOGIN);
   }
+
   if (session.role !== 'MEMBER') {
     return { success: false, error: 'Unauthorized' };
   }
 
-  const timeout = setTimeout(() => controller.abort(), 15000);
-  revalidatePath(ROUTES.CINEMA);
+  setTimeout(() => controller.abort(), 15000);
   try {
     const filmId = await addFilmByKinopoiskId(id);
+    revalidatePath(ROUTES.CINEMA);
     return {
       success: true,
       filmId: filmId,

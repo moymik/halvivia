@@ -5,6 +5,8 @@ import { Button } from '@/shared/ui/Button';
 import { ChangeEvent, useState, useTransition, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
+import { getFilmRefById } from '@/entities/films/lib/utils';
+import Link from 'next/link';
 
 //TODO: убрать /film/ из обязательных
 export function parseKinopoiskFilmId(url: string): number | null {
@@ -18,7 +20,8 @@ export function KinopoiskForm() {
   const [currentRef, setCurrentRef] = useState('');
   const [isValidOrEmpty, setValidOrEmpty] = useState<boolean>(true);
   const [isPending, startTransition] = useTransition();
-  const [status, setStatus] = useState<string>('');
+  const [status, setStatus] = useState<boolean | null>(null);
+  const [filmRef, setFilmRef] = useState<string | null>(null);
 
   function onSubmit() {
     startTransition(async function () {
@@ -29,15 +32,17 @@ export function KinopoiskForm() {
       if (parsed === null) return;
 
       const res = await addKinopoiskFilmAction(parsed);
-      if (res.success) setStatus('Фильм успешно добавлен!');
-      else setStatus('Не удалось добавить фильм :(');
+      if (res.success && res.filmId) {
+        setFilmRef(getFilmRefById(res.filmId));
+        setStatus(true);
+      } else setStatus(false);
     });
   }
 
   const debounced = useDebouncedCallback((value: string) => {
     if (currentRef == '') {
       setValidOrEmpty(true);
-      setStatus('');
+      setStatus(null);
     } else setValidOrEmpty(Boolean(parseKinopoiskFilmId(value)));
   }, 500);
 
@@ -92,7 +97,16 @@ export function KinopoiskForm() {
       >
         {isPending ? 'Добавление...' : 'Добавить'}
       </Button>
-      {status ? <div className={'text-primary'}>{status}</div> : ''}
+      {status ? (
+        <div className={'text-success'}>
+          Фильм успешно добавлен!
+          <Link className={'bold'} href={filmRef as string}>
+            Ссылка
+          </Link>
+        </div>
+      ) : (
+        status === false && <div className={'text-error'}>Не удалось добавить фильм :(</div>
+      )}
     </form>
   );
 }

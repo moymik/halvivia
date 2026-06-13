@@ -1,6 +1,4 @@
-import { FilmType, FilmWithoutGenres } from '@/entities/films/model/types';
 import { Image } from '@imagekit/next';
-import { cn } from '@/shared';
 import { StarIcon } from '@/shared/ui/icons';
 import Link from 'next/link';
 import { ROUTES } from '@/shared/config';

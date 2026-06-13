@@ -104,3 +104,6 @@ export function mapDbFilmToFilmCardProps(film: DbFilm): FilmCardProps {
     posterUrl: film.poster_url,
   };
 }
+
+// переводит массив фильмов в массив пропсов
+export const mapFilms = (films: DbFilm[]) => films.map(mapDbFilmToFilmCardProps);
