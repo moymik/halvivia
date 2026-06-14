@@ -26,7 +26,7 @@ export async function UserPage({ params }: UserPageProps) {
   }
 
   return (
-    <div className="flex w-full flex-col gap-5 space-y-6 md:flex-row">
+    <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5 px-4 py-8 md:flex-row md:px-8 lg:py-10">
       {/* Profile header */}
       <div className="flex w-max flex-col items-center gap-5 rounded-2xl bg-gray-900 p-6 shadow-lg">
         <div className={'flex-col'}>
