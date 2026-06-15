@@ -65,9 +65,11 @@ export async function FilmPage({ params }: FilmPageProps) {
 
   //console.log(resolvedParams);
   return (
-    <div className={'flex h-fit'}>
-      <HeroSection film={film as Film} />
-    </div>
+    <main className="bg-bg-base text-text-primary">
+      <section className="mx-auto flex w-full max-w-[1100px] px-4 py-8 md:px-8 lg:py-10">
+        <HeroSection film={film as Film} />
+      </section>
+    </main>
   );
 }
 

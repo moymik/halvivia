@@ -1,7 +1,6 @@
 import FilmCard from '@/entities/films/ui/FilmCard';
 import Carousel from '@/shared/ui/carousel/Carousel';
 
-import Link from 'next/link';
 import { getInitialCardsAction } from '@/pages/cinema/api/actions';
 import FilmDialogButton from '@/pages/cinema/ui/FilmDialogButton';
 
@@ -9,7 +8,7 @@ export async function CinemaPage() {
   'use cache';
   const cardProps = await getInitialCardsAction();
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-4 px-4 py-8 md:px-8 lg:py-9">
       <Carousel label={'Новинки'}>
         {cardProps.recentCards.map((prop) => (
           <FilmCard key={prop.id} {...prop} />

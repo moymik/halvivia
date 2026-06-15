@@ -1,0 +1,176 @@
+import 'server-only';
+
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL as string);
+
+export async function createUserTable() {
+  await sql`CREATE EXTENSION IF NOT EXISTS citext;`;
+  await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto;`;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS users
+    (
+      id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name          VARCHAR(20) UNIQUE,
+      email         CITEXT      UNIQUE,
+      password_hash TEXT        NOT NULL,
+      discord_id    VARCHAR(20) UNIQUE,
+      role          VARCHAR(20),
+      avatar_url    VARCHAR(255)
+    );
+  `;
+}
+
+export async function createRefreshTokensTable() {
+  await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto;`;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS refresh_tokens
+    (
+      id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id    UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token      TEXT        NOT NULL UNIQUE,
+      expires_at TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS refresh_tokens_user_id_idx
+      ON refresh_tokens(user_id);
+  `;
+}
+
+export async function createFilmsTable() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS films
+    (
+      id                          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+
+      kinopoisk_id                INTEGER     NOT NULL,
+      kinopoisk_hd_id             TEXT,
+      imdb_id                     TEXT,
+
+      name_ru                     TEXT,
+      name_en                     TEXT,
+      name_original               TEXT,
+
+      poster_url                  TEXT        NOT NULL,
+      poster_url_preview          TEXT        NOT NULL,
+
+      rating_imdb                 NUMERIC,
+      rating_kinopoisk            NUMERIC,
+      web_url                     TEXT        NOT NULL,
+
+      year                        INTEGER,
+      film_length                 INTEGER,
+
+      slogan                      TEXT,
+      description                 TEXT,
+
+      type                        TEXT        NOT NULL,
+
+      rating_age_limits           TEXT,
+
+      last_sync                   TIMESTAMP   NOT NULL,
+
+      countries                   TEXT[]      NOT NULL DEFAULT '{}',
+
+      start_year                  INTEGER,
+      end_year                    INTEGER,
+
+      serial                      BOOLEAN,
+      short_film                  BOOLEAN,
+      completed                   BOOLEAN,
+      created_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_films_created_at
+      ON films (created_at DESC);
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS genres (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL UNIQUE
+    );
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS film_genres (
+      film_id TEXT NOT NULL REFERENCES films(id) ON DELETE CASCADE,
+      genre_id INTEGER NOT NULL REFERENCES genres(id) ON DELETE CASCADE,
+      PRIMARY KEY (film_id, genre_id)
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_film_genres_genre_id
+      ON film_genres (genre_id);
+  `;
+}
+
+export async function createBooksTable() {
+  await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto;`;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS books (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      google_books_id TEXT UNIQUE,
+      open_library_key TEXT UNIQUE,
+      title TEXT NOT NULL,
+      subtitle TEXT,
+      authors TEXT[] NOT NULL DEFAULT '{}',
+      description TEXT,
+      published_date TEXT,
+      publisher TEXT,
+      page_count INTEGER,
+      language TEXT,
+      maturity_rating TEXT,
+      info_link TEXT,
+      preview_link TEXT,
+      canonical_volume_link TEXT,
+      thumbnail_url TEXT,
+      categories TEXT[] NOT NULL DEFAULT '{}',
+      section_ids TEXT[] NOT NULL DEFAULT '{}',
+      external_ratings JSONB NOT NULL DEFAULT '[]'::jsonb,
+      raw_data JSONB NOT NULL DEFAULT '{}'::jsonb,
+      created_by_user_id UUID,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS books_created_at_idx
+      ON books (created_at DESC);
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS books_section_ids_idx
+      ON books USING GIN (section_ids);
+  `;
+
+  await sql`
+    DO $$
+    BEGIN
+      IF to_regclass('public.users') IS NOT NULL
+        AND NOT EXISTS (
+          SELECT 1
+          FROM pg_constraint
+          WHERE conname = 'books_created_by_user_id_fkey'
+        )
+      THEN
+        ALTER TABLE books
+          ADD CONSTRAINT books_created_by_user_id_fkey
+          FOREIGN KEY (created_by_user_id)
+          REFERENCES users(id)
+          ON DELETE SET NULL
+          NOT VALID;
+      END IF;
+    END
+    $$;
+  `;
+}
