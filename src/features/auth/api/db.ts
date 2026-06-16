@@ -40,7 +40,7 @@ export async function createDiscordUser(data: {
   const [row] = await sql`
     INSERT INTO users (name, discord_id, password_hash, role, avatar_url)
     VALUES (${data.name}, ${data.discordId}, ${data.password_hash}, ${data.role}, ${DEFAULT_AVATAR_URL})
-    RETURNING id, name,email, discord_id
+    RETURNING id, name, email, discord_id
   `;
 
   return {
@@ -53,12 +53,16 @@ export async function createDiscordUser(data: {
   };
 }
 
-export async function linkDiscordAccount(userId: string, discordId: string, role: string) {
+export async function linkDiscordAccount(
+  userId: string,
+  discordId: string,
+  role: string,
+): Promise<User> {
   const [row] = await sql`
     UPDATE users
     SET discord_id = ${discordId}, role = ${role}
     WHERE id = ${userId}
-    RETURNING id, name,email, discord_id
+    RETURNING id, name, email, discord_id, role, avatar_url
   `;
 
   return {
@@ -67,5 +71,6 @@ export async function linkDiscordAccount(userId: string, discordId: string, role
     email: row.email,
     discordId: row.discord_id,
     avatarUrl: row.avatar_url,
+    role: row.role,
   };
 }

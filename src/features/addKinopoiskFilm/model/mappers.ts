@@ -1,4 +1,4 @@
-import { Film } from '@/entities/films/model/types';
+import { Film, FilmType } from '@/entities/films/model/types';
 import { KinopoiskFilm } from '@/features/addKinopoiskFilm/model/types';
 
 export function mapKinopoiskFilmToFilm(film: KinopoiskFilm): Film {
@@ -26,7 +26,7 @@ export function mapKinopoiskFilmToFilm(film: KinopoiskFilm): Film {
     slogan: film.slogan,
     description: film.description,
 
-    type: film.type,
+    type: getMappedType(film),
 
     ratingAgeLimits: film.ratingAgeLimits,
 
@@ -43,4 +43,18 @@ export function mapKinopoiskFilmToFilm(film: KinopoiskFilm): Film {
     shortFilm: film.shortFilm,
     completed: film.completed,
   };
+}
+
+function getMappedType(film: KinopoiskFilm): FilmType {
+  if (film.genres.some((item) => item.genre === 'аниме')) {
+    return 'ANIME';
+  }
+  if (film.genres.some((item) => item.genre === 'мультфильм')) {
+    return 'CARTOONS';
+  }
+  if (film.type === 'TV_SERIES' || film.type === 'MINI_SERIES') {
+    return 'SERIES';
+  }
+  if (film.type === 'FILM') return 'FILM';
+  return 'OTHERS';
 }

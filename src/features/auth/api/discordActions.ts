@@ -5,7 +5,6 @@ import { ROUTES } from '@/shared/config';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import { findUserByDiscordId } from '@/entities/user';
 import { issueSession, withAuth } from '@/shared/lib/auth';
-
 import { createDiscordUser } from './db';
 import { DISCORD_ENDPOINTS } from '../model/discordConstraints';
 import { linkDiscordAccount } from './db';
@@ -33,7 +32,7 @@ async function loginWithDiscord(discordUser: DiscordUser, guilds: DiscordGuild[]
 
   if (!user) {
     user = await createDiscordUser({
-      name: discordUser.username + '))000))0',
+      name: 'ds-' + discordUser.username,
       discordId: discordUser.id,
       password_hash: generateRandomPassword(12),
       role: isMember(guilds) ? 'MEMBER' : 'GUEST',

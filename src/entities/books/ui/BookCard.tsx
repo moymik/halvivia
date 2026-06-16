@@ -21,7 +21,7 @@ export function BookCard({ book, priority = false }: BookCardProps) {
       href={`${ROUTES.LIBRARY}/${book.id}`}
       className="group focus-visible:ring-primary relative block shrink-0 overflow-hidden bg-neutral-900 shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition-transform duration-300 ease-out outline-none hover:z-20 hover:-translate-y-1 focus-visible:ring-2"
     >
-      <div className="relative aspect-[104/171] w-[104px] sm:w-[128px] lg:w-[148px]">
+      <div className="relative aspect-104/171 w-26 sm:w-32 lg:w-37">
         {book.thumbnailUrl ? (
           <Image
             fill

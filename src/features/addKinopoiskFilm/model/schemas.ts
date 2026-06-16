@@ -1,5 +1,13 @@
 import z from 'zod';
-import { FilmTypeSchema, GenreSchema } from '@/entities/films/model/Schemas';
+import { GenreSchema } from '@/entities/films/model/Schemas';
+
+export const KinopoiskFilmTypeSchema = z.enum([
+  'FILM',
+  'TV_SERIES',
+  'MINI_SERIES',
+  'VIDEO',
+  'TV_SHOW',
+]);
 
 export const KinopoiskCountrySchema = z.object({
   country: z.string(),
@@ -60,7 +68,7 @@ export const KinopoiskFilmSchema = z.object({
   isTicketsAvailable: z.boolean(),
 
   productionStatus: KinopoiskProductionStatusSchema.nullable(),
-  type: FilmTypeSchema,
+  type: KinopoiskFilmTypeSchema,
 
   ratingMpaa: z.string().nullable(),
   ratingAgeLimits: z.string().nullable(),
@@ -86,7 +94,7 @@ export const KinopoiskSearchFilmSchema = z.object({
   filmId: z.number(),
   nameRu: z.string().nullable(),
   nameEn: z.string().nullable().optional(),
-  type: FilmTypeSchema.optional(),
+  type: KinopoiskFilmTypeSchema.optional(),
   year: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   filmLength: z.string().nullable().optional(),
