@@ -15,7 +15,7 @@ export async function FilmPage({ params }: FilmPageProps) {
   //console.log(resolvedParams);
   return (
     <>
-      <section className="app-x-padding mx-auto flex w-full py-8 lg:py-10">
+      <section className="page-content-width flex py-8">
         <HeroSection film={film as Film} />
       </section>
     </>

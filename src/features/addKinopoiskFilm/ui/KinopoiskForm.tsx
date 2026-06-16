@@ -8,7 +8,6 @@ import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions'
 import { getFilmRefById } from '@/entities/films/lib/utils';
 import Link from 'next/link';
 
-//TODO: убрать /film/ из обязательных
 export function parseKinopoiskFilmId(url: string): number | null {
   if (typeof url !== 'string') return null;
 
