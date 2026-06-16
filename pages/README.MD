@@ -1,1 +1,1 @@
-https://feature-sliced.design/ru/docs/guides/tech/with-nextjs
+https://fsd.how/ru/docs/guides/tech/with-nextjs/#conflict-between-fsd-and-nextjs-in-the-app-layer

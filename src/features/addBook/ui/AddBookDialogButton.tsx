@@ -41,7 +41,7 @@ export function AddBookDialogButton() {
         closeLabel="Вернуться к книгам"
         isOpen={isOpen}
         onClose={closeDialog}
-        className="max-w-[420px] gap-5 px-5 py-10 md:px-8"
+        className="max-w-105 gap-5 px-5 py-10 md:px-8"
       >
         <AddBookForm onAdded={handleAdded} />
       </Dialog>

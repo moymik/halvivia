@@ -21,7 +21,7 @@ export function FilmCard({
       className="relative block w-max overflow-visible hover:z-50"
     >
       <div
-        className={`group relative flex w-[43vw] flex-col gap-1 overflow-visible transition-transform duration-300 ease-out hover:scale-110 md:w-[22vw] xl:w-[17vw] 2xl:w-[15vw]`}
+        className={`group default relative flex w-[43vw] flex-col gap-1 overflow-visible transition-transform duration-300 ease-out hover:scale-110 md:w-[22vw] xl:w-[17vw] 2xl:w-64.25`}
       >
         <Image
           urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}

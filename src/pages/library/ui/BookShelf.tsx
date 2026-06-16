@@ -31,7 +31,7 @@ export function BookShelf({
         </div>
       ) : (
         <div
-          className={`flex min-h-[116px] items-center rounded-lg border border-dashed px-4 text-sm ${
+          className={`flex min-h-29 items-center rounded-lg border border-dashed px-4 text-sm ${
             muted
               ? 'text-text-muted border-white/10'
               : 'border-border-inverse-200 text-text-inverse-500'

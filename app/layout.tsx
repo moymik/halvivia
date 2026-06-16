@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
+import '@/app/styles/globals.css';
 
 import { golosText, roboto } from 'src/shared/config';
 import { Footer } from 'src/widgets/Footer';
 import { Header } from 'src/widgets/Header';
 
-import 'src/app/styles/globals.css';
 import 'src/app/styles/typography.css';
 import { AuthModal } from '@/features/auth/ui/AuthModal';
 import { AuthForm } from '@/features/auth/ui/AuthForm';
@@ -27,8 +27,7 @@ function RootLayout({ children }: RootLayoutProps) {
             <AuthForm></AuthForm>
           </AuthModal>
         </Header>
-
-        <main className="flex-1">{children}</main>
+        <main className="bg-bg-base text-text-secondary flex-1">{children}</main>
         <Footer></Footer>
       </body>
     </html>

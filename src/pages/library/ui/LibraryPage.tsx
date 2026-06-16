@@ -16,9 +16,9 @@ export async function LibraryPage() {
     await getLibraryPageViewModel();
 
   return (
-    <div className="bg-bg-base text-text-primary">
+    <>
       <section className="bg-bg-inverse text-text-inverse">
-        <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5 px-4 py-8 md:px-8 lg:py-9">
+        <div className="page-content-width flex flex-col gap-5 py-8 lg:py-9">
           <BookShelf
             title={RECENT_BOOKS_TITLE}
             books={recentBooks}
@@ -29,8 +29,8 @@ export async function LibraryPage() {
       </section>
 
       <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-42 bg-[url('/library-vector.png')] [background-size:100%_auto] bg-bottom bg-no-repeat opacity-45 md:h-52" />
-        <div className="relative mx-auto flex w-full max-w-[1100px] flex-col gap-10 px-4 py-8 md:px-8 lg:py-9">
+        <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-42 bg-[url('/library-vector.png')] bg-size-[100%_auto] bg-bottom bg-no-repeat opacity-45 md:h-52" />
+        <div className="page-content-width relative flex flex-col gap-10 py-8 lg:py-9">
           <LibraryToolbar canAddBooks={canAddBooks} />
 
           <BookShelf
@@ -51,7 +51,7 @@ export async function LibraryPage() {
           ))}
         </div>
       </section>
-    </div>
+    </>
   );
 }
 
