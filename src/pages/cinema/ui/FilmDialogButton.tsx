@@ -10,6 +10,7 @@ export function FilmDialogButton() {
   return (
     <div>
       <Dialog
+        className={'overflow-visible'}
         title={'Загрузи фильм'}
         closeLabel={'Поиск фильмов'}
         isOpen={filmDialogOpen}

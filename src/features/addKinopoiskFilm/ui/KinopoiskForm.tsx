@@ -7,6 +7,9 @@ import { useDebouncedCallback } from 'use-debounce';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
 import { getFilmRefById } from '@/entities/films/lib/utils';
 import Link from 'next/link';
+import { useSearchByKeyword } from '@/features/addKinopoiskFilm/model/useSearchByKeyword';
+import FilmPreview from '@/features/addKinopoiskFilm/ui/FilmPreview';
+import SearchBox from '@/shared/ui/search-box/SearchBox';
 
 export function parseKinopoiskFilmId(url: string): number | null {
   if (typeof url !== 'string') return null;
@@ -21,6 +24,8 @@ export function KinopoiskForm() {
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState<boolean | null>(null);
   const [filmRef, setFilmRef] = useState<string | null>(null);
+  const [keyword, setKeyword] = useState<string>('');
+  const { data, loading, error, search } = useSearchByKeyword();
 
   function onSubmit() {
     startTransition(async function () {
@@ -38,27 +43,50 @@ export function KinopoiskForm() {
     });
   }
 
-  const debounced = useDebouncedCallback((value: string) => {
+  const debouncedRefValidation = useDebouncedCallback((value: string) => {
     if (currentRef == '') {
       setValidOrEmpty(true);
       setStatus(null);
     } else setValidOrEmpty(Boolean(parseKinopoiskFilmId(value)));
   }, 500);
 
+  const debouncedSearch = useDebouncedCallback((val: string) => {
+    search(val);
+  }, 1000);
+
   useEffect(() => {
-    debounced(currentRef);
-  }, [currentRef, debounced]);
+    debouncedRefValidation(currentRef);
+  }, [currentRef, debouncedRefValidation]);
 
   return (
     <form className="flex w-full flex-col gap-8 lg:w-[22vw]">
       <div className="flex flex-col items-center gap-3.5">
-        <Input
-          searchIcon
-          placeholder="Поиск"
-          className={'text-sm md:text-base lg:text-xl'}
-          type="text"
-          disabled={true}
-        />
+        <div className="relative w-full overflow-visible">
+          <Input
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+              debouncedSearch(e.target.value);
+            }}
+            searchIcon
+            placeholder="Поиск"
+            className={'text-sm md:text-base lg:text-xl'}
+            type="text"
+            disabled={false}
+          />
+          <SearchBox show={keyword.length > 2}>
+            {loading && <p>Loading...</p>}
+            {error && <p>{error}</p>}
+            <ul>
+              {data?.map((film) => (
+                <li key={film.filmId}>
+                  <FilmPreview key={film.filmId} film={film} />
+                </li>
+              ))}
+            </ul>
+          </SearchBox>
+        </div>
+
         <label className="text-text-inverse-500 text-xs lg:text-sm">Введи название фильма</label>
       </div>
       <div className="space-between text-text-inverse-200 flex flex-row items-center gap-4 text-sm md:text-lg">

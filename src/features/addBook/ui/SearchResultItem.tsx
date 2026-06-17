@@ -47,7 +47,7 @@ export function SearchResultItem({ book, isSelected, onSelect }: SearchResultIte
           </span>
         )}
       </span>
-      <span className="text-primary flex items-center justify-center">
+      <span className="text-primary flex w-3.5 items-center justify-center">
         <AddIcon className="h-4 w-4" />
       </span>
     </button>

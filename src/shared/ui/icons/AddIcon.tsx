@@ -12,9 +12,9 @@ export function AddIcon({ className, ...props }: ComponentPropsWithoutRef<'svg'>
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M7.5 0.5V14.5M0.5 7.5H14.5"
+        d="M7.5 2V13M2 7.5H13" // Немного отступили от краев (с 0.5 до 2), чтобы округлые концы не обрезались рамкой SVG
         stroke="currentColor"
-        strokeOpacity="0.7"
+        strokeWidth="3" // <--- ДОБАВЛЕНО: увеличили толщину, теперь углы видно
         strokeLinecap="round"
         strokeLinejoin="round"
       />

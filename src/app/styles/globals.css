@@ -14,6 +14,7 @@
 
   /* Background */
   --color-bg-base: rgba(17, 17, 17, 1);
+  --color-bg-gray-100: rgba(17, 17, 17, 0.1);
   --color-bg-surface: rgba(13, 13, 13, 1);
   --color-bg-inverse: rgba(249, 249, 249, 1);
   --color-bg-overlay: rgba(0, 0, 0, 0.6);

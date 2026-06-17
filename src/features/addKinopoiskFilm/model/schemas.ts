@@ -89,19 +89,32 @@ export const KinopoiskFilmSchema = z.object({
   completed: z.boolean().nullable(),
 });
 
-/// апи v2.1
-export const KinopoiskSearchFilmSchema = z.object({
+/// апи v2.2
+
+export const FilmSearchByKeywordSchema = z.object({
   filmId: z.number(),
+  imdbId: z.string().nullable().optional(),
+
   nameRu: z.string().nullable(),
   nameEn: z.string().nullable().optional(),
-  type: KinopoiskFilmTypeSchema.optional(),
-  year: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
-  filmLength: z.string().nullable().optional(),
-  countries: z.array(KinopoiskCountrySchema).optional(),
-  genres: z.array(GenreSchema).optional(),
+  nameOriginal: z.string().nullable().optional(),
+
+  countries: z.array(KinopoiskCountrySchema),
+  genres: z.array(GenreSchema),
+
   rating: z.string().nullable().optional(),
-  ratingVoteCount: z.number().nullable().optional(),
-  posterUrl: z.string().url().optional(),
-  posterUrlPreview: z.string().url().optional(),
+  ratingImdb: z.number().nullable().optional(),
+  year: z.string().nullable().optional(),
+
+  type: KinopoiskFilmTypeSchema,
+
+  posterUrl: z.string().url(),
+  posterUrlPreview: z.string().url(),
+});
+
+export const FilmSearchByKeywordResponseSchema = z.object({
+  keyword: z.string(),
+  pagesCount: z.number(),
+  films: z.array(FilmSearchByKeywordSchema),
+  searchFilmsCountResult: z.number().nullable(),
 });

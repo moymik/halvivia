@@ -1,7 +1,10 @@
 import 'server-only';
 
 import { addFilm } from '@/entities/films/api/db';
-import { KinopoiskFilm } from '@/features/addKinopoiskFilm/model/types';
+import {
+  FilmSearchByKeywordResponse,
+  KinopoiskFilm,
+} from '@/features/addKinopoiskFilm/model/types';
 import { KinopoiskFilmSchema } from '@/features/addKinopoiskFilm/model/schemas';
 import { mapKinopoiskFilmToFilm } from '@/features/addKinopoiskFilm/model/mappers';
 import { imagekitClient } from '@/shared/api/imagekit/client';
@@ -56,4 +59,26 @@ export async function addFilmByKinopoiskId(id: number): Promise<string> {
   }
 
   return addFilm(film);
+}
+
+export async function searchFilmsByKeyword(keyword: string) {
+  const res = await fetch(
+    `https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${encodeURIComponent(keyword)}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': process.env.KINOPOISK_API_PRIVATE_KEY!,
+      },
+      cache: 'no-store',
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Kinopoisk API error: ${res.status}`);
+  }
+
+  const data: FilmSearchByKeywordResponse = await res.json();
+
+  return data;
 }
