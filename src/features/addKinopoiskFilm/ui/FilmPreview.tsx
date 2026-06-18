@@ -5,30 +5,36 @@ import Image from 'next/image';
 
 export type FilmPreviewProps = {
   film: FilmSearchByKeywordItem;
+  onAdd: (filmId: number) => void;
+  isPending: boolean;
 };
 
-export function FilmPreview({ film }: FilmPreviewProps) {
+export function FilmPreview({ film, onAdd, isPending }: FilmPreviewProps) {
   return (
-    <div className="hover:bg-bg-gray-100 flex items-center gap-3 rounded-md border p-2">
+    <div className="hover:bg-bg-gray-100 flex h-19 items-center gap-3">
       {/* Poster */}
       <img
         src={film.posterUrlPreview}
         alt={'Постер' + film.nameRu}
-        className="h-16 w-12 rounded object-cover"
+        className="h-19 w-12 object-cover"
       />
 
       {/* Info */}
-      <div className="flex flex-1 flex-col items-start gap-1">
-        <h3 className="line-clamp-1 text-sm font-medium">{film.nameRu}</h3>
+      <div className="flex flex-1 flex-col">
+        <h3 className="font-body lg:font-heading line-clamp-1 text-sm font-bold lg:text-xl lg:font-semibold">
+          {film.nameRu}
+        </h3>
 
         {/* Secondary title */}
         {(film.nameEn || film.nameOriginal) && (
-          <p className="line-clamp-1 text-xs text-gray-500">{film.nameEn || film.nameOriginal}</p>
+          <p className="line-clamp-1 text-xs text-gray-500 lg:text-base">
+            {film.nameEn || film.nameOriginal}
+          </p>
         )}
         {/* Rating */}
 
         {film.rating !== 'null' && film.rating && (
-          <span className="text-xs">
+          <span className="flex flex-row items-center gap-1 text-xs lg:text-base">
             <Image
               src="/kinopoisk-logo.png"
               width={14}
@@ -43,7 +49,7 @@ export function FilmPreview({ film }: FilmPreviewProps) {
       </div>
 
       {/* Action */}
-      <button onClick={() => addKinopoiskFilmAction(film.filmId)}>
+      <button disabled={isPending} type={'button'} onClick={() => onAdd(film.filmId)}>
         <Icon name={'AddIcon'} className={'text-primary'}></Icon>
       </button>
     </div>

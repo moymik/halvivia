@@ -18,21 +18,15 @@ export function SearchBox({
     show && (
       <div
         className={cn(
-          'mt-1 p-5 lg:absolute lg:top-full lg:right-0 lg:left-0 lg:z-50' +
-            ' flex max-h-138.5 flex-col gap-4 ' +
-            ' rounded-lg border border-gray-200 bg-white shadow-lg ' +
+          'mt-1 w-full md:absolute md:top-full md:right-0 md:left-0 md:z-50 md:p-5' +
+            ' flex scrollbar-thumb-transparent flex-col gap-4 ' +
+            ' border-border-inverse-200 bg-bg-inverse rounded-lg md:border md:shadow-lg ' +
             ' ${className}',
           className,
         )}
       >
-        <p className="text-text-inverse-500 px-4 pt-4 pb-2 text-sm">{hint}</p>
-        <div className={'h-91.25 overflow-y-scroll'}>{children}</div>
-        <p className="text-text-inverse-500 mx-auto px-4 pt-4 pb-2 text-sm">
-          Не нашел нужный фильм? Добавь по кнопке
-        </p>
-        <Button variant={'primaryOnLight'} disabled className={'mx-auto w-full'}>
-          Добавить фильм
-        </Button>
+        <p className="text-text-inverse-500 text-sm">{hint}</p>
+        {children}
       </div>
     )
   );

@@ -17,6 +17,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@base-ui/react": "^1.5.0",
     "@imagekit/next": "^2.1.5",
     "@imagekit/nodejs": "^7.7.0",
     "@neondatabase/serverless": "^1.1.0",

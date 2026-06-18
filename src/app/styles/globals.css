@@ -49,10 +49,11 @@
   --color-border-inverse: 17, 17, 17;
   --color-border-inverse-500: rgba(17, 17, 17, 0.5);
   --color-border-inverse-300: 17, 17, 12;
-  --color-border-inverse-200: rgba(17, 17, 12, 0.5);
+  --color-border-inverse-200: rgba(17, 17, 17, 0.2);
   --color-border-inverse-100: 17, 17, 1;
   --color-border-inverse-700: 17, 17, 2;
   --color-border-inverse-900: rgba(130, 40, 50, 0.2);
+
   /* Font weights */
   --font-weight-normal: 400;
   --font-weight-medium: 500;

@@ -10,10 +10,10 @@ import Link from 'next/link';
 import { useSearchByKeyword } from '@/features/addKinopoiskFilm/model/useSearchByKeyword';
 import FilmPreview from '@/features/addKinopoiskFilm/ui/FilmPreview';
 import SearchBox from '@/shared/ui/search-box/SearchBox';
+import { StatusBlock } from '@/features/addKinopoiskFilm/ui/StatusBlock';
 
 export function parseKinopoiskFilmId(url: string): number | null {
   if (typeof url !== 'string') return null;
-
   const match = url.match(/kinopoisk\.ru\/[^/]+\/(\d+)\b/);
   return match ? Number(match[1]) : null;
 }
@@ -25,29 +25,48 @@ export function KinopoiskForm() {
   const [status, setStatus] = useState<boolean | null>(null);
   const [filmRef, setFilmRef] = useState<string | null>(null);
   const [keyword, setKeyword] = useState<string>('');
+
   const { data, loading, error, search } = useSearchByKeyword();
 
-  function onSubmit() {
-    startTransition(async function () {
-      if (!isValidOrEmpty) {
-        return;
+  const runAddFilm = (filmId: number) => {
+    startTransition(async () => {
+      const res = await addKinopoiskFilmAction(filmId);
+
+      if (res.success && res.filmId) {
+        setFilmRef(getFilmRefById(res.filmId));
+        setStatus(true);
+      } else {
+        setStatus(false);
       }
+    });
+  };
+
+  const onSubmit = () => {
+    startTransition(async () => {
+      if (!isValidOrEmpty) return;
+
       const parsed = parseKinopoiskFilmId(currentRef);
       if (parsed === null) return;
 
       const res = await addKinopoiskFilmAction(parsed);
+
       if (res.success && res.filmId) {
         setFilmRef(getFilmRefById(res.filmId));
         setStatus(true);
-      } else setStatus(false);
+      } else {
+        setStatus(false);
+      }
     });
-  }
+  };
 
   const debouncedRefValidation = useDebouncedCallback((value: string) => {
-    if (currentRef == '') {
+    if (value === '') {
       setValidOrEmpty(true);
       setStatus(null);
-    } else setValidOrEmpty(Boolean(parseKinopoiskFilmId(value)));
+      return;
+    }
+
+    setValidOrEmpty(Boolean(parseKinopoiskFilmId(value)));
   }, 500);
 
   const debouncedSearch = useDebouncedCallback((val: string) => {
@@ -59,81 +78,103 @@ export function KinopoiskForm() {
   }, [currentRef, debouncedRefValidation]);
 
   return (
-    <form className="flex w-full flex-col gap-8 lg:w-[22vw]">
-      <div className="flex flex-col items-center gap-3.5">
-        <div className="relative w-full overflow-visible">
-          <Input
-            value={keyword}
-            onChange={(e) => {
-              setKeyword(e.target.value);
-              debouncedSearch(e.target.value);
-            }}
-            searchIcon
-            placeholder="Поиск"
-            className={'text-sm md:text-base lg:text-xl'}
-            type="text"
-            disabled={false}
-          />
-          <SearchBox show={keyword.length > 2}>
-            {loading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
-            <ul>
-              {data?.map((film) => (
-                <li key={film.filmId}>
-                  <FilmPreview key={film.filmId} film={film} />
-                </li>
-              ))}
-            </ul>
-          </SearchBox>
+    <form className="flex w-full min-w-100 flex-col gap-8 md:w-[22vw]">
+      <div className="relative flex w-full flex-col items-center gap-3.5 overflow-visible">
+        <Input
+          value={keyword}
+          onChange={(e) => {
+            setKeyword(e.target.value);
+            debouncedSearch(e.target.value);
+          }}
+          searchIcon
+          placeholder="Поиск"
+          className="text-sm md:text-base lg:text-xl"
+          type="text"
+        />
+
+        {keyword.length === 0 && (
+          <label className="text-text-inverse-500 text-xs lg:text-sm">Введи название фильма`</label>
+        )}
+
+        <SearchBox show={keyword.length > 2}>
+          {loading && <p>Loading...</p>}
+          {error && <p>{error}</p>}
+
+          <div className="flex flex-col items-start gap-4 lg:items-center">
+            <div className="h-91.25 w-full overflow-y-scroll">
+              <ul className="flex flex-col gap-1">
+                {data?.map((film) => (
+                  <li key={film.filmId}>
+                    <FilmPreview
+                      film={film}
+                      onAdd={(filmId) => runAddFilm(filmId)}
+                      isPending={isPending}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p className="text-text-inverse-500">Не нашел нужный фильм? Добавь по кнопке</p>
+
+            <Button
+              disabled={isPending || !isValidOrEmpty}
+              onClick={onSubmit}
+              type="button"
+              variant="primaryOnLight"
+              className="w-full lg:text-xl"
+            >
+              {isPending ? 'Добавление...' : 'Добавить'}
+            </Button>
+
+            <StatusBlock status={status} filmRef={filmRef} />
+          </div>
+        </SearchBox>
+      </div>
+
+      <div
+        className={`flex flex-col gap-10 ${
+          keyword.length === 0 ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+      >
+        <div className="text-text-inverse-200 flex flex-row items-center gap-4 text-sm md:text-lg">
+          <hr className="flex-1" />
+          или
+          <hr className="flex-1" />
         </div>
 
-        <label className="text-text-inverse-500 text-xs lg:text-sm">Введи название фильма</label>
-      </div>
-      <div className="space-between text-text-inverse-200 flex flex-row items-center gap-4 text-sm md:text-lg">
-        <hr className="flex-1" />
-        или
-        <hr className="flex-1" />
-      </div>
-      <div className="flex flex-col items-center gap-2.5 lg:gap-3">
-        <div className="flex min-h-14 w-full flex-col items-center gap-1 lg:h-17.5">
+        <div className="flex min-h-14 w-full flex-col items-center gap-1">
           <Input
             value={currentRef}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setCurrentRef(e.target.value);
-            }}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentRef(e.target.value)}
             placeholder="https://"
             className="text-sm md:text-base lg:text-xl"
             type="text"
           />
-          <label
-            className={`text-error block w-fit text-[10px] transition-opacity duration-200 lg:text-xs ${isValidOrEmpty ? '-translate-y-1 opacity-0' : 'translate-y-0 opacity-100'} `}
-          >
-            *Видеосервис не поддерживается или ссылка некорректная
+
+          {!isValidOrEmpty && (
+            <label className="text-error block w-fit text-[10px] lg:text-xs">
+              *Видеосервис не поддерживается или ссылка некорректная
+            </label>
+          )}
+
+          <label className="text-text-inverse-500 mt-2.5 text-xs lg:text-sm">
+            Укажи ссылку на фильм на Кинопоиске
           </label>
         </div>
-        <label className="text-text-inverse-500 text-xs lg:text-sm">
-          Укажи ссылку на фильм на Кинопоиске
-        </label>
+
+        <Button
+          disabled={isPending || !isValidOrEmpty}
+          onClick={onSubmit}
+          type="button"
+          variant="primaryOnLight"
+          className="w-full lg:text-xl"
+        >
+          {isPending ? 'Добавление...' : 'Добавить'}
+        </Button>
+
+        <StatusBlock status={status} filmRef={filmRef} />
       </div>
-      <Button
-        disabled={isPending}
-        onClick={onSubmit}
-        type="button"
-        variant="primaryOnLight"
-        className="w-full lg:text-xl"
-      >
-        {isPending ? 'Добавление...' : 'Добавить'}
-      </Button>
-      {status ? (
-        <div className={'text-success'}>
-          Фильм успешно добавлен!
-          <Link className={'bold'} href={filmRef as string}>
-            Ссылка
-          </Link>
-        </div>
-      ) : (
-        status === false && <div className={'text-error'}>Не удалось добавить фильм :(</div>
-      )}
     </form>
   );
 }
