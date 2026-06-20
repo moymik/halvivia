@@ -3,7 +3,7 @@ import { cn } from '@/shared';
 import { UserAvatarProps } from '@/entities/user/ui/UserAvatarMini';
 
 export function UserAvatarFull({ user, className }: UserAvatarProps) {
-  return user.avatarUrl ? (
+  return user?.avatarUrl ? (
     <div className={'rounded-lg shadow'}>
       <Image
         urlEndpoint={`https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`} // New prop
