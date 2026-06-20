@@ -9,7 +9,7 @@ import { CommentWithAuthor, CommentWithAuthorTree } from '@/widgets/CommentSecti
 import { getCommentsWithAuthorAction } from '@/widgets/CommentSection/api/actions';
 import { CommentNode } from '@/widgets/CommentSection/ui/CommentNode';
 import { insertCommentWithAuthor } from '@/widgets/CommentSection/model/insertCommentWithAuthor';
-type Props = Omit<CreateCommentInput, 'content'> & { className: string };
+type Props = Omit<CreateCommentInput, 'content'> & { className?: string };
 
 export function CommentSection({ entityType, entityId, className }: Props) {
   const [comments, setComments] = useState<CommentWithAuthorTree[]>([]);
@@ -33,10 +33,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
 
   return (
     <section
-      className={cn(
-        'border-border-default text-text-inverse page-content-width mb-16 flex flex-col gap-5 border',
-        className,
-      )}
+      className={cn('text-text-inverse page-content-width mb-16 flex flex-col gap-5', className)}
     >
       <h2 className={'lg:text-h2-size mt-8 text-xl font-bold'}>Комментарии</h2>
 

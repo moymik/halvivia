@@ -7,6 +7,7 @@ import { connection } from 'next/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { CommentSection } from '@/widgets/CommentSection/ui/CommentSection';
 
 type BookPageProps = {
   params: Promise<{
@@ -75,6 +76,9 @@ export async function BookPageContent({ params }: BookPageProps) {
             )}
           </div>
         </div>
+      </section>
+      <section className="bg-bg-inverse flex py-8">
+        <CommentSection entityType={'book'} entityId={id}></CommentSection>
       </section>
     </>
   );

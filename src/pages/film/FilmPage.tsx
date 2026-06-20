@@ -20,7 +20,7 @@ export async function FilmPage({ params }: FilmPageProps) {
         <HeroSection film={film as Film} />
       </section>
       <section className="bg-bg-inverse flex py-8">
-        <CommentSection className={''} entityType={'film'} entityId={id}></CommentSection>
+        <CommentSection entityType={'film'} entityId={id}></CommentSection>
       </section>
     </>
   );
