@@ -14,10 +14,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "db:init": "tsx scripts/initDB.ts"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
     "@imagekit/next": "^2.1.5",
     "@imagekit/nodejs": "^7.7.0",
     "@neondatabase/serverless": "^1.1.0",
@@ -25,8 +25,10 @@
     "@vercel/blob": "^2.4.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "dotenv": "^17.4.2",
     "jose": "^6.2.3",
     "next": "16.2.6",
+    "radix-ui": "^1.6.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.6.0",
@@ -76,6 +78,7 @@
     "tailwindcss": "^4",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
     "typescript": "^5",
     "vite": "^8.0.16",
     "vitest": "^4.1.8"

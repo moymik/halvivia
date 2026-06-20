@@ -9,6 +9,8 @@ export type User = {
   avatarUrl: string | null;
 };
 
+export type PublicUser = Pick<User, 'id' | 'name' | 'avatarUrl' | 'role'>;
+
 export const UserSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1).max(20),

@@ -1,9 +1,7 @@
-import 'server-only';
-
-import { createBooksTable } from './src/shared/lib/db/initSchema';
+import { createCommentsTable } from './initSchema';
 
 async function main() {
-  await createBooksTable();
+  await createCommentsTable();
 }
 
 const isDirectRun =

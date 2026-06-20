@@ -6,7 +6,6 @@ import { ChangeEvent, useState, useTransition, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { addKinopoiskFilmAction } from '@/features/addKinopoiskFilm/api/actions';
 import { getFilmRefById } from '@/entities/films/lib/utils';
-import Link from 'next/link';
 import { useSearchByKeyword } from '@/features/addKinopoiskFilm/model/useSearchByKeyword';
 import FilmPreview from '@/features/addKinopoiskFilm/ui/FilmPreview';
 import SearchBox from '@/shared/ui/search-box/SearchBox';

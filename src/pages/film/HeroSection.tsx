@@ -13,7 +13,6 @@ function parseAgeLimits(age: string | null) {
 }
 
 export function HeroSection({ film }: HeroSectionProps) {
-  console.log(film);
   return (
     <div className="flex flex-col items-center gap-6">
       <Poster filmName={film.nameRu} posterUrl={film.posterUrl}></Poster>

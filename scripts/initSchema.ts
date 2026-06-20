@@ -1,4 +1,8 @@
-import 'server-only';
+import dotenv from 'dotenv';
+
+dotenv.config({
+  path: '.env.local',
+});
 
 import { neon } from '@neondatabase/serverless';
 
@@ -173,4 +177,47 @@ export async function createBooksTable() {
     END
     $$;
   `;
+}
+
+export async function createCommentsTable() {
+  await sql`
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS comments (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+      content TEXT NOT NULL,
+
+      -- к чему относится комментарий (film | book)
+      entity_type TEXT NOT NULL,
+      entity_id UUID NOT NULL,
+
+      --  вложенные комментарии (reply to comment)
+      parent_id UUID REFERENCES comments(id) ON DELETE CASCADE,
+
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS comments_entity_idx
+      ON comments (entity_type, entity_id);
+  `;
+
+  await sql`
+     CREATE INDEX IF NOT EXISTS comments_parent_idx
+     ON comments (parent_id);
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS comments_user_idx
+      ON comments (user_id);
+  `;
+
+  await sql`CREATE INDEX IF NOT EXISTS comments_entity_created_idx
+    ON comments (entity_type, entity_id, created_at DESC);`;
 }
