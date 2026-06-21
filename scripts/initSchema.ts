@@ -221,3 +221,86 @@ export async function createCommentsTable() {
   await sql`CREATE INDEX IF NOT EXISTS comments_entity_created_idx
     ON comments (entity_type, entity_id, created_at DESC);`;
 }
+
+export async function createRatingsTable() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS ratings
+    (
+      id          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+      user_id     UUID        NOT NULL REFERENCES users (id),
+
+      subject_type TEXT        NOT NULL,
+      subject_id   UUID        NOT NULL,
+
+      rating      SMALLINT,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
+  await sql`
+    DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1
+          FROM pg_constraint
+          WHERE conname = 'unique_user_entity_rating'
+        ) THEN
+          ALTER TABLE ratings
+            ADD CONSTRAINT unique_user_entity_rating
+              UNIQUE (user_id, subject_type, subject_id);
+        END IF;
+      END $$;
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_ratings_user_created
+      ON ratings (user_id, created_at DESC);
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_ratings_entity_created
+      ON ratings (subject_id, subject_type, created_at DESC);
+  `;
+}
+
+export async function createReviewsTable() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS reviews
+    (
+      id          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+      user_id     UUID        NOT NULL REFERENCES users (id),
+
+      subject_type TEXT        NOT NULL,
+      subject_id   UUID        NOT NULL,
+
+      title       VARCHAR(100),
+      review_text TEXT,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
+  await sql`
+    DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1
+          FROM pg_constraint
+          WHERE conname = 'unique_user_entity_review'
+        ) THEN
+          ALTER TABLE reviews
+            ADD CONSTRAINT unique_user_entity_review
+              UNIQUE (user_id, subject_type, subject_id);
+        END IF;
+      END $$;
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_reviews_user_created
+      ON reviews (user_id, created_at DESC);
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_reviews_entity_created
+      ON reviews (subject_id, subject_type, created_at DESC);
+  `;
+}

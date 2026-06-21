@@ -1,7 +1,7 @@
-import { createCommentsTable } from './initSchema';
+import { createCommentsTable, createRatingsTable, createReviewsTable } from './initSchema';
 
 async function main() {
-  await createCommentsTable();
+  await createRatingsTable();
 }
 
 const isDirectRun =

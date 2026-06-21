@@ -1,6 +1,6 @@
-import { sql } from '@/shared/lib/db';
+import 'server-only';
 
-('server-only');
+import { sql } from '@/shared/lib/db';
 
 import { CommentEntityType, DbComment } from '@/entities/comments/model/types';
 
