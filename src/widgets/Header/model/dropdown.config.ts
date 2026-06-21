@@ -6,7 +6,7 @@ type DropdownLink = {
   iconName: IconName;
 };
 
-export const dropdownLinks = [
+export const userDropdownLinks = [
   { link: NAVIGATION_LINKS.PROFILE, iconName: 'ProfileIcon' },
   { link: NAVIGATION_LINKS.REVIEWS, iconName: 'StarIcon' },
   { link: NAVIGATION_LINKS.DOWNLOADS, iconName: 'DownloadIcon' },

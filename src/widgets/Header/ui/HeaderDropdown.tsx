@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { dropdownLinks } from '@/widgets/Header/config/dropdown.config';
+import { userDropdownLinks } from '@/widgets/Header/model/dropdown.config';
 import DropdownLink from '@/widgets/Header/ui/DropdownLink';
 import { User } from '@/entities/user';
 import { logout } from '@/features/auth';
@@ -31,7 +31,7 @@ export function HeaderDropdown({ user }: HeaderProps) {
             <p>{user.name}</p>
           </div>
           <div className="border-border-second flex w-screen flex-col gap-3 border-t py-5 md:w-auto md:items-start">
-            {dropdownLinks.map((link) => (
+            {userDropdownLinks.map((link) => (
               <DropdownLink
                 setOpen={setOpen}
                 link={link.link}

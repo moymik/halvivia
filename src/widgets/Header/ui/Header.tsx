@@ -1,11 +1,11 @@
 import TabPanel from './TabPanel';
-import { headerTabLinks } from '../config/header.config';
+import { headerTabLinks } from '@/widgets/Header/model/header.config';
 import { Icon } from '@/shared/ui/icon';
 import { AppLink } from '@/shared/ui/app-link';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import HeaderUserBar from '@/widgets/Header/ui/HeaderUserBar';
 import { Suspense } from 'react';
-import { DropdownBurger } from '@/widgets/Header/ui/DropdownBurger';
+import { BurgerMenu } from '@/widgets/Header/ui/BurgerMenu';
 
 export async function Header({ children }: { children: React.ReactNode }) {
   return (
@@ -14,7 +14,7 @@ export async function Header({ children }: { children: React.ReactNode }) {
         'border-border-default bg-bg-surface sticky top-0 z-500 flex h-18 w-full flex-row items-center justify-between border-b px-4 md:z-100 md:px-8.5 lg:h-23 lg:px-20 xl:px-25.5 2xl:px-[15%]'
       }
     >
-      <DropdownBurger aria-label="Открыть меню" aria-controls="main-navigation"></DropdownBurger>
+      <BurgerMenu aria-label="Открыть меню" aria-controls="main-navigation"></BurgerMenu>
 
       <div className="absolute top-1/2 left-1/2 flex h-full -translate-x-1/2 -translate-y-1/2 items-center justify-between lg:static lg:translate-0">
         <AppLink
