@@ -47,13 +47,13 @@ async function loginWithDiscord(discordUser: DiscordUser, guilds: DiscordGuild[]
 async function linkDiscord(discordUser: DiscordUser, guilds: DiscordGuild[]) {
   const session = await withAuth();
 
-  if (!session) {
+  if (session.status === 'unauthenticated') {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const existingUser = await findUserByDiscordId(discordUser.id);
 
-  if (existingUser && existingUser.id !== session.userId) {
+  if (existingUser && existingUser.id !== session.payload.userId) {
     return Response.json(
       {
         error: 'Discord account already linked to another user',
@@ -63,7 +63,7 @@ async function linkDiscord(discordUser: DiscordUser, guilds: DiscordGuild[]) {
   }
 
   const role: string = isMember(guilds) ? 'MEMBER' : 'GUEST';
-  const res = await linkDiscordAccount(session.userId, discordUser.id, role);
+  const res = await linkDiscordAccount(session.payload.userId, discordUser.id, role);
 
   if (!res) {
     return Response.json({ error: 'Failed to link discord account' }, { status: 500 });

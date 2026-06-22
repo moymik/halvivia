@@ -104,16 +104,16 @@ function normalizeSectionIds(sectionIds: BookSectionId[]): BookSectionId[] {
 export async function addBookAction(input: AddBookSelectionInput): Promise<AddBookResult> {
   const session = await withAuth();
 
-  if (!session) {
+  if (session.status === 'unauthenticated') {
     redirect(ROUTES.LOGIN);
   }
 
-  if (session.role !== 'MEMBER') {
+  if (session.payload.role !== 'MEMBER') {
     return { success: false, error: 'UNAUTHORIZED' };
   }
 
   const rateLimit = checkRateLimit({
-    key: `book-add:${session.userId}:${await getRequestIp()}`,
+    key: `book-add:${session.payload.userId}:${await getRequestIp()}`,
     limit: ADD_BOOK_RATE_LIMIT,
     windowMs: ADD_BOOK_RATE_LIMIT_WINDOW_MS,
   });
@@ -134,7 +134,7 @@ export async function addBookAction(input: AddBookSelectionInput): Promise<AddBo
         book: externalBook,
         sectionIds: normalizeSectionIds(input.sectionIds),
       },
-      session.userId,
+      session.payload.userId,
     );
 
     if (!created) {

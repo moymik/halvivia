@@ -12,11 +12,11 @@ export async function addKinopoiskFilmAction(id: number) {
   const controller = new AbortController();
   const session = await withAuth();
 
-  if (!session) {
+  if (session.status === 'unauthenticated') {
     redirect(ROUTES.LOGIN);
   }
 
-  if (session.role !== 'MEMBER') {
+  if (session.payload.role !== 'MEMBER') {
     return { success: false, error: 'Unauthorized' };
   }
 

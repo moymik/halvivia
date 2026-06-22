@@ -31,14 +31,14 @@ export async function createCommentAction(
 
   const session = await withAuth();
 
-  if (!session) {
+  if (session.status === 'unauthenticated') {
     return {
       success: false,
       error: 'UNAUTHENTICATED',
     };
   }
 
-  if (session.role !== 'MEMBER') {
+  if (session.payload.role !== 'MEMBER') {
     return {
       success: false,
       error: 'UNAUTHORIZED',
@@ -48,7 +48,7 @@ export async function createCommentAction(
   try {
     const dbComment = await createComment({
       ...parsed.data,
-      userId: session.userId,
+      userId: session.payload.userId,
     });
 
     return {

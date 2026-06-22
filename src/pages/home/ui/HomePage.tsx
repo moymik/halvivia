@@ -1,16 +1,14 @@
 import { withAuth } from '@/shared/lib/auth';
 
 import { findUserById } from '@/entities/user';
-import { Image } from '@imagekit/next';
-import NextImage from 'next/image';
 
 export async function testAuthAction() {
   'use server';
   const session = await withAuth();
   console.log('SESSION:', session);
 
-  if (session) {
-    const user = await findUserById(session?.userId);
+  if (session.status === 'authenticated') {
+    const user = await findUserById(session.payload.userId);
     console.log(user);
   }
 }
