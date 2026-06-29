@@ -3,7 +3,7 @@ import { CommentEntityType } from '@/entities/comments/model/types';
 import { verifySession } from '@/shared/lib/auth';
 import { GetCommentsSchema } from '../model/schemas';
 
-import { ActionResult } from '@/entities/comments/api/actions';
+import { ActionResult } from '@/shared/model';
 import { getCommentsWithAuthors } from '@/widgets/CommentSection/api/db';
 import { CommentWithAuthorTree } from '@/widgets/CommentSection/model/types';
 import { buildCommentWithAuthorTree } from '@/widgets/CommentSection/model/buildCommentWithAuthorTree';

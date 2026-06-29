@@ -1,20 +1,12 @@
 'use server';
+
 import { withAuth } from '@/shared/lib/auth';
 import { createComment } from '@/entities/comments/api/db';
 import { CreateCommentInput } from '@/entities/comments/model/types';
 import { Comment } from '@/entities/comments/model/types';
 import { mapDbCommentToComment } from '@/entities/comments/model/mappers';
-import { AppErrorCode } from '@/shared';
 import { CreateCommentSchema } from '@/entities/comments/model/schemas';
-
-export type ActionErrorCode = AppErrorCode;
-
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | {
-      success: false;
-      error: ActionErrorCode;
-    };
+import { ActionResult } from '@/shared/model';
 
 export async function createCommentAction(
   input: CreateCommentInput,

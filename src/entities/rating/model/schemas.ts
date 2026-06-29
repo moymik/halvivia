@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SubjectSchema } from '@/subject/schema';
+import { SubjectSchema } from '@/shared/model/subject/schema';
 
 export const RatingValueSchema = z.union([
   z.literal(-1),

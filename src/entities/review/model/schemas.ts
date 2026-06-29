@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { RatingValueSchema } from '@/entities/rating/model/schemas';
-import { SubjectSchema, SubjectTypeSchema } from '@/subject/schema';
+import { SubjectSchema, SubjectTypeSchema } from '@/shared/model/subject/schema';
 
 export const ReviewSchema = z.object({
   id: z.string().uuid(),

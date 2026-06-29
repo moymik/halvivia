@@ -1,5 +1,5 @@
 import { DbRating, Rating, RatingValue } from '@/entities/rating/model/types';
-import { Subject } from '@/subject/types';
+import { Subject } from '@/shared/model/subject/types';
 
 export function normalizeRating(value: number | null): RatingValue {
   if (value === null) return null;

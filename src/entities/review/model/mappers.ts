@@ -1,5 +1,5 @@
 import { DbReviewWithRating, Review } from '@/entities/review/model/types';
-import { SubjectType } from '@/subject/types';
+import { SubjectType } from '@/shared/model/subject/types';
 
 export function mapDbReviewWithRatingToReview(db: DbReviewWithRating): Review {
   return {
