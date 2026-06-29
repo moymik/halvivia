@@ -304,3 +304,31 @@ export async function createReviewsTable() {
       ON reviews (subject_id, subject_type, created_at DESC);
   `;
 }
+
+export async function addFilmRatingsFields() {
+  await sql`
+    ALTER TABLE films
+    ADD COLUMN IF NOT EXISTS rating_sum INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS rating_count INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS rating_avg NUMERIC(3,2);
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS films_rating_avg_idx
+    ON films (rating_avg DESC);
+  `;
+}
+
+export async function addBookRatingsFields() {
+  await sql`
+    ALTER TABLE books
+    ADD COLUMN IF NOT EXISTS rating_sum INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS rating_count INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS rating_avg NUMERIC(3,2);
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS books_rating_avg_idx
+    ON books (rating_avg DESC);
+  `;
+}

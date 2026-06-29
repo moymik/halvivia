@@ -8,7 +8,7 @@ import { Header } from 'src/widgets/Header';
 import 'src/app/styles/typography.css';
 import { AuthModal } from '@/features/auth/ui/AuthModal';
 import { AuthForm } from '@/features/auth/ui/AuthForm';
-
+import { QueryProvider } from '@/app/providers/QueryProvider';
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
 }>;
@@ -22,13 +22,15 @@ function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
       <body className="flex min-h-full flex-col justify-between">
-        <Header>
-          <AuthModal>
-            <AuthForm></AuthForm>
-          </AuthModal>
-        </Header>
-        <main className="bg-bg-base text-text-secondary flex-1">{children}</main>
-        <Footer></Footer>
+        <QueryProvider>
+          <Header>
+            <AuthModal>
+              <AuthForm></AuthForm>
+            </AuthModal>
+          </Header>
+          <main className="bg-bg-base text-text-secondary flex-1">{children}</main>
+          <Footer></Footer>
+        </QueryProvider>
       </body>
     </html>
   );
