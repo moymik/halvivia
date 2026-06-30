@@ -4,6 +4,10 @@
   --font-body: var(--font-roboto);
   --font-heading: var(--font-golos);
 
+  --color-green-base: rgba(18, 214, 0, 1);
+  --color-red-base: rgba(224, 0, 0, 1);
+  --color-yellow-base: rgba(255, 255, 0, 1);
+
   /* Breakpoints*/
   --breakpoint-md: 800px;
   --breakpoint-lg: 1280px;

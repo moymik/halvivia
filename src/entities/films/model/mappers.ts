@@ -47,6 +47,9 @@ export function mapDbFilmToFilmWothoutGenres(db: DbFilm): FilmWithoutGenres {
     serial: db.serial,
     shortFilm: db.short_film,
     completed: db.completed,
+
+    ratingAvg: Number(db.rating_avg),
+    ratingCount: db.rating_count,
   };
 }
 
@@ -94,6 +97,9 @@ export function mapDbFilmWithGenresToFilm(db: DbFilmWithGenres): Film {
     serial: db.serial,
     shortFilm: db.short_film,
     completed: db.completed,
+
+    ratingAvg: Number(db.rating_avg),
+    ratingCount: db.rating_count,
   };
 }
 
@@ -102,6 +108,7 @@ export function mapDbFilmToFilmCardProps(film: DbFilm): FilmCardProps {
     id: film.id,
     name: film.name_ru,
     posterUrl: film.poster_url,
+    ratingAvg: Number(film.rating_avg),
   };
 }
 

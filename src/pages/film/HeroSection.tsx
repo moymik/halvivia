@@ -13,6 +13,13 @@ function parseAgeLimits(age: string | null) {
   return age.substring(3) + '+';
 }
 
+function getRatingColorClass(avg: number | null) {
+  if (avg === null) return 'text-white-500';
+  if (avg < 0) return 'text-red-base';
+  if (avg <= 1) return 'text-yellow-base';
+  return 'text-green-base';
+}
+
 export function HeroSection({ film }: HeroSectionProps) {
   return (
     <div className="flex flex-col items-center gap-6">
@@ -25,7 +32,11 @@ export function HeroSection({ film }: HeroSectionProps) {
         <p className="text-text-secondary flex flex-row items-center justify-between gap-2.5">
           <span>{film.nameOriginal || film.nameEn}</span>
           <span>{parseAgeLimits(film.ratingAgeLimits)}</span>
-          <StarIcon className={'inline w-4'}></StarIcon>
+          <span
+            className={`flex flex-row items-center gap-1 ${getRatingColorClass(film.ratingAvg)}`}
+          >
+            <StarIcon className={`inline w-4`} fill="currentColor"></StarIcon> {`${film.ratingAvg}`}
+          </span>
         </p>
       </div>
       <Description description={film.description}></Description>

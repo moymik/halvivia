@@ -31,6 +31,9 @@ export interface Film {
   shortFilm: boolean | null;
   completed: boolean | null;
   genres: Genre[];
+
+  ratingAvg: number | null;
+  ratingCount: number | null;
 }
 
 //используем когда нам не нужн делать фильтр по жанрам
@@ -74,6 +77,9 @@ export type DbFilm = {
   serial: boolean | null;
   short_film: boolean | null;
   completed: boolean | null;
+
+  rating_avg: string | null;
+  rating_count: number | null;
 };
 
 export type DbGenre = {
