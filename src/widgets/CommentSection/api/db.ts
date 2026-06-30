@@ -1,6 +1,7 @@
 import { CommentEntityType } from '@/entities/comments/model/types';
 import { DbCommentWithAuthor } from '@/widgets/CommentSection/model/types';
 import { sql } from '@/shared/lib/db';
+import { cacheLife } from 'next/cache';
 
 export async function getCommentsWithAuthors({
   entityType,
@@ -9,6 +10,9 @@ export async function getCommentsWithAuthors({
   entityType: CommentEntityType;
   entityId: string;
 }): Promise<DbCommentWithAuthor[]> {
+  'use cache';
+  cacheLife('seconds');
+
   return (await sql`
     SELECT
       c.*,

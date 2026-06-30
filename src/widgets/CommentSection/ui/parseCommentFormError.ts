@@ -1,4 +1,4 @@
-import { ActionResult } from '@/entities/comments/api/actions';
+import { ActionResult } from '@/shared/model';
 
 type CreateCommentError = Extract<ActionResult<Comment>, { success: false }>;
 

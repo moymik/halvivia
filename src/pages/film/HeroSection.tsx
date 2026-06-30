@@ -3,6 +3,7 @@ import Poster from '@/pages/film/Poster';
 import { StarIcon } from '@/shared/ui/icons';
 import Description from '@/pages/film/Description';
 import Info from '@/pages/film/Info';
+import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
 
 type HeroSectionProps = {
   film: Film;
@@ -35,6 +36,7 @@ export function HeroSection({ film }: HeroSectionProps) {
         genres={film.genres}
         additionalInfo={[{ name: 'Слоган', info: film.slogan ? film.slogan : '' }]}
       ></Info>
+      <RatingStarButton subject={{ type: 'film', id: film.id }}></RatingStarButton>
     </div>
   );
 }
