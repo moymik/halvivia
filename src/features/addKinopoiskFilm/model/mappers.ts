@@ -50,7 +50,7 @@ function getMappedType(film: KinopoiskFilm): FilmType {
     return 'ANIME';
   }
   if (film.genres.some((item) => item.genre === 'мультфильм')) {
-    return 'CARTOONS';
+    return 'CARTOON';
   }
   if (film.type === 'TV_SERIES' || film.type === 'MINI_SERIES') {
     return 'SERIES';
