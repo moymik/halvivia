@@ -4,6 +4,7 @@ import { StarIcon } from '@/shared/ui/icons';
 import Description from '@/pages/film/Description';
 import Info from '@/pages/film/Info';
 import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
+import { getRatingColorClass } from '@/entities/rating/lib/utils';
 
 type HeroSectionProps = {
   film: Film;
@@ -11,13 +12,6 @@ type HeroSectionProps = {
 function parseAgeLimits(age: string | null) {
   if (!age) return '';
   return age.substring(3) + '+';
-}
-
-function getRatingColorClass(avg: number | null) {
-  if (avg === null) return 'text-white-500';
-  if (avg < 0) return 'text-red-base';
-  if (avg <= 1) return 'text-yellow-base';
-  return 'text-green-base';
 }
 
 export function HeroSection({ film }: HeroSectionProps) {

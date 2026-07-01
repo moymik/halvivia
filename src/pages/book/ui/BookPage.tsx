@@ -1,13 +1,15 @@
 import { getBookById } from '@/entities/books/api/db';
 import { ROUTES } from '@/shared/config';
 import { sanitizeHtml } from '@/shared/lib/sanitizeHtml';
-import { ArrowIcon } from '@/shared/ui/icons';
+import { ArrowIcon, StarIcon } from '@/shared/ui/icons';
 import Image from 'next/image';
 import { connection } from 'next/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { CommentSection } from '@/widgets/CommentSection/ui/CommentSection';
+import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
+import { getRatingColorClass } from '@/entities/rating/lib/utils';
 
 type BookPageProps = {
   params: Promise<{
@@ -59,7 +61,15 @@ export async function BookPageContent({ params }: BookPageProps) {
             <div>
               <h1 className="text-3xl font-bold md:text-4xl">{book.title}</h1>
               {book.authors.length > 0 && (
-                <p className="text-text-secondary mt-2 text-lg">{book.authors.join(', ')}</p>
+                <p className="text-text-secondary mt-2 flex flex-row flex-wrap items-center gap-2 text-lg">
+                  <span>{book.authors.join(', ')} </span>
+                  <span
+                    className={`inline-flex items-center gap-1 ${getRatingColorClass(book.ratingAvg)}`}
+                  >
+                    <StarIcon className={`w-4`} fill="currentColor"></StarIcon>{' '}
+                    {`${book.ratingAvg}`}
+                  </span>
+                </p>
               )}
             </div>
 
@@ -74,6 +84,7 @@ export async function BookPageContent({ params }: BookPageProps) {
                 dangerouslySetInnerHTML={{ __html: descriptionHtml }}
               />
             )}
+            <RatingStarButton subject={{ type: 'book', id: book.id }}></RatingStarButton>
           </div>
         </div>
       </section>

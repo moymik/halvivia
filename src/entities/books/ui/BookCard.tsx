@@ -3,6 +3,7 @@ import { ROUTES } from '@/shared/config';
 import { StarIcon } from '@/shared/ui/icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { CardRatingStar } from '@/entities/rating/ui/CardRatingStar';
 
 type BookCardProps = {
   book: Book;
@@ -14,7 +15,7 @@ function getRating(book: Book) {
 }
 
 export function BookCard({ book, priority = false }: BookCardProps) {
-  const rating = getRating(book);
+  const rating = book.ratingAvg;
 
   return (
     <Link
@@ -42,10 +43,10 @@ export function BookCard({ book, priority = false }: BookCardProps) {
           {book.title}
         </span>
         {rating !== null && (
-          <span className="flex shrink-0 items-center gap-1 text-base font-bold lg:text-lg">
-            <StarIcon className="h-4 w-4" />
-            {rating.toFixed(1)}
-          </span>
+          <CardRatingStar
+            className={'hidden inline-flex h-4 w-4'}
+            averageRating={rating}
+          ></CardRatingStar>
         )}
       </div>
     </Link>

@@ -36,6 +36,9 @@ export type Book = {
   externalRatings: BookExternalRating[];
   createdByUserId: string | null;
   createdAt: string;
+
+  ratingAvg: number | null;
+  ratingCount: number | null;
 };
 
 export type BookExternalSource = 'google-books' | 'open-library';

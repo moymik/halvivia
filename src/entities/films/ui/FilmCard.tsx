@@ -2,7 +2,7 @@ import { Image } from '@imagekit/next';
 import { StarIcon } from '@/shared/ui/icons';
 import Link from 'next/link';
 import { ROUTES } from '@/shared/config';
-import { CardRatingStar } from '@/entities/films/ui/CardRatingStar';
+import { CardRatingStar } from '@/entities/rating/ui/CardRatingStar';
 
 export type FilmCardProps = {
   id: string;
@@ -42,8 +42,14 @@ export function FilmCard({
           className={`lg:font-heading lg:bg-bg-overlay-gray flex w-full flex-row items-center justify-between backdrop-opacity-40 transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:min-h-[25%] lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100`}
         >
           <span className={'my-1 block w-2/3 overflow-hidden text-ellipsis'}>{name}</span>
-          <CardRatingStar className={'hidden lg:block'} averageRating={ratingAvg}></CardRatingStar>
-          <span className={`${ratingAvg === null && 'hidden'}`}>{ratingAvg}</span>
+          <span className={`inline-flex items-center ${ratingAvg === null && 'hidden'}`}>
+            <CardRatingStar
+              className={'hidden lg:block'}
+              averageRating={ratingAvg}
+            ></CardRatingStar>
+            &nbsp;
+            {ratingAvg}
+          </span>
         </div>
       </div>
     </Link>

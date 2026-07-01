@@ -22,6 +22,8 @@ type DbBook = {
   external_ratings: BookExternalRating[] | null;
   created_by_user_id: string | null;
   created_at: string | Date;
+  rating_avg: string | null;
+  rating_count: number | null;
 };
 
 export function mapDbBook(row: DbBook): Book {
@@ -50,5 +52,7 @@ export function mapDbBook(row: DbBook): Book {
       row.created_at instanceof Date
         ? row.created_at.toISOString()
         : new Date(row.created_at).toISOString(),
+    ratingAvg: Number(row.rating_avg),
+    ratingCount: row.rating_count,
   };
 }

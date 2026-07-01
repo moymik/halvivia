@@ -42,6 +42,9 @@ export function mapKinopoiskFilmToFilm(film: KinopoiskFilm): Film {
     serial: film.serial,
     shortFilm: film.shortFilm,
     completed: film.completed,
+
+    ratingAvg: null,
+    ratingCount: null,
   };
 }
 
