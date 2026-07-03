@@ -54,10 +54,10 @@ export async function getFilmsByKeywordAction(
     }
 
     const data = await searchFilmsByKeyword(keyword);
-
     const parsed = FilmSearchByKeywordResponseSchema.safeParse(data);
 
     if (!parsed.success) {
+      console.error(parsed.error);
       return {
         success: false,
         error: 'Invalid API response format',

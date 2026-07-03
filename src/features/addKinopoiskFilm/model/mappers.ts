@@ -8,7 +8,7 @@ export function mapKinopoiskFilmToFilm(film: KinopoiskFilm): Film {
     kinopoiskHDId: film.kinopoiskHDId,
     imdbId: film.imdbId,
 
-    nameRu: film.nameRu,
+    nameRu: film.nameRu || film.nameEn || film.nameOriginal || `без названия`,
     nameEn: film.nameEn,
     nameOriginal: film.nameOriginal,
 

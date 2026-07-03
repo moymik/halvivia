@@ -95,7 +95,7 @@ export const FilmSearchByKeywordSchema = z.object({
   filmId: z.number(),
   imdbId: z.string().nullable().optional(),
 
-  nameRu: z.string().nullable(),
+  nameRu: z.string().nullable().optional(),
   nameEn: z.string().nullable().optional(),
   nameOriginal: z.string().nullable().optional(),
 
