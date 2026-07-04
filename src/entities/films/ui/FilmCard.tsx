@@ -1,15 +1,26 @@
 import { Image } from '@imagekit/next';
-import { StarIcon } from '@/shared/ui/icons';
 import Link from 'next/link';
 import { ROUTES } from '@/shared/config';
 import { CardRatingStar } from '@/entities/rating/ui/CardRatingStar';
+import { cn } from '@/shared';
 
 export type FilmCardProps = {
   id: string;
   name?: string;
   posterUrl?: string;
   ratingAvg?: number | null;
-  ///averageRating
+  variant?: 'grid' | 'fixed';
+  className?: string;
+};
+
+const variants = {
+  grid: 'w-full',
+  fixed: 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-64.25',
+};
+
+const sizesByVariant = {
+  grid: '(max-width: 390px) 43vw, (max-width: 800px) 22vw, (max-width: 1400px) 17vw, 15vw',
+  fixed: '(max-width: 390px) 43vw, (max-width: 800px) 22vw, (max-width: 1400px) 17vw, 15vw',
 };
 
 export function FilmCard({
@@ -17,14 +28,19 @@ export function FilmCard({
   posterUrl = '/posters/1143242_FgX7h_vrI',
   name = 'Джентльмены ',
   ratingAvg = 0,
+  variant = 'fixed',
 }: FilmCardProps) {
   return (
     <Link
-      href={`${ROUTES.CINEMA}/${id}`}
-      className="relative block w-max overflow-visible hover:z-50"
+      href={`${ROUTES.FILM_PAGE}${id}`}
+      className={`${variant === 'grid' ? 'w-full' : 'w-max'} relative block overflow-visible hover:z-50`}
     >
       <div
-        className={`group default relative flex w-[43vw] flex-col gap-1 overflow-visible transition-transform duration-300 ease-out hover:scale-110 md:w-[22vw] xl:w-[17vw] 2xl:w-64.25`}
+        className={cn(
+          `group default relative flex flex-col gap-1 overflow-visible transition-transform duration-300 ease-out hover:scale-110`,
+          variant === 'grid' && 'w-full',
+          variant === 'fixed' && 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-64.25',
+        )}
       >
         <Image
           urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
@@ -34,21 +50,16 @@ export function FilmCard({
           height={93}
           src={posterUrl}
           loading={'lazy'}
-          sizes={
-            '(max-width:390) 42vw,(max-width:800) 22vw, (max-width:1400)17vw,(max-width:1920)15vw'
-          }
+          sizes={sizesByVariant[variant]}
         ></Image>
         <div
-          className={`lg:font-heading lg:bg-bg-overlay-gray flex w-full flex-row items-center justify-between backdrop-opacity-40 transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:min-h-[25%] lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100`}
+          className={`lg:font-heading lg:bg-bg-overlay-gray flex w-full flex-row items-center justify-between px-1 py-1 backdrop-opacity-40 transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:min-h-[25%] lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100`}
         >
-          <span className={'my-1 block w-2/3 overflow-hidden text-ellipsis'}>{name}</span>
+          <span className={`line-clamp-2`}>{name}</span>
           <span className={`inline-flex items-center ${ratingAvg === null && 'hidden'}`}>
-            <CardRatingStar
-              className={'hidden lg:block'}
-              averageRating={ratingAvg}
-            ></CardRatingStar>
+            <CardRatingStar averageRating={ratingAvg}></CardRatingStar>
             &nbsp;
-            {ratingAvg}
+            <span className={'hidden lg:block'}>{ratingAvg}</span>
           </span>
         </div>
       </div>

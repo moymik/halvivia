@@ -1,6 +1,8 @@
 'server-only';
 
-import { DbFilm, DbFilmWithGenres, Film } from '@/entities/films/model/types';
+import { cacheLife } from 'next/cache';
+
+import { DbFilm, DbFilmWithGenres, DbGenre, Film } from '@/entities/films/model/types';
 import { pool, sql } from '@/shared/lib/db';
 
 export async function addFilm(film: Film): Promise<string> {
@@ -165,6 +167,7 @@ export async function getInitialCinemaFilms() {
     cartoons,
   };
 }
+
 export async function getRecentFilms(limit = 10) {
   const { rows } = await pool.query<DbFilm>(
     `
@@ -192,4 +195,49 @@ export async function getFilmsByType(type: string, limit = 10) {
   );
 
   return rows;
+}
+
+export async function getFilmGenres(): Promise<DbGenre[]> {
+  'use cache';
+  cacheLife('days');
+
+  const rows = await sql`
+    SELECT *
+    FROM genres
+  `;
+
+  return rows as DbGenre[];
+}
+
+export async function getFilteredFilms(
+  genreIds: number[],
+  limit = 25,
+  page = 1,
+): Promise<DbFilm[]> {
+  const offset = (page - 1) * limit;
+
+  // Если фильтр пустой — вернуть все фильмы
+  if (genreIds.length === 0) {
+    const rows = await sql`
+      SELECT *
+      FROM films
+      ORDER BY id
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `;
+
+    return rows as DbFilm[];
+  }
+
+  const rows = await sql`
+    SELECT DISTINCT f.*
+    FROM films f
+    JOIN film_genres fg ON fg.film_id = f.id
+    WHERE fg.genre_id = ANY(${genreIds})
+    ORDER BY f.id
+    LIMIT ${limit}
+    OFFSET ${offset}
+  `;
+
+  return rows as DbFilm[];
 }

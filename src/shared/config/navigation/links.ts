@@ -7,6 +7,7 @@ export const NAVIGATION_LINKS = {
     label: 'Home',
     href: ROUTES.HOME,
   },
+
   CINEMA: {
     id: 'cinema',
     label: 'Смотрильня',
@@ -86,6 +87,7 @@ export const NAVIGATION_LINKS = {
     href: ROUTES.REVIEWS,
     label: 'Оценки',
   },
+
   DOWNLOADS: {
     id: 'downloads',
     href: ROUTES.DOWNLOADS,

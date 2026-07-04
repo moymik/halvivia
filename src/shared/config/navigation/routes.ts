@@ -9,6 +9,7 @@ export const ROUTES = {
   PROFILE: '/user/',
   REVIEWS: '/reviews',
   DOWNLOADS: '/downloads',
+  FILM_PAGE: '/cinema/film/',
 } as const;
 
 // type Route = "/" | "/cinema" | "/library" | "/terms" | "/privacy"

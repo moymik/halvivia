@@ -2,46 +2,27 @@ import FilmCard from '@/entities/films/ui/FilmCard';
 import Carousel from '@/shared/ui/carousel/Carousel';
 
 import { getInitialCardsAction } from '@/pages/cinema/api/actions';
-import FilmDialogButton from '@/pages/cinema/ui/FilmDialogButton';
+import Toolbar from '@/pages/cinema/ui/Toolbar';
+import FilmsGrid from '@/pages/cinema/ui/FilmsGrid';
 
 export async function CinemaPage() {
   'use cache';
-  const cardProps = await getInitialCardsAction();
+  const initialCards = await getInitialCardsAction();
   return (
     <>
-      <section className={'bg-bg-inverse w-full'}>
+      <section className={'bg-bg-inverse w-full pt-7.5 pb-4'}>
         <div className={'page-content-width'}>
           <Carousel className={'text-text-inverse'} label={'Новинки'}>
-            {cardProps.recentCards.map((prop) => (
+            {initialCards.recentCards.map((prop) => (
               <FilmCard key={prop.id} {...prop} />
             ))}
           </Carousel>
         </div>
       </section>
-      <section></section>
       <section className={'w-full'}>
-        <div className={'page-content-width'}>
-          <FilmDialogButton></FilmDialogButton>
-          <Carousel label={'Фильмы'}>
-            {cardProps.filmCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-          <Carousel label={'Сериалы'}>
-            {cardProps.seriesCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-          <Carousel label={'Аниме'}>
-            {cardProps.animeCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-          <Carousel label={'Мультфильмы'}>
-            {cardProps.cartoonCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
+        <div className={'page-content-width py-12'}>
+          <Toolbar canAddFilm={true}></Toolbar>
+          <FilmsGrid initialFilmCards={initialCards}></FilmsGrid>
         </div>
       </section>
     </>
