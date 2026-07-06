@@ -21,16 +21,25 @@ export async function getFilteredFilmsAction(
   genreIds: number[],
   limit = 25,
   page = 1,
-): Promise<ActionResult<FilmWithoutGenres[]>> {
+): Promise<
+  ActionResult<{
+    films: FilmWithoutGenres[];
+    totalPages: number;
+    totalCount: number;
+  }>
+> {
   'use cache';
   cacheLife('minutes');
 
   try {
-    const films = await getFilteredFilms(genreIds, limit, page);
+    const result = await getFilteredFilms(genreIds, limit, page);
 
     return {
       success: true,
-      data: films.map((film) => mapDbFilmToFilmWothoutGenres(film)),
+      data: {
+        ...result,
+        films: result.films.map(mapDbFilmToFilmWothoutGenres),
+      },
     };
   } catch (error) {
     console.error('Failed to get filtered films:', error);

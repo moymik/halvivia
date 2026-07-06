@@ -3,6 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { FilmCard } from '@/entities/films/ui/FilmCard';
 import { getFilteredFilmsAction } from '@/pages/cinema/api/actions';
+import { useState } from 'react';
+import { Pagination } from '@/shared/ui/pagination/pagination';
 
 export const fetchFilteredFilms = async (genreIds: number[], limit: number, page: number) => {
   const result = await getFilteredFilmsAction(genreIds, limit, page);
@@ -16,13 +18,14 @@ export const fetchFilteredFilms = async (genreIds: number[], limit: number, page
 
 type FilmsGridProps = {
   genreIds: number[];
-  page: number;
   limit?: number;
 };
 
-export function FilteredFilmsGrid({ genreIds, limit = 25, page }: FilmsGridProps) {
+export function FilteredFilmsGrid({ genreIds, limit = 24 }: FilmsGridProps) {
+  const [page, setPage] = useState(1);
+
   const {
-    data: films,
+    data: res,
     isLoading,
     isError,
   } = useQuery({
@@ -40,17 +43,21 @@ export function FilteredFilmsGrid({ genreIds, limit = 25, page }: FilmsGridProps
   }
 
   return (
-    <div className="grid w-full grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
-      {films?.map((film) => (
-        <FilmCard
-          key={film.id}
-          id={film.id}
-          name={film.nameRu}
-          posterUrl={film.posterUrl}
-          ratingAvg={film.ratingAvg}
-          variant={'grid'}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid w-full grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
+        {res?.films.map((film) => (
+          <FilmCard
+            key={film.id}
+            id={film.id}
+            name={film.nameRu}
+            posterUrl={film.posterUrl}
+            ratingAvg={film.ratingAvg}
+            variant={'grid'}
+          />
+        ))}
+      </div>
+
+      <Pagination page={page} totalPages={res?.totalPages ?? 0} onChange={setPage} />
+    </>
   );
 }

@@ -209,35 +209,67 @@ export async function getFilmGenres(): Promise<DbGenre[]> {
   return rows as DbGenre[];
 }
 
+export type GetFilteredFilmsResult = {
+  films: DbFilm[];
+  totalPages: number;
+  totalCount: number;
+};
+
 export async function getFilteredFilms(
   genreIds: number[],
   limit = 25,
   page = 1,
-): Promise<DbFilm[]> {
+): Promise<GetFilteredFilmsResult> {
   const offset = (page - 1) * limit;
 
   // Если фильтр пустой — вернуть все фильмы
   if (genreIds.length === 0) {
-    const rows = await sql`
-      SELECT *
-      FROM films
-      ORDER BY id
-      LIMIT ${limit}
-      OFFSET ${offset}
-    `;
+    const [films, countResult] = await Promise.all([
+      sql`
+        SELECT *
+        FROM films
+        ORDER BY id
+        LIMIT ${limit}
+          OFFSET ${offset}
+      `,
+      sql`
+        SELECT COUNT(*) as count
+        FROM films
+      `,
+    ]);
 
-    return rows as DbFilm[];
+    const totalCount = Number(countResult[0].count);
+
+    return {
+      films: films as DbFilm[],
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   }
 
-  const rows = await sql`
-    SELECT DISTINCT f.*
-    FROM films f
-    JOIN film_genres fg ON fg.film_id = f.id
-    WHERE fg.genre_id = ANY(${genreIds})
-    ORDER BY f.id
-    LIMIT ${limit}
-    OFFSET ${offset}
-  `;
+  const [films, countResult] = await Promise.all([
+    sql`
+      SELECT DISTINCT f.*
+      FROM films f
+      JOIN film_genres fg ON fg.film_id = f.id
+      WHERE fg.genre_id = ANY(${genreIds})
+      ORDER BY f.id
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `,
+    sql`
+      SELECT COUNT(DISTINCT f.id) as count
+      FROM films f
+      JOIN film_genres fg ON fg.film_id = f.id
+      WHERE fg.genre_id = ANY(${genreIds})
+    `,
+  ]);
 
-  return rows as DbFilm[];
+  const totalCount = Number(countResult[0].count);
+
+  return {
+    films: films as DbFilm[],
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
+  };
 }
