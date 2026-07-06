@@ -15,7 +15,9 @@ type RootLayoutProps = Readonly<{
 
 export const metadata: Metadata = {
   title: 'Halvivia',
-  description: 'Home page',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 function RootLayout({ children }: RootLayoutProps) {
