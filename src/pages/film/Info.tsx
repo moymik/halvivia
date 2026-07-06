@@ -1,55 +1,46 @@
-import { Genre } from '@/entities/films/model/types';
+import { cn } from '@/shared';
 
-export type InfoObject = {
-  name: string;
-  info: string;
+export type InfoItem = {
+  label: string;
+  value?: React.ReactNode;
+  href?: string;
+  render?: () => React.ReactNode;
+  key?: string;
 };
+
 export type InfoProps = {
-  countries: string;
-  genres?: Genre[];
-  length: number | null;
-  links: string[];
-  additionalInfo: InfoObject[]; /// пример [{name: 'Актеры', info:'Уилл Смит, Марго Робби' }]
+  items: InfoItem[];
+  className?: string;
 };
 
-function stringFromGenres(genres: Genre[]) {
-  let result = '';
-  genres.forEach((genre, i) => {
-    if (i === genres.length - 1) {
-      result = result + ' ' + genre.genre;
-    } else result = result + ' ' + genre.genre + ' ,';
-  });
-  return result;
-}
-
-///TODO:
-export function Info({ countries, genres, length, additionalInfo }: InfoProps) {
+export function Info({ items, className = '' }: InfoProps) {
   return (
-    <ul className={'flex w-full flex-col'}>
-      <li key="Страна">
-        <span>Страна:</span> <span>{countries}</span>
-      </li>
-      {!genres ? (
-        ''
-      ) : (
-        <li key="Жанр">
-          <span>Жанр:</span> <span>{stringFromGenres(genres)}</span>
-        </li>
+    <ul
+      className={cn(
+        'grid w-full grid-cols-[max-content_1fr] gap-x-6.25 gap-y-1 text-sm lg:text-base',
+        className,
       )}
-      {!length ? (
-        ''
-      ) : (
-        <li key="Продолжительность">
-          <span>Продолжительность:</span> <span>{length}</span>
+    >
+      {items.map((item, index) => (
+        <li key={item.key ?? `${item.label}-${index}`} className="contents">
+          <span className="text-nowrap opacity-50">{item.label}:</span>
+
+          {item.render ? (
+            item.render()
+          ) : item.href ? (
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="wrap-break-words flex items-center gap-2 hover:underline"
+            >
+              {item.value}
+            </a>
+          ) : (
+            <span className="wrap-break-words">{item.value}</span>
+          )}
         </li>
-      )}
-      {additionalInfo
-        ? additionalInfo.map(({ name, info }) => (
-            <li key={name}>
-              <span>{name}:</span> <span>{info}</span>
-            </li>
-          ))
-        : ''}
+      ))}
     </ul>
   );
 }

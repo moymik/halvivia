@@ -23,7 +23,7 @@ export function mapDbFilmToFilmWothoutGenres(db: DbFilm): FilmWithoutGenres {
     posterUrlPreview: db.poster_url_preview,
 
     ratingImdb: db.rating_imdb,
-    ratingKinopoisk: db.rating_kinopoisk,
+    ratingKinopoisk: db.rating_kinopoisk === null ? null : Number(db.rating_kinopoisk),
 
     webUrl: db.web_url,
 
@@ -69,7 +69,7 @@ export function mapDbFilmWithGenresToFilm(db: DbFilmWithGenres): Film {
     posterUrlPreview: db.poster_url_preview,
 
     ratingImdb: db.rating_imdb,
-    ratingKinopoisk: db.rating_kinopoisk,
+    ratingKinopoisk: db.rating_kinopoisk === null ? null : Number(db.rating_kinopoisk),
 
     webUrl: db.web_url,
 

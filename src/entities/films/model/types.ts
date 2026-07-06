@@ -15,7 +15,7 @@ export interface Film {
   posterUrl: string;
   posterUrlPreview: string;
   ratingImdb: number | string | null;
-  ratingKinopoisk: number | string | null; ///Я получаю этот рейтинг из апи числом, кладу его в бд числом, а забираю из бд строкой
+  ratingKinopoisk: number | null;
   webUrl: string; //weburl=>kinopoiskurl
   year: number | null;
   filmLength: number | null; //в минутах

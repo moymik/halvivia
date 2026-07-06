@@ -25,7 +25,7 @@ export function FilterDropdownClient({ genresResult }: FilterDropdownClientProps
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button>
+        <button className={'hover:text-text-primary transition-colors duration-200 ease-out'}>
           Фильтры &nbsp;
           <FilterIcon className={`inline ${selectedGenres.length > 0 && 'fill-primary'}`} />
         </button>

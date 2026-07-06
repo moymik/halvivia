@@ -1,11 +1,10 @@
 import FilmDialogButton from '@/pages/cinema/ui/FilmDialogButton';
 import FilterDropdown from '@/pages/cinema/ui/FilterDropdown';
+import { verifySession } from '@/shared/lib/auth';
 
-export type ToolbarProps = {
-  canAddFilm: boolean;
-};
-
-export function Toolbar({ canAddFilm = false }: ToolbarProps) {
+export async function Toolbar() {
+  const session = await verifySession();
+  const canAddFilm = session.status === 'authenticated' && session.payload.role == 'MEMBER';
   return (
     <div className={'flex flex-row justify-between'}>
       <FilterDropdown></FilterDropdown>

@@ -4,9 +4,9 @@ import Carousel from '@/shared/ui/carousel/Carousel';
 import { getInitialCardsAction } from '@/pages/cinema/api/actions';
 import Toolbar from '@/pages/cinema/ui/Toolbar';
 import FilmsGrid from '@/pages/cinema/ui/FilmsGrid';
+import { Suspense } from 'react';
 
 export async function CinemaPage() {
-  'use cache';
   const initialCards = await getInitialCardsAction();
   return (
     <>
@@ -20,8 +20,10 @@ export async function CinemaPage() {
         </div>
       </section>
       <section className={'w-full'}>
-        <div className={'page-content-width py-12'}>
-          <Toolbar canAddFilm={true}></Toolbar>
+        <div className={'page-content-width flex flex-col gap-5 py-12'}>
+          <Suspense fallback={null}>
+            <Toolbar></Toolbar>
+          </Suspense>
           <FilmsGrid initialFilmCards={initialCards}></FilmsGrid>
         </div>
       </section>

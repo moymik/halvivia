@@ -1,10 +1,13 @@
 import { Film } from '@/entities/films/model/types';
 import Poster from '@/pages/film/Poster';
-import { StarIcon } from '@/shared/ui/icons';
+import { ArrowIcon, StarIcon } from '@/shared/ui/icons';
 import Description from '@/pages/film/Description';
 import Info from '@/pages/film/Info';
 import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
 import { getRatingColorClass } from '@/entities/rating/lib/utils';
+import { ROUTES } from '@/shared/config';
+import Link from 'next/link';
+import { mapFilmToInfoItems } from '@/pages/film/model/mapFilmToInfoItems';
 
 type HeroSectionProps = {
   film: Film;
@@ -13,37 +16,59 @@ function parseAgeLimits(age: string | null) {
   if (!age) return '';
   return age.substring(3) + '+';
 }
-
 export function HeroSection({ film }: HeroSectionProps) {
   return (
-    <div className="flex flex-col items-center gap-6">
-      <Poster filmName={film.nameRu} posterUrl={film.posterUrl}></Poster>
-      <div className="flex h-22 flex-col items-center gap-3">
-        <h1 className="font-heading text-text-primary text-center text-2xl leading-6 font-bold">
-          {film.nameRu} <br /> ({film.year ? film.year : film.startYear + '-' + film.endYear})
-        </h1>
+    <>
+      <div className="page-content-width grid grid-cols-1 items-start gap-y-6 py-8 md:grid-cols-[auto_1fr] md:gap-x-8">
+        <Link
+          href={ROUTES.CINEMA}
+          className="text-text-secondary hover:text-text-primary flex w-fit items-center gap-2 text-sm font-medium transition-colors md:col-span-2"
+        >
+          <ArrowIcon className="h-3 w-3 scale-x-[-1]" />
+          вернуться к фильмам
+        </Link>
 
-        <p className="text-text-secondary flex flex-row items-center justify-between gap-2.5">
-          <span>{film.nameOriginal || film.nameEn}</span>
-          <span>{parseAgeLimits(film.ratingAgeLimits)}</span>
-          <span
-            className={`flex flex-row items-center gap-1 ${getRatingColorClass(film.ratingAvg)}`}
-          >
-            <StarIcon className={`inline w-4`} fill="currentColor"></StarIcon> {`${film.ratingAvg}`}
-          </span>
-        </p>
+        <Poster
+          filmName={film.nameRu}
+          posterUrl={film.posterUrl}
+          className="justify-self-center md:justify-self-start"
+        />
+
+        <div className="flex flex-col items-center gap-5 md:items-start">
+          <div className="flex flex-col items-center gap-3 md:items-start">
+            <h1 className="font-heading text-text-primary text-center text-2xl font-bold md:text-left">
+              {film.nameRu}
+              <br />({film.year ? film.year : `${film.startYear}-${film.endYear}`})
+            </h1>
+
+            <p className="text-text-secondary flex flex-wrap items-center justify-center gap-2.5 md:justify-start">
+              <span>{film.nameOriginal || film.nameEn}</span>
+              <span>{parseAgeLimits(film.ratingAgeLimits)}</span>
+
+              <span className={`flex items-center gap-1 ${getRatingColorClass(film.ratingAvg)}`}>
+                <StarIcon className="w-4" fill="currentColor" />
+                {film.ratingAvg}
+              </span>
+            </p>
+          </div>
+          <Info
+            className="text-text-primary hidden w-full md:grid"
+            items={mapFilmToInfoItems(film)}
+          />
+          <RatingStarButton className="md:self-start" subject={{ type: 'film', id: film.id }} />
+        </div>
       </div>
-      <Description description={film.description}></Description>
-      <Info
-        countries={film.countries ? film.countries.join(',') : ''}
-        links={[film.webUrl]}
-        length={film.filmLength}
-        genres={film.genres}
-        additionalInfo={[{ name: 'Слоган', info: film.slogan ? film.slogan : '' }]}
-      ></Info>
-      <RatingStarButton subject={{ type: 'film', id: film.id }}></RatingStarButton>
-    </div>
+      <section className="bg-bg-base md:bg-bg-inverse py-10">
+        <div className="page-content-width">
+          <Description description={film.description} />
+        </div>
+      </section>
+      <section className="bg-bg-inverse py-10">
+        <div className="page-content-width">
+          <Info className="text-text-inverse w-full md:hidden" items={mapFilmToInfoItems(film)} />;
+        </div>
+      </section>
+    </>
   );
 }
-
 export default HeroSection;

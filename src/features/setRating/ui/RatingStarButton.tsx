@@ -24,6 +24,7 @@ const variants = {
 export type setRatingButtonProps = {
   subject: Subject;
   variant?: keyof typeof variants;
+  className?: string;
 };
 
 function getIconFillClass(variant: keyof typeof variants, hasRating: boolean) {
@@ -41,16 +42,17 @@ function getIconFillClass(variant: keyof typeof variants, hasRating: boolean) {
   }
 }
 
-export function RatingStarButton({ subject, variant = 'onDark' }: setRatingButtonProps) {
+export function RatingStarButton({ subject, variant = 'onDark', className }: setRatingButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const currentUser = useCurrentUserStore((state) => state.currentUser);
 
   const userId = currentUser ? currentUser.id : null;
 
-  const { data: rating } = useRatingQuery(userId, subject);
+  const { data: rating, isLoading } = useRatingQuery(userId, subject);
 
-  const iconFillClass = getIconFillClass(variant, rating !== null);
+  const hasRating = rating !== null && rating !== undefined;
+  const iconFillClass = getIconFillClass(variant, hasRating);
 
   return (
     <>
@@ -66,6 +68,7 @@ export function RatingStarButton({ subject, variant = 'onDark' }: setRatingButto
           className={cn(
             'flex h-10 w-10 items-center justify-center rounded-md border-[1.75px]',
             variants[variant].button,
+            className,
           )}
           aria-label={!isOpen && 'Открыть выбор рейтинга'}
           aria-expanded={isOpen}
@@ -74,10 +77,14 @@ export function RatingStarButton({ subject, variant = 'onDark' }: setRatingButto
             else redirect(ROUTES.LOGIN);
           }}
         >
-          <Icon
-            className={cn('w-4.5 stroke-2', variants[variant].icon, iconFillClass)}
-            name="StarIcon"
-          />
+          {isLoading ? (
+            <div className="h-4.5 w-4.5 animate-pulse rounded-full bg-current opacity-20" />
+          ) : (
+            <Icon
+              className={cn('w-4.5 stroke-2', variants[variant].icon, iconFillClass)}
+              name="StarIcon"
+            />
+          )}
         </button>
       )}
     </>

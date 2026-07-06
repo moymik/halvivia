@@ -6,6 +6,8 @@ import { ActionResult } from '@/shared/model';
 import { cacheLife } from 'next/cache';
 
 export async function getInitialCardsAction() {
+  'use cache';
+  cacheLife('hours');
   const initialFilmsObj = await getInitialCinemaFilms();
 
   return {
