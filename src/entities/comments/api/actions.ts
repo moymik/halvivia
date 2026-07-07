@@ -30,13 +30,6 @@ export async function createCommentAction(
     };
   }
 
-  if (session.payload.role !== 'MEMBER') {
-    return {
-      success: false,
-      error: 'UNAUTHORIZED',
-    };
-  }
-
   try {
     const dbComment = await createComment({
       ...parsed.data,

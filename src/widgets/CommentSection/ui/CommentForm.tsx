@@ -112,7 +112,7 @@ export function CommentForm({
                 'md:text-s field-sizing-content resize-none text-xs leading-5 focus:border-none focus-visible:outline-none'
               }
             />
-            {error && <div className={'text-error absolute -bottom-2 text-xs'}>{error}</div>}
+            {error && <div className={'text-error absolute -bottom-2.5 text-xs'}>{error}</div>}
           </div>
           <Clip></Clip>
         </div>
