@@ -21,7 +21,12 @@ export function UserAvatarMini({ user, className }: UserAvatarProps) {
       />
     </div>
   ) : (
-    <div className={'border-primary h-15 w-15 shrink-0 rounded-full border-2 bg-gray-500'}></div>
+    <div
+      className={cn(
+        'border-primary h-15 w-15 shrink-0 rounded-full border-2 bg-gray-500',
+        className,
+      )}
+    ></div>
   );
 }
 

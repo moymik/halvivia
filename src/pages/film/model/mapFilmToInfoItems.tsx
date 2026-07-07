@@ -1,5 +1,5 @@
 import { Film } from '@/entities/films/model/types';
-import { InfoItem } from '@/pages/film/Info';
+import { InfoItem } from '@/pages/film/ui/Info';
 import { Genre } from '@/entities/films/model/types';
 import KinopoiskLogo from '@/shared/assets/kinopoisk-logo.svg';
 export function formatGenres(genres: Genre[]) {

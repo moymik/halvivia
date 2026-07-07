@@ -16,3 +16,19 @@ export type DbRating = {
 export type Rating = z.infer<typeof RatingSchema>;
 
 export type RatingValue = z.infer<typeof RatingValueSchema>;
+
+export interface DbRatingWithUser extends DbRating {
+  user: {
+    id: string;
+    name: string | null;
+    avatar_url: string | null;
+  };
+}
+
+export interface RatingWithUser extends Rating {
+  user: {
+    id: string;
+    name: string | null;
+    avatarUrl: string | null;
+  };
+}

@@ -13,7 +13,6 @@ export async function FilmPage({ params }: FilmPageProps) {
   const { id } = await params;
   const film = await getFilmByIdAction(id);
 
-  //console.log(resolvedParams);
   return (
     <>
       <HeroSection film={film as Film} />

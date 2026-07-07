@@ -9,6 +9,8 @@ import 'src/app/styles/typography.css';
 import { AuthModal } from '@/features/auth/ui/AuthModal';
 import { AuthForm } from '@/features/auth/ui/AuthForm';
 import { QueryProvider } from '@/app/providers/QueryProvider';
+import { TooltipProvider } from '@/shared/ui/tooltip/Tooltip';
+
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
 }>;
@@ -25,13 +27,15 @@ function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
       <body className="flex min-h-full flex-col justify-between">
         <QueryProvider>
-          <Header>
-            <AuthModal>
-              <AuthForm></AuthForm>
-            </AuthModal>
-          </Header>
-          <main className="bg-bg-base text-text-secondary flex-1">{children}</main>
-          <Footer></Footer>
+          <TooltipProvider>
+            <Header>
+              <AuthModal>
+                <AuthForm></AuthForm>
+              </AuthModal>
+            </Header>
+            <main className="bg-bg-base text-text-secondary flex-1">{children}</main>
+            <Footer></Footer>
+          </TooltipProvider>
         </QueryProvider>
       </body>
     </html>

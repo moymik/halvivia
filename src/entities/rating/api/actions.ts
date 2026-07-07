@@ -1,21 +1,23 @@
 'use server';
 
 import { getRatingByUserIdAndSubject, getRatingsBySubject } from '@/entities/rating/api/db';
-import { mapDbRatingToRating } from '@/entities/rating/model/mappers';
-import { Rating } from '@/entities/rating/model/types';
+import { mapDbRatingToRating, mapDbToRatingWithUser } from '@/entities/rating/model/mappers';
+import { Rating, RatingWithUser } from '@/entities/rating/model/types';
 import { ActionResult, Subject } from '@/shared/model';
+import { cacheTag } from 'next/cache';
 
 export async function getRatingsBySubjectAction(params: {
-  subjectType: string;
-  subjectId: string;
-}): Promise<ActionResult<Rating[]>> {
+  subject: Subject;
+}): Promise<ActionResult<RatingWithUser[]>> {
+  'use cache';
+  cacheTag(`ratings:${params.subject.type}:${params.subject.id}`);
+
   try {
     const dbRatings = await getRatingsBySubject({
-      subjectType: params.subjectType,
-      subjectId: params.subjectId,
+      subject: params.subject,
     });
 
-    const ratings = dbRatings.map(mapDbRatingToRating);
+    const ratings = dbRatings.map(mapDbToRatingWithUser);
 
     return {
       success: true,

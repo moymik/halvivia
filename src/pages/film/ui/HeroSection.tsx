@@ -1,17 +1,19 @@
 import { Film } from '@/entities/films/model/types';
-import Poster from '@/pages/film/Poster';
+import Poster from '@/pages/film/ui/Poster';
 import { ArrowIcon, StarIcon } from '@/shared/ui/icons';
-import Description from '@/pages/film/Description';
-import Info from '@/pages/film/Info';
+import Description from '@/pages/film/ui/Description';
+import Info from '@/pages/film/ui/Info';
 import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
 import { getRatingColorClass } from '@/entities/rating/lib/utils';
 import { ROUTES } from '@/shared/config';
 import Link from 'next/link';
 import { mapFilmToInfoItems } from '@/pages/film/model/mapFilmToInfoItems';
+import SubjectRatingStar from '@/widgets/SubjectRatingStar/SubjectRatingStar';
 
 type HeroSectionProps = {
   film: Film;
 };
+
 function parseAgeLimits(age: string | null) {
   if (!age) return '';
   return age.substring(3) + '+';
@@ -41,15 +43,14 @@ export function HeroSection({ film }: HeroSectionProps) {
               <br />({film.year ? film.year : `${film.startYear}-${film.endYear}`})
             </h1>
 
-            <p className="text-text-secondary flex flex-wrap items-center justify-center gap-2.5 md:justify-start">
+            <div className="text-text-secondary flex flex-wrap items-center justify-center gap-2.5 md:justify-start">
               <span>{film.nameOriginal || film.nameEn}</span>
               <span>{parseAgeLimits(film.ratingAgeLimits)}</span>
-
-              <span className={`flex items-center gap-1 ${getRatingColorClass(film.ratingAvg)}`}>
-                <StarIcon className="w-4" fill="currentColor" />
-                {film.ratingAvg}
-              </span>
-            </p>
+              <SubjectRatingStar
+                avgRating={film.ratingAvg}
+                subject={{ type: 'film', id: film.id }}
+              />
+            </div>
           </div>
           <Info
             className="text-text-primary hidden w-full md:grid"

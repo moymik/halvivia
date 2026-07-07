@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { sql, pool } from '@/shared/lib/db';
-import { DbRating } from '@/entities/rating/model/types';
+import { DbRating, DbRatingWithUser } from '@/entities/rating/model/types';
 import { Subject } from '@/shared/model';
 
 export async function upsertRating({
@@ -98,22 +98,27 @@ export async function upsertRating({
     client.release();
   }
 }
-
 export async function getRatingsBySubject(params: {
-  subjectType: string;
-  subjectId: string;
+  subject: Subject;
   limit?: number;
-}): Promise<DbRating[]> {
-  const limit = params.limit ?? 50;
+}): Promise<DbRatingWithUser[]> {
+  const limit = params.limit ?? 20;
 
   return (await sql`
-        SELECT *
-        FROM ratings
-        WHERE subject_type = ${params.subjectType}
-          AND subject_id = ${params.subjectId}
-        ORDER BY created_at DESC
-        LIMIT ${limit};
-  `) as DbRating[];
+    SELECT
+      ratings.*,
+      json_build_object(
+          'id', users.id,
+          'name', users.name,
+          'avatar_url', users.avatar_url
+      ) AS user
+    FROM ratings
+           JOIN users ON users.id = ratings.user_id
+    WHERE ratings.subject_type = ${params.subject.type}
+      AND ratings.subject_id = ${params.subject.id}
+    ORDER BY ratings.created_at DESC
+    LIMIT ${limit};
+  `) as DbRatingWithUser[];
 }
 
 export async function getRatingByUserIdAndSubject(params: {

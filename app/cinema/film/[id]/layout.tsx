@@ -1,1 +1,1 @@
-export { FilmPageLayout as default } from '@/pages/film/layout';
+export { FilmPageLayout as default } from '@/pages/film/ui/layout';

@@ -8,6 +8,7 @@ export const RatingValueSchema = z.union([
   z.literal(2),
   z.null(),
 ]);
+
 export const RatingSchema = z.object({
   id: z.string().uuid(),
 
