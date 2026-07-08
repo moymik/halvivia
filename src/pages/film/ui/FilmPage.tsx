@@ -12,7 +12,6 @@ export type FilmPageProps = {
 export async function FilmPage({ params }: FilmPageProps) {
   const { id } = await params;
   const film = await getFilmByIdAction(id);
-
   return (
     <>
       <HeroSection film={film as Film} />

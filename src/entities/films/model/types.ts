@@ -1,4 +1,4 @@
-import { FilmTypeSchema, GenreSchema } from '@/entities/films/model/Schemas';
+import { FilmFiltersSchema, FilmTypeSchema, GenreSchema } from '@/entities/films/model/Schemas';
 import { z } from 'zod';
 
 export type Genre = z.infer<typeof GenreSchema>;
@@ -91,3 +91,5 @@ export type DbGenre = {
 export type DbFilmWithGenres = DbFilm & {
   genres: DbGenre[];
 };
+
+export type FilmFilters = z.infer<typeof FilmFiltersSchema>;
