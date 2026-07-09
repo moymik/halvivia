@@ -33,12 +33,14 @@ export default function FilterForm({ filters, genres }: Props) {
         <label>Сортировка</label>
 
         <select
-          className="w-full border p-2"
+          className="bg-bg-surface w-full border p-2"
           value={filters.sort}
           onChange={(e) => updateParam('sort', e.target.value)}
         >
           <option value="newest">Новые</option>
           <option value="oldest">Старые</option>
+          <option value="rating_desc">Рейтинг ↓</option>
+          <option value="rating_asc">Рейтинг ↑</option>
           <option value="year_desc">Год ↓</option>
           <option value="year_asc">Год ↑</option>
         </select>
@@ -49,7 +51,7 @@ export default function FilterForm({ filters, genres }: Props) {
         <label>На странице</label>
 
         <select
-          className="border p-2"
+          className="bg-bg-surface border p-2"
           value={filters.limit}
           onChange={(e) => updateParam('limit', e.target.value)}
         >
@@ -78,30 +80,32 @@ export default function FilterForm({ filters, genres }: Props) {
       </div>
 
       {/* Годы */}
-      <div className="flex gap-2">
-        <input
-          type="number"
-          placeholder="От"
-          className="w-1/2 border p-2"
-          defaultValue={filters.yearFrom ?? ''}
-          onBlur={(e) => updateParam('yearFrom', e.target.value)}
-        />
+      <div>
+        <label>Годы</label>
+        <div className="flex gap-2">
+          <input
+            type="number"
+            placeholder="От"
+            className="w-1/2 border p-2"
+            defaultValue={filters.yearFrom ?? ''}
+            onBlur={(e) => updateParam('yearFrom', e.target.value)}
+          />
 
-        <input
-          type="number"
-          placeholder="До"
-          className="w-1/2 border p-2"
-          defaultValue={filters.yearTo ?? ''}
-          onBlur={(e) => updateParam('yearTo', e.target.value)}
-        />
+          <input
+            type="number"
+            placeholder="До"
+            className="w-1/2 border p-2"
+            defaultValue={filters.yearTo ?? ''}
+            onBlur={(e) => updateParam('yearTo', e.target.value)}
+          />
+        </div>
       </div>
-
       {/* Сериал */}
       <div>
         <label>Сериал</label>
 
         <select
-          className="w-full border p-2"
+          className="bg-bg-surface w-full border p-2"
           value={filters.serial === undefined ? '' : String(filters.serial)}
           onChange={(e) => updateParam('serial', e.target.value)}
         >

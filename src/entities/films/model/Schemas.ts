@@ -35,7 +35,9 @@ export const FilmFiltersSchema = z
 
     ratingImdbFrom: z.number().min(0).max(10).optional(),
 
-    sort: z.enum(['newest', 'oldest', 'year_desc', 'year_asc']).default('newest'),
+    sort: z
+      .enum(['newest', 'oldest', 'year_desc', 'year_asc', 'rating_desc', 'rating_asc'])
+      .default('newest'),
 
     page: z.number().int().positive().default(1),
 
