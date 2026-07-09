@@ -12,7 +12,7 @@ export async function CinemaPage() {
     <>
       <section className={'bg-bg-inverse w-full pt-7.5 pb-4'}>
         <div className={'page-content-width'}>
-          <Carousel className={'text-text-inverse'} label={'Новинки'}>
+          <Carousel className={'text-text-inverse'} href={'/cinema/lists'} label={'Новинки'}>
             {initialCards.recentCards.map((prop) => (
               <FilmCard key={prop.id} {...prop} />
             ))}

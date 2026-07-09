@@ -1,8 +1,11 @@
 'use client';
+
 import Carousel from '@/shared/ui/carousel/Carousel';
 import FilmCard, { FilmCardProps } from '@/entities/films/ui/FilmCard';
+
 import { useFiltersStore } from '@/pages/cinema/model/useFiltersStore';
 import { FilteredFilmsGrid } from '@/pages/cinema/ui/FilteredFilmsGrid';
+import { INITIAL_FILM_SECTIONS } from '@/pages/cinema/model/constants';
 
 export type FilmsGridProps = {
   initialFilmCards: {
@@ -14,41 +17,24 @@ export type FilmsGridProps = {
 };
 
 export function FilmsGrid({ initialFilmCards }: FilmsGridProps) {
-  const selectedGenreIds = useFiltersStore((s) => s.selectedGenreIds);
+  const selectedGenreIds = useFiltersStore((state) => state.selectedGenreIds);
+
   const isFiltered = selectedGenreIds.length > 0;
 
+  if (isFiltered) {
+    return <FilteredFilmsGrid genreIds={selectedGenreIds} />;
+  }
+
   return (
-    <>
-      {!isFiltered && (
-        <div>
-          <Carousel label={'Фильмы'}>
-            {initialFilmCards.filmCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-          <Carousel label={'Сериалы'}>
-            {initialFilmCards.seriesCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-          <Carousel label={'Аниме'}>
-            {initialFilmCards.animeCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-          <Carousel label={'Мультфильмы'}>
-            {initialFilmCards.cartoonCards.map((prop) => (
-              <FilmCard key={prop.id} {...prop} />
-            ))}
-          </Carousel>
-        </div>
-      )}
-      {isFiltered && (
-        <>
-          <FilteredFilmsGrid genreIds={selectedGenreIds}></FilteredFilmsGrid>
-        </>
-      )}
-    </>
+    <div>
+      {INITIAL_FILM_SECTIONS.map((section) => (
+        <Carousel key={section.type} label={section.label} href={section.href}>
+          {initialFilmCards[section.key].map((film) => (
+            <FilmCard key={film.id} {...film} />
+          ))}
+        </Carousel>
+      ))}
+    </div>
   );
 }
 
