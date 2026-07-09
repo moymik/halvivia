@@ -1,6 +1,6 @@
 import { HeroSection } from './HeroSection';
 import { Film } from '@/entities/films/model/types';
-import { getFilmByIdAction } from '@/entities/films/api/actions';
+import { getFilmById } from '@/entities/films/api/api';
 import { CommentSection } from '@/widgets/CommentSection/ui/CommentSection';
 
 export type FilmPageProps = {
@@ -11,7 +11,7 @@ export type FilmPageProps = {
 
 export async function FilmPage({ params }: FilmPageProps) {
   const { id } = await params;
-  const film = await getFilmByIdAction(id);
+  const film = await getFilmById(id);
   return (
     <>
       <HeroSection film={film as Film} />

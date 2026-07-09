@@ -1,4 +1,4 @@
-import { getFilmGenresAction } from '@/entities/films/api/actions';
+import { getFilmGenres } from '@/entities/films/api/api';
 import FilterDropdownClient from '@/pages/cinema/ui/FilterDropdownClient';
 
 export type FilterDropdownProps = {
@@ -6,7 +6,7 @@ export type FilterDropdownProps = {
 };
 
 export async function FilterDropdown({}: FilterDropdownProps) {
-  const result = await getFilmGenresAction();
+  const result = await getFilmGenres();
 
   return <FilterDropdownClient genresResult={result}></FilterDropdownClient>;
 }

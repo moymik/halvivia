@@ -93,3 +93,5 @@ export type DbFilmWithGenres = DbFilm & {
 };
 
 export type FilmFilters = z.infer<typeof FilmFiltersSchema>;
+
+export type FilmFilterKey = keyof FilmFilters;

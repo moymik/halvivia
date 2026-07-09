@@ -1,8 +1,12 @@
+import { ActionResult } from '@/shared/model';
+
 ('server-only');
 
 import { sql } from '@/shared/lib/db';
-import { DbFilmWithGenres, FilmFilters } from '@/entities/films/model/types';
+import { DbFilmWithGenres, Film, FilmFilters } from '@/entities/films/model/types';
 import { FILM_SORT_MAP } from '@/entities/films/model/constants';
+import { FilmFiltersSchema } from '@/entities/films/model/Schemas';
+import { mapDbFilmWithGenresToFilm } from '@/entities/films/model/mappers';
 
 type QueryBuilder = {
   where: string[];
@@ -89,7 +93,8 @@ export function getPagination(filters: FilmFilters) {
 export const FILMS_SELECT_QUERY = `
 SELECT
   f.*,
-  COALESCE(genres.genres, '[]') AS genres
+  COALESCE(genres.genres, '[]') AS genres,
+  COUNT(*) OVER() AS total_count
 
 FROM films f
 
@@ -113,7 +118,12 @@ LEFT JOIN LATERAL (
 ) genres ON TRUE
 `;
 
-export async function filmsQuery(filters: FilmFilters): Promise<DbFilmWithGenres[]> {
+export type DbFilmQueryResult = {
+  films: DbFilmWithGenres[];
+  totalCount: number;
+};
+
+export async function filmsQueryDb(filters: FilmFilters): Promise<DbFilmQueryResult> {
   const { where, values } = buildFilmWhere(filters);
 
   const { limit, offset } = getPagination(filters);
@@ -137,5 +147,37 @@ export async function filmsQuery(filters: FilmFilters): Promise<DbFilmWithGenres
     OFFSET $${offsetIndex}
   `;
 
-  return (await sql.query(query, values)) as DbFilmWithGenres[];
+  const rows = (await sql.query(query, values)) as (DbFilmWithGenres & {
+    total_count: number;
+  })[];
+
+  return {
+    films: rows.map(({ total_count, ...film }) => film),
+    totalCount: rows[0]?.total_count ?? 0,
+  };
+}
+
+export async function filmsQuery(
+  filters: FilmFilters,
+): Promise<ActionResult<{ films: Film[]; totalCount: number }>> {
+  const parsedFilters = FilmFiltersSchema.parse(filters);
+
+  try {
+    const res = await filmsQueryDb(parsedFilters);
+
+    return {
+      success: true,
+      data: {
+        ...res,
+        films: res.films.map(mapDbFilmWithGenresToFilm),
+      },
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      error: 'DB_ERROR',
+    };
+  }
 }

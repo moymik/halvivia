@@ -197,7 +197,7 @@ export async function getFilmsByType(type: string, limit = 10) {
   return rows;
 }
 
-export async function getFilmGenres(): Promise<DbGenre[]> {
+export async function getDbFilmGenres(): Promise<DbGenre[]> {
   'use cache';
   cacheLife('days');
 
