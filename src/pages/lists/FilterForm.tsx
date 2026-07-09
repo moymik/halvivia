@@ -4,6 +4,7 @@ import { DbGenre, FilmFilterKey, FilmFilters } from '@/entities/films/model/type
 
 import { FILM_TYPE_OPTIONS } from '@/entities/films/model/constants';
 import { useListQuery } from '@/shared/lib/url/hooks';
+import { useDebouncedCallback } from 'use-debounce';
 
 type Props = {
   filters: FilmFilters;
@@ -12,6 +13,10 @@ type Props = {
 
 export default function FilterForm({ filters, genres }: Props) {
   const { updateParam, toggleArrayParam, reset } = useListQuery<FilmFilterKey>();
+  const debouncedUpdateParam = useDebouncedCallback((key: FilmFilterKey, value: string) => {
+    updateParam(key, value);
+  }, 1000);
+
   return (
     <aside className="flex flex-col gap-6 rounded-lg border p-5">
       <h2 className="text-xl font-bold">Фильтры</h2>
@@ -24,7 +29,7 @@ export default function FilterForm({ filters, genres }: Props) {
           className="w-full border p-2"
           defaultValue={filters.search ?? ''}
           placeholder="Название фильма"
-          onChange={(e) => updateParam('search', e.target.value)}
+          onChange={(e) => debouncedUpdateParam('search', e.target.value)}
         />
       </div>
 
@@ -88,7 +93,14 @@ export default function FilterForm({ filters, genres }: Props) {
             placeholder="От"
             className="w-1/2 border p-2"
             defaultValue={filters.yearFrom ?? ''}
-            onBlur={(e) => updateParam('yearFrom', e.target.value)}
+            min={1800}
+            onChange={(e) => {
+              const value = e.target.value;
+
+              if (value === '' || Number(value) >= 1800) {
+                debouncedUpdateParam('yearFrom', value);
+              }
+            }}
           />
 
           <input
@@ -96,7 +108,21 @@ export default function FilterForm({ filters, genres }: Props) {
             placeholder="До"
             className="w-1/2 border p-2"
             defaultValue={filters.yearTo ?? ''}
-            onBlur={(e) => updateParam('yearTo', e.target.value)}
+            min={1800}
+            onChange={(e) => {
+              const value = e.target.value;
+
+              if (value === '') {
+                debouncedUpdateParam('yearTo', '');
+                return;
+              }
+
+              const year = Number(value);
+
+              if (year >= 1800 && year <= new Date().getFullYear() + 5) {
+                debouncedUpdateParam('yearTo', value);
+              }
+            }}
           />
         </div>
       </div>
