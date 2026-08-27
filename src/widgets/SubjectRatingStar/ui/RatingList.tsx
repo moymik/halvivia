@@ -28,7 +28,7 @@ export function RatingList({ ratings, className, emptyText = 'Нет оцено�
                 ...rating.user,
                 role: null,
               }}
-              className="h-7 w-7 border-none"
+              className="h-7 w-7 border-none lg:h-10 lg:w-10"
             />
 
             <span className="truncate text-sm">{rating.user.name ?? 'Unknown'}</span>

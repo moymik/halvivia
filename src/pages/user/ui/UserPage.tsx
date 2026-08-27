@@ -2,65 +2,56 @@ import { findUserById } from '@/entities/user';
 import { verifySession } from '@/shared/lib/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
-import { UserAvatarFull } from '@/entities/user/ui/userAvatarFull';
 import DiscordLinkButton from '@/features/auth/ui/DiscordLinkButton';
 import { ImageKitUploader } from '@/widgets/ImageKitUploader';
+import UserAvatarMini from '@/entities/user/ui/UserAvatarMini';
+import { Separator } from '@/shared/ui/separator';
+import { UserTabs } from '@/pages/user/ui/UserTabs';
+import UserTabContent from '@/pages/user/ui/UserTabContent';
+import { getUserTab, USER_TABS } from '@/pages/user/model';
 
 export type UserPageProps = {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{
+    tab?: string;
+  }>;
 };
-//TODO: перенести текущее отображение в user/edit роут а на его месте сверстать по дизайну
-export async function UserPage({ params }: UserPageProps) {
-  const session = await verifySession();
+
+export async function UserPage({ params, searchParams }: UserPageProps) {
+  const [session, { id }, { tab }] = await Promise.all([verifySession(), params, searchParams]);
 
   if (session.status === 'unauthenticated') {
     redirect(ROUTES.LOGIN);
   }
 
-  const resolvedParams = await params;
-  const user = await findUserById(resolvedParams.id);
+  const user = await findUserById(id);
+
   if (!user) {
-    return <>Пользователь не найден...</>;
+    return <div>Пользователь не найден...</div>;
   }
 
+  const isOwner = session.payload.userId === user.id;
+
+  const activeTab = getUserTab(tab);
+
   return (
-    <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5 px-4 py-8 md:flex-row md:px-8 lg:py-10">
-      {/* Profile header */}
-      <div className="flex w-max flex-col items-center gap-5 rounded-2xl bg-gray-900 p-6 shadow-lg">
-        <div className={'flex-col'}>
-          <UserAvatarFull user={user}></UserAvatarFull>
-          <h1 className="text-xl font-semibold">{user.name}</h1>
-          <p className="text-sm text-gray-400">{user.role}</p>
-          <p className="text-sm text-gray-500">{user.email ?? 'Email не указан'}</p>
-        </div>
-        <ImageKitUploader folder={'/avatars'} />
+    <div className="flex w-full flex-col py-4.5 md:py-7">
+      <div className="page-content-width">
+        <UserAvatarMini className={'border-none lg:h-[4.9vw] lg:w-[4.9vw]'} user={user} />
+        <h1 className={'text-text-inverse mt-0.5 text-xl font-semibold md:mt-1.5 md:text-2xl'}>
+          {user.name}
+        </h1>
       </div>
-      {/* Info cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="rounded-xl bg-gray-900 p-5">
-          <h2 className="mb-2 text-sm text-gray-400">User ID</h2>
-          <p className="text-sm break-all">{user.id}</p>
-        </div>
+      <div> tabspan</div>
 
-        <div className="flex flex-col gap-5 rounded-xl bg-gray-900 p-5">
-          <h2 className="mb-2 text-sm text-gray-400">Discord ID</h2>
-          <p className="text-sm">{user.discordId}</p>
-          <DiscordLinkButton />
-        </div>
-
-        <div className="rounded-xl bg-gray-900 p-5 md:col-span-2">
-          <h2 className="mb-2 text-sm text-gray-400">Email</h2>
-          <p className="text-sm">{user.email ?? 'Не привязан'}</p>
-        </div>
-
-        <div className="rounded-xl bg-gray-900 p-5 md:col-span-2">
-          <h2 className="mb-2 text-sm text-gray-400">Role</h2>
-          <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-xs">
-            {user.role}
-          </span>
-        </div>
+      <div className="page-content-width">
+        <UserTabs userId={user.id} />
+      </div>
+      <Separator className={'bg-border-second w-screen'} />
+      <div>
+        <UserTabContent userId={user.id} activeTab={activeTab} />
       </div>
     </div>
   );
