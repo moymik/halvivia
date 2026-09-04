@@ -7,7 +7,7 @@ import {
 } from '@/entities/films/model/types';
 import { FilmCardProps } from '@/entities/films/ui/FilmCard';
 
-export function mapDbFilmToFilmWothoutGenres(db: DbFilm): FilmWithoutGenres {
+export function mapDbFilmToFilmWithoutGenres(db: DbFilm): FilmWithoutGenres {
   return {
     id: db.id,
 

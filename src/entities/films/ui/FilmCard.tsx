@@ -11,6 +11,7 @@ export type FilmCardProps = {
   ratingAvg?: number | null;
   variant?: 'grid' | 'fixed';
   className?: string;
+  children?: React.ReactNode;
 };
 
 const variants = {
@@ -29,6 +30,7 @@ export function FilmCard({
   name = 'Джентльмены ',
   ratingAvg = 0,
   variant = 'fixed',
+  children,
 }: FilmCardProps) {
   return (
     <Link
@@ -42,6 +44,7 @@ export function FilmCard({
           variant === 'fixed' && 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-64.25',
         )}
       >
+        {children}
         <Image
           urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
           alt="alt"

@@ -1,4 +1,5 @@
 import { UserTab, USER_TABS } from '@/pages/user/model';
+import UserRatings from '@/pages/user/ui/UserRatings';
 
 type UserTabContentProps = {
   userId: string;
@@ -15,8 +16,7 @@ export function UserTabContent({ userId, activeTab }: UserTabContentProps) {
       //return <PlannedMovies userId={userId} />;
       return <div>Фильмы</div>;
     case USER_TABS.RATINGS:
-      //return <UserRatings userId={userId} />;
-      return <div>Рейтинг</div>;
+      return <UserRatings userId={userId} />;
     case USER_TABS.UPLOADS:
       //return <UserUploads userId={userId} />;
       return <div>Загрузки</div>;

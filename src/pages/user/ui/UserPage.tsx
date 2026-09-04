@@ -2,13 +2,11 @@ import { findUserById } from '@/entities/user';
 import { verifySession } from '@/shared/lib/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
-import DiscordLinkButton from '@/features/auth/ui/DiscordLinkButton';
-import { ImageKitUploader } from '@/widgets/ImageKitUploader';
 import UserAvatarMini from '@/entities/user/ui/UserAvatarMini';
 import { Separator } from '@/shared/ui/separator';
 import { UserTabs } from '@/pages/user/ui/UserTabs';
 import UserTabContent from '@/pages/user/ui/UserTabContent';
-import { getUserTab, USER_TABS } from '@/pages/user/model';
+import { getUserTab } from '@/pages/user/model';
 
 export type UserPageProps = {
   params: Promise<{
