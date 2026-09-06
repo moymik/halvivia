@@ -4,11 +4,13 @@ import { ArrowIcon, StarIcon } from '@/shared/ui/icons';
 import Description from '@/pages/film/ui/Description';
 import Info from '@/pages/film/ui/Info';
 import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
-import { getRatingColorClass } from '@/entities/rating/lib/utils';
 import { ROUTES } from '@/shared/config';
 import Link from 'next/link';
 import { mapFilmToInfoItems } from '@/pages/film/model/mapFilmToInfoItems';
 import SubjectRatingStar from '@/widgets/SubjectRatingStar/SubjectRatingStar';
+import { FilmWishlistButton } from '@/features/wishlist/ui/FilmWishlistButton';
+import { verifySession } from '@/shared/lib/auth';
+import { isFilmInWishlist } from '@/features/wishlist/api/db';
 
 type HeroSectionProps = {
   film: Film;
@@ -18,7 +20,15 @@ function parseAgeLimits(age: string | null) {
   if (!age) return '';
   return age.substring(3) + '+';
 }
-export function HeroSection({ film }: HeroSectionProps) {
+
+export async function HeroSection({ film }: HeroSectionProps) {
+  const session = await verifySession();
+
+  const isInWishlist =
+    session.status === 'authenticated'
+      ? await isFilmInWishlist(session.payload.userId, film.id)
+      : false;
+
   return (
     <>
       <div className="page-content-width grid grid-cols-1 items-start gap-y-6 py-8 md:grid-cols-[auto_1fr] md:gap-x-8">
@@ -56,7 +66,10 @@ export function HeroSection({ film }: HeroSectionProps) {
             className="text-text-primary hidden w-full md:grid"
             items={mapFilmToInfoItems(film)}
           />
-          <RatingStarButton className="md:self-start" subject={{ type: 'film', id: film.id }} />
+          <div className="flex flex-row gap-2">
+            <FilmWishlistButton isInWishlist={isInWishlist} filmId={film.id}></FilmWishlistButton>
+            <RatingStarButton className="md:self-start" subject={{ type: 'film', id: film.id }} />
+          </div>
         </div>
       </div>
       <section className="bg-bg-base md:bg-bg-inverse py-10">

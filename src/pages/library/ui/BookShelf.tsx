@@ -9,7 +9,7 @@ type BookShelfProps = {
   emptyText: string;
   muted?: boolean;
   priorityCount?: number;
-  variant: 'base' | 'onLight';
+  variant?: 'base' | 'onLight';
 };
 
 export function BookShelf({
