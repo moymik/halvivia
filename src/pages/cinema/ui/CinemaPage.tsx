@@ -5,6 +5,7 @@ import { getInitialCardsAction } from '@/pages/cinema/api/actions';
 import Toolbar from '@/pages/cinema/ui/Toolbar';
 import FilmsGrid from '@/pages/cinema/ui/FilmsGrid';
 import { Suspense } from 'react';
+import PlannedFilmsCarousel from '@/features/wishlist/ui/PlannedFilmsCarousel';
 
 export async function CinemaPage() {
   const initialCards = await getInitialCardsAction();
@@ -23,6 +24,9 @@ export async function CinemaPage() {
         <div className={'page-content-width flex flex-col gap-5 py-12'}>
           <Suspense fallback={null}>
             <Toolbar></Toolbar>
+          </Suspense>
+          <Suspense>
+            <PlannedFilmsCarousel></PlannedFilmsCarousel>
           </Suspense>
           <FilmsGrid initialFilmCards={initialCards}></FilmsGrid>
         </div>

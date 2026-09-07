@@ -2,6 +2,7 @@ import { connection } from 'next/server';
 import { getLibraryPageViewModel } from '../model/viewModel';
 import { BookShelf } from './BookShelf';
 import { LibraryToolbar } from './LibraryToolbar';
+import PlannedBooksShelf from '@/features/wishlist/ui/PlannedBooksShelf';
 
 const RECENT_BOOKS_TITLE = 'Новинки';
 const PLANNED_BOOKS_TITLE = 'Планирую прочитать';
@@ -32,14 +33,7 @@ export async function LibraryPage() {
         <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-42 bg-[url('/library-vector.png')] bg-size-[100%_auto] bg-bottom bg-no-repeat opacity-45 md:h-52" />
         <div className="page-content-width relative flex flex-col gap-10 py-8 lg:py-9">
           <LibraryToolbar canAddBooks={canAddBooks} />
-
-          <BookShelf
-            title={PLANNED_BOOKS_TITLE}
-            books={plannedBooks}
-            emptyText={PLANNED_EMPTY_TEXT}
-            muted
-          />
-
+          <PlannedBooksShelf></PlannedBooksShelf>
           {sectionShelves.map((section) => (
             <BookShelf
               key={section.id}
