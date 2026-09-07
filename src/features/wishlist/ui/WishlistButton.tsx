@@ -53,7 +53,7 @@ export function WishlistButton({
       title={label}
     >
       <WishlistIcon
-        className={isInWishlist ? 'text-transparent' : 'text-[#F9F9F9]'}
+        className={isInWishlist ? 'text-[#F9F9F9]' : 'text-transparent'}
         aria-hidden="true"
       />
     </button>

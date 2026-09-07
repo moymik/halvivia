@@ -5,7 +5,7 @@ export type UserRatingsTabProps = { userId: string };
 
 export function UserRatings({ userId }: UserRatingsTabProps) {
   return (
-    <div className={'page-content-width'}>
+    <div>
       <RatedFilmsCarousel userId={userId} />
       <RatedBooksShelf userId={userId} />
     </div>

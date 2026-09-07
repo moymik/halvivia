@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { sql } from '@/shared/lib/db';
+import { DbFilm } from '@/entities/films/model/types';
 
 export async function addFilmToWishlist(userId: string, filmId: string): Promise<void> {
   await sql`
@@ -30,15 +31,40 @@ export async function isFilmInWishlist(userId: string, filmId: string): Promise<
   return result.length > 0;
 }
 
-export async function getUserFilmWishlist(userId: string) {
-  return sql`
-    SELECT
-      f.*,
-      w.created_at AS wishlist_created_at
-    FROM user_film_wishlist AS w
-           INNER JOIN films AS f
-                      ON f.id = w.film_id
-    WHERE w.user_id = ${userId}
-    ORDER BY w.created_at DESC
-  `;
+type GetUserFilmWishlistResult = {
+  films: DbFilm[];
+  totalCount: number;
+  totalPages: number;
+};
+
+export async function getUserFilmWishlist(
+  userId: string,
+  limit = 25,
+  page = 1,
+): Promise<GetUserFilmWishlistResult> {
+  const offset = (page - 1) * limit;
+  const [films, countResult] = await Promise.all([
+    sql`
+        SELECT f.*
+        FROM user_film_wishlist AS w
+                 INNER JOIN films AS f
+                            ON f.id = w.film_id
+        WHERE w.user_id = ${userId}
+        ORDER BY w.created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+    `,
+    sql`
+      SELECT COUNT(*) as count
+      FROM user_film_wishlist
+      WHERE user_id = ${userId}
+    `,
+  ]);
+
+  const totalCount = Number(countResult[0].count);
+
+  return {
+    films: films as DbFilm[],
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
+  };
 }

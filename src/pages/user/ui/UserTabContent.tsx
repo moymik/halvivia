@@ -1,5 +1,6 @@
 import { UserTab, USER_TABS } from '@/pages/user/model';
 import UserRatings from '@/pages/user/ui/UserRatings';
+import { FilmWishlistGrid } from '@/features/wishlist/ui/FilmsWishlist';
 
 type UserTabContentProps = {
   userId: string;
@@ -13,8 +14,7 @@ export function UserTabContent({ userId, activeTab }: UserTabContentProps) {
       return <div>Книги</div>;
 
     case USER_TABS.MOVIES:
-      //return <PlannedMovies userId={userId} />;
-      return <div>Фильмы</div>;
+      return <FilmWishlistGrid userId={userId}></FilmWishlistGrid>;
     case USER_TABS.RATINGS:
       return <UserRatings userId={userId} />;
     case USER_TABS.UPLOADS:
