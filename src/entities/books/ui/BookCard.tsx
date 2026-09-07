@@ -7,6 +7,7 @@ import { CardRatingStar } from '@/entities/rating/ui/CardRatingStar';
 type BookCardProps = {
   book: Book;
   priority?: boolean;
+  hoverLift?: boolean;
   children?: React.ReactNode;
 };
 
@@ -14,13 +15,15 @@ function getRating(book: Book) {
   return book.externalRatings[0]?.value ?? null;
 }
 
-export function BookCard({ book, priority = false, children }: BookCardProps) {
+export function BookCard({ book, priority = false, hoverLift = true, children }: BookCardProps) {
   const rating = book.ratingAvg;
 
   return (
     <Link
       href={`${ROUTES.LIBRARY}/${book.id}`}
-      className="group focus-visible:ring-primary relative block shrink-0 overflow-hidden bg-neutral-900 shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition-transform duration-300 ease-out outline-none hover:z-20 hover:-translate-y-1 focus-visible:ring-2"
+      className={`group focus-visible:ring-primary relative block shrink-0 overflow-hidden bg-neutral-900 shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition-transform duration-300 ease-out outline-none focus-visible:ring-2 ${
+        hoverLift ? 'hover:z-20 hover:-translate-y-1' : ''
+      }`}
     >
       {children}
       <div className="relative aspect-104/171 w-26 sm:w-32 lg:w-37">

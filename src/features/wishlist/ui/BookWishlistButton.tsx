@@ -9,14 +9,23 @@ import {
 type BookWishlistButtonProps = {
   bookId: string;
   isInWishlist: boolean;
+  onSuccess?: () => void;
+  variant?: 'default' | 'compactRemove';
 };
 
-export function BookWishlistButton({ bookId, isInWishlist }: BookWishlistButtonProps) {
+export function BookWishlistButton({
+  bookId,
+  isInWishlist,
+  onSuccess,
+  variant,
+}: BookWishlistButtonProps) {
   return (
     <WishlistButton
       isInWishlist={isInWishlist}
       onAddAction={() => addBookToWishlistAction(bookId)}
       onRemoveAction={() => removeBookFromWishlistAction(bookId)}
+      onSuccess={onSuccess}
+      variant={variant}
     />
   );
 }

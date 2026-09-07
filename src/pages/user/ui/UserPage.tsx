@@ -14,11 +14,22 @@ export type UserPageProps = {
   }>;
   searchParams: Promise<{
     tab?: string;
+    page?: string;
   }>;
 };
 
+function getPage(value?: string): number {
+  const page = Number(value);
+
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
 export async function UserPage({ params, searchParams }: UserPageProps) {
-  const [session, { id }, { tab }] = await Promise.all([verifySession(), params, searchParams]);
+  const [session, { id }, { tab, page }] = await Promise.all([
+    verifySession(),
+    params,
+    searchParams,
+  ]);
 
   if (session.status === 'unauthenticated') {
     redirect(ROUTES.LOGIN);
@@ -33,6 +44,7 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
   const isOwner = session.payload.userId === user.id;
 
   const activeTab = getUserTab(tab);
+  const wishlistPage = getPage(page);
 
   return (
     <div className="flex w-full flex-col py-4.5 md:py-7">
@@ -49,7 +61,12 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
       </div>
       <Separator className={'bg-border-second w-screen'} />
       <div className={'page-content-width'}>
-        <UserTabContent userId={user.id} activeTab={activeTab} />
+        <UserTabContent
+          userId={user.id}
+          activeTab={activeTab}
+          page={wishlistPage}
+          canRemoveFromWishlist={isOwner}
+        />
       </div>
     </div>
   );

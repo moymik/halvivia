@@ -9,14 +9,23 @@ import {
 type FilmWishlistButtonProps = {
   filmId: string;
   isInWishlist: boolean;
+  onSuccess?: () => void;
+  variant?: 'default' | 'compactRemove';
 };
 
-export function FilmWishlistButton({ filmId, isInWishlist }: FilmWishlistButtonProps) {
+export function FilmWishlistButton({
+  filmId,
+  isInWishlist,
+  onSuccess,
+  variant,
+}: FilmWishlistButtonProps) {
   return (
     <WishlistButton
       isInWishlist={isInWishlist}
       onAddAction={() => addFilmToWishlistAction(filmId)}
       onRemoveAction={() => removeFilmFromWishlistAction(filmId)}
+      onSuccess={onSuccess}
+      variant={variant}
     />
   );
 }

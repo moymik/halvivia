@@ -11,6 +11,7 @@ export type FilmCardProps = {
   ratingAvg?: number | null;
   variant?: 'grid' | 'fixed';
   className?: string;
+  hoverScale?: boolean;
   children?: React.ReactNode;
 };
 
@@ -30,6 +31,7 @@ export function FilmCard({
   name = 'Джентльмены ',
   ratingAvg = 0,
   variant = 'fixed',
+  hoverScale = true,
   children,
 }: FilmCardProps) {
   return (
@@ -39,7 +41,9 @@ export function FilmCard({
     >
       <div
         className={cn(
-          `group default relative flex flex-col gap-1 overflow-visible transition-transform duration-300 ease-out hover:scale-110`,
+          `group default relative flex flex-col gap-1 overflow-visible transition-transform duration-300 ease-out ${
+            hoverScale ? 'hover:scale-110' : ''
+          }`,
           variant === 'grid' && 'w-full',
           variant === 'fixed' && 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-64.25',
         )}

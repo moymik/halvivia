@@ -4,9 +4,10 @@ type PaginationProps = {
   page: number;
   totalPages: number;
   onChange: (page: number) => void;
+  variant?: 'default' | 'onLight';
 };
 
-export function Pagination({ page, totalPages, onChange }: PaginationProps) {
+export function Pagination({ page, totalPages, onChange, variant = 'default' }: PaginationProps) {
   const pagination = useMemo(() => {
     const delta = 2;
     const pages: (number | '...')[] = [];
@@ -37,12 +38,22 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
 
   if (totalPages <= 1) return null;
 
+  const isOnLight = variant === 'onLight';
+  const controlClassName = isOnLight
+    ? 'border-border-inverse-200 text-text-inverse hover:bg-bg-base-050'
+    : '';
+  const pageClassName = isOnLight
+    ? 'bg-primary text-white hover:bg-primary-dark'
+    : 'bg-black text-white';
+
   return (
-    <div className="mt-6 flex items-center justify-center gap-2">
+    <div
+      className={`mt-6 flex items-center justify-center gap-2 ${isOnLight ? 'text-text-inverse' : ''}`}
+    >
       <button
         onClick={() => onChange(Math.max(1, page - 1))}
         disabled={page === 1}
-        className="rounded border px-3 py-2 disabled:opacity-50"
+        className={`rounded border px-3 py-2 disabled:opacity-50 ${controlClassName}`}
       >
         ←
       </button>
@@ -57,7 +68,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
             key={item}
             onClick={() => onChange(item)}
             className={`h-10 w-10 rounded border ${
-              item === page ? 'bg-black text-white' : 'hover:bg-gray-100'
+              item === page ? pageClassName : isOnLight ? controlClassName : 'hover:bg-gray-100'
             }`}
           >
             {item}
@@ -68,7 +79,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
       <button
         onClick={() => onChange(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
-        className="rounded border px-3 py-2 disabled:opacity-50"
+        className={`rounded border px-3 py-2 disabled:opacity-50 ${controlClassName}`}
       >
         →
       </button>

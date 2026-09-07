@@ -6,15 +6,22 @@ import { BookWishlistGrid } from '@/features/wishlist/ui/BooksWishlist';
 type UserTabContentProps = {
   userId: string;
   activeTab: UserTab;
+  page: number;
+  canRemoveFromWishlist: boolean;
 };
 
-export function UserTabContent({ userId, activeTab }: UserTabContentProps) {
+export function UserTabContent({
+  userId,
+  activeTab,
+  page,
+  canRemoveFromWishlist,
+}: UserTabContentProps) {
   switch (activeTab) {
     case USER_TABS.BOOKS:
-      return <BookWishlistGrid userId={userId} />;
+      return <BookWishlistGrid userId={userId} page={page} canRemove={canRemoveFromWishlist} />;
 
     case USER_TABS.MOVIES:
-      return <FilmWishlistGrid userId={userId}></FilmWishlistGrid>;
+      return <FilmWishlistGrid userId={userId} page={page} canRemove={canRemoveFromWishlist} />;
     case USER_TABS.RATINGS:
       return <UserRatings userId={userId} />;
     case USER_TABS.UPLOADS:
