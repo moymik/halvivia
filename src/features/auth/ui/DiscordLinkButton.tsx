@@ -6,7 +6,7 @@ import { startDiscordLinkAction } from '@/features/auth';
 export function DiscordLinkButton() {
   return (
     <Button onClick={startDiscordLinkAction} variant={'primary'}>
-      Подключить дискорд аккаунт
+      Подключить дискорд
     </Button>
   );
 }

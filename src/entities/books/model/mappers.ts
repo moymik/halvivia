@@ -1,6 +1,6 @@
 import type { Book, BookExternalRating, BookSectionId } from './types';
 
-type DbBook = {
+export type DbBook = {
   id: string;
   google_books_id: string | null;
   open_library_key: string | null;

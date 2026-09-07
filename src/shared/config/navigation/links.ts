@@ -82,6 +82,12 @@ export const NAVIGATION_LINKS = {
     label: 'Профиль',
   },
 
+  SETTINGS: {
+    id: 'settings',
+    href: ROUTES.SETTINGS,
+    label: 'Настройки',
+  },
+
   REVIEWS: {
     id: 'reviews',
     href: ROUTES.REVIEWS,

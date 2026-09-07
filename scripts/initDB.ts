@@ -1,9 +1,7 @@
-import { addBookRatingsFields, addFilmRatingsFields } from './initSchema';
-import { addBook } from '@/entities/books/api/db';
+import { createWishListsTables } from './initSchema';
 
 async function main() {
-  await addFilmRatingsFields();
-  await addBookRatingsFields();
+  await createWishListsTables();
 }
 
 const isDirectRun =

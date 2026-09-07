@@ -33,9 +33,9 @@ export function Carousel({
           Все
         </Link>
       </div>
-      <div className="flex scrollbar-thumb-transparent flex-row gap-[max(4px,0.5vw)] overflow-x-scroll overflow-y-visible py-2 hover:scrollbar-thumb-gray-800">
+      <ul className="flex scrollbar-thumb-transparent flex-row gap-[max(4px,0.5vw)] overflow-x-scroll overflow-y-visible py-2 hover:scrollbar-thumb-gray-800">
         {children}
-      </div>
+      </ul>
     </div>
   );
 }

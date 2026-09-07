@@ -7,6 +7,7 @@ export const ROUTES = {
   LOGIN: '/auth/login',
   REGISTER: '/auth/register',
   PROFILE: '/user/',
+  SETTINGS: '/user/settings/',
   REVIEWS: '/reviews',
   DOWNLOADS: '/downloads',
   FILM_PAGE: '/cinema/film/',

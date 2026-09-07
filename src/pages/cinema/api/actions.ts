@@ -1,6 +1,6 @@
 'use server';
 import { getFilteredFilms, getInitialCinemaFilms } from '@/entities/films/api/db';
-import { mapDbFilmToFilmWothoutGenres, mapFilms } from '@/entities/films/model/mappers';
+import { mapDbFilmToFilmWithoutGenres, mapFilms } from '@/entities/films/model/mappers';
 import { FilmWithoutGenres } from '@/entities/films/model/types';
 import { ActionResult } from '@/shared/model';
 import { cacheLife } from 'next/cache';
@@ -40,7 +40,7 @@ export async function getFilteredFilmsAction(
       success: true,
       data: {
         ...result,
-        films: result.films.map(mapDbFilmToFilmWothoutGenres),
+        films: result.films.map(mapDbFilmToFilmWithoutGenres),
       },
     };
   } catch (error) {

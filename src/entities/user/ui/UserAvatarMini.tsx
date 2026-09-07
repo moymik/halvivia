@@ -14,7 +14,10 @@ export function UserAvatarMini({ user, className }: UserAvatarProps) {
       <Image
         urlEndpoint={`https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`} // New prop
         src={user.avatarUrl}
-        className={cn('border-primary h-15 w-15 shrink-0 rounded-full border-2', className)}
+        className={cn(
+          'border-primary h-10 w-10 shrink-0 rounded-full border-2 md:h-17 md:w-17',
+          className,
+        )}
         width={100}
         height={100}
         alt="Picture of the author"
@@ -23,7 +26,7 @@ export function UserAvatarMini({ user, className }: UserAvatarProps) {
   ) : (
     <div
       className={cn(
-        'border-primary h-15 w-15 shrink-0 rounded-full border-2 bg-gray-500',
+        'border-primary h-10 w-10 shrink-0 rounded-full border-2 bg-gray-500 md:h-17 md:w-17',
         className,
       )}
     ></div>

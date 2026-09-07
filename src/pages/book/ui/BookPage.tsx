@@ -10,6 +10,9 @@ import { Suspense } from 'react';
 import { CommentSection } from '@/widgets/CommentSection/ui/CommentSection';
 import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
 import SubjectRatingStar from '@/widgets/SubjectRatingStar/SubjectRatingStar';
+import { BookWishlistButton } from '@/features/wishlist/ui/BookWishlistButton';
+import { verifySession } from '@/shared/lib/auth';
+import { isBookInWishlist } from '@/features/wishlist/api/db';
 
 type BookPageProps = {
   params: Promise<{
@@ -20,7 +23,7 @@ type BookPageProps = {
 export async function BookPageContent({ params }: BookPageProps) {
   await connection();
 
-  const { id } = await params;
+  const [{ id }, session] = await Promise.all([params, verifySession()]);
   const book = await getBookById(id);
 
   if (!book) {
@@ -28,6 +31,10 @@ export async function BookPageContent({ params }: BookPageProps) {
   }
 
   const descriptionHtml = book.description ? sanitizeHtml(book.description) : null;
+  const isInWishlist =
+    session.status === 'authenticated'
+      ? await isBookInWishlist(session.payload.userId, book.id)
+      : false;
 
   return (
     <>
@@ -82,7 +89,10 @@ export async function BookPageContent({ params }: BookPageProps) {
                 dangerouslySetInnerHTML={{ __html: descriptionHtml }}
               />
             )}
-            <RatingStarButton subject={{ type: 'book', id: book.id }}></RatingStarButton>
+            <div className="flex flex-row gap-2">
+              <BookWishlistButton bookId={book.id} isInWishlist={isInWishlist} />
+              <RatingStarButton subject={{ type: 'book', id: book.id }} />
+            </div>
           </div>
         </div>
       </section>

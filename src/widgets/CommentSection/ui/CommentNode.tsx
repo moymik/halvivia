@@ -2,6 +2,7 @@ import { CommentWithAuthor, CommentWithAuthorTree } from '@/widgets/CommentSecti
 import { useState } from 'react';
 import UserAvatarMini from '@/entities/user/ui/UserAvatarMini';
 import { formatDate } from '../lib/utils';
+import UserLink from '@/pages/user/ui/UserLink';
 
 export function CommentNode({
   comment,
@@ -14,12 +15,18 @@ export function CommentNode({
   return (
     <div className={`flex flex-col gap-5 ${comment.parentId && 'ml-17'} `}>
       <div className={`flex flex-row items-start gap-6`}>
-        <UserAvatarMini
-          user={comment.author}
-          className={'h-12 w-12 border-none lg:h-16 lg:w-16'}
-        ></UserAvatarMini>
+        <UserLink userId={comment.userId}>
+          <UserAvatarMini
+            user={comment.author}
+            className={'h-12 w-12 border-none lg:h-16 lg:w-16'}
+          ></UserAvatarMini>
+        </UserLink>
         <div className={`flex flex-1 flex-col items-start gap-1.5`}>
-          <h3 className={'text-base leading-4.5 font-medium lg:text-xl'}>{comment.author.name}</h3>
+          <UserLink userId={comment.userId}>
+            <h3 className={'text-base leading-4.5 font-medium lg:text-xl'}>
+              {comment.author.name}
+            </h3>
+          </UserLink>
           <p className={'text-sm leading-6 lg:text-base'}>{comment.content}</p>
           <div className={'text-text-inverse-500 flex flex-row gap-6 text-xs lg:text-sm'}>
             <p>{formatDate(comment.createdAt)}</p>

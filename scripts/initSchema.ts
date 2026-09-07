@@ -332,3 +332,37 @@ export async function addBookRatingsFields() {
     ON books (rating_avg DESC);
   `;
 }
+
+export async function createWishListsTables() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS user_film_wishlist
+    (
+      user_id    UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+      film_id    UUID        NOT NULL REFERENCES films (id) ON DELETE CASCADE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+      PRIMARY KEY (user_id, film_id)
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_user_film_wishlist_user_created
+      ON user_film_wishlist (user_id, created_at DESC);
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS user_book_wishlist
+    (
+      user_id    UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+      book_id    UUID        NOT NULL REFERENCES books (id) ON DELETE CASCADE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+      PRIMARY KEY (user_id, book_id)
+    );
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_user_book_wishlist_user_created
+      ON user_book_wishlist (user_id, created_at DESC);
+  `;
+}
