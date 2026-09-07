@@ -2,6 +2,7 @@ import { getFilmWishlist } from '@/features/wishlist/api/queries';
 import FilmCard from '@/entities/films/ui/FilmCard';
 import { WishlistPagination } from '@/features/wishlist/ui/WishlistPagination';
 import { WishlistRemoveButton } from '@/features/wishlist/ui/WishlistRemoveButton';
+import { WishlistEmptyState } from '@/features/wishlist/ui/WishlistEmptyState';
 
 type FilmWishlistGridProps = {
   userId: string;
@@ -19,6 +20,10 @@ export async function FilmWishlistGrid({
   const result = await getFilmWishlist(userId, limit, page);
   if (!result) {
     return <div>Необходимо авторизоваться.</div>;
+  }
+
+  if (result.films.length === 0) {
+    return <WishlistEmptyState type="film" />;
   }
 
   return (

@@ -2,6 +2,7 @@ import { getBookWishlist } from '@/features/wishlist/api/queries';
 import BookCard from '@/entities/books/ui/BookCard';
 import { WishlistPagination } from '@/features/wishlist/ui/WishlistPagination';
 import { WishlistRemoveButton } from '@/features/wishlist/ui/WishlistRemoveButton';
+import { WishlistEmptyState } from '@/features/wishlist/ui/WishlistEmptyState';
 
 type BookWishlistGridProps = {
   userId: string;
@@ -20,6 +21,10 @@ export async function BookWishlistGrid({
 
   if (!result) {
     return <div>Необходимо авторизоваться.</div>;
+  }
+
+  if (result.books.length === 0) {
+    return <WishlistEmptyState type="book" />;
   }
 
   return (

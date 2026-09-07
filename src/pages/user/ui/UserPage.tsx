@@ -72,7 +72,7 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
         <UserTabs userId={user.id} />
       </div>
       <Separator className={'bg-border-second w-screen'} />
-      <div className={'page-content-width'}>
+      <div className={'page-content-width min-h-40'}>
         <UserTabContent
           userId={user.id}
           activeTab={activeTab}
