@@ -7,6 +7,8 @@ import { Separator } from '@/shared/ui/separator';
 import { UserTabs } from '@/pages/user/ui/UserTabs';
 import UserTabContent from '@/pages/user/ui/UserTabContent';
 import { getUserTab } from '@/pages/user/model';
+import Link from 'next/link';
+import { SettingsIcon } from '@/shared/ui/icons';
 
 export type UserPageProps = {
   params: Promise<{
@@ -50,9 +52,19 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
     <div className="flex w-full flex-col py-4.5 md:py-7">
       <div className="page-content-width">
         <UserAvatarMini className={'border-none lg:h-[4.9vw] lg:w-[4.9vw]'} user={user} />
-        <h1 className={'text-text-inverse mt-0.5 text-xl font-semibold md:mt-1.5 md:text-2xl'}>
-          {user.name}
-        </h1>
+        <div className="mt-0.5 flex items-center gap-2 md:mt-1.5">
+          <h1 className="text-text-inverse text-xl font-semibold md:text-2xl">{user.name}</h1>
+          {isOwner && (
+            <Link
+              href={ROUTES.SETTINGS + user.id}
+              className="text-text-inverse-500 hover:text-text-inverse focus-visible:ring-primary rounded p-1 transition-colors focus-visible:ring-2"
+              aria-label="Настройки профиля"
+              title="Настройки профиля"
+            >
+              <SettingsIcon className="h-5 w-5" aria-hidden="true" />
+            </Link>
+          )}
+        </div>
       </div>
       <div> tabspan</div>
 

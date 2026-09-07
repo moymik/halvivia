@@ -61,3 +61,14 @@ export async function setAvatar(userId: string, url: string): Promise<User | nul
   if (!user) return null;
   else return mapDBUserToUser(user as DBPublicUser);
 }
+
+export async function updateUserName(userId: string, name: string): Promise<User | null> {
+  const [user] = await sql`
+    UPDATE users
+    SET name = ${name}
+    WHERE id = ${userId}
+    RETURNING id, name, email, discord_id, role, avatar_url
+  `;
+
+  return user ? mapDBUserToUser(user as DBPublicUser) : null;
+}

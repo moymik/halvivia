@@ -16,3 +16,10 @@ export const UserSchema = z.object({
   name: z.string().min(1).max(20),
   email: z.string().email(),
 });
+
+export const UserNameSchema = z
+  .string()
+  .trim()
+  .min(2, 'Имя должно содержать минимум 2 символа')
+  .max(20, 'Имя должно содержать максимум 20 символов')
+  .regex(/^\S+$/, 'Пробелы в имени не допускаются');

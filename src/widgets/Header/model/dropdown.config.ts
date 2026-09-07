@@ -8,6 +8,7 @@ type DropdownLink = {
 
 export const userDropdownLinks = [
   { link: NAVIGATION_LINKS.PROFILE, iconName: 'ProfileIcon' },
+  { link: NAVIGATION_LINKS.SETTINGS, iconName: 'SettingsIcon' },
   { link: NAVIGATION_LINKS.REVIEWS, iconName: 'StarIcon' },
   { link: NAVIGATION_LINKS.DOWNLOADS, iconName: 'DownloadIcon' },
 ] as const satisfies readonly DropdownLink[];

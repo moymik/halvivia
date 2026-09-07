@@ -36,9 +36,10 @@ export function HeaderDropdown({ user }: HeaderProps) {
                 setOpen={setOpen}
                 link={link.link}
                 href={
-                  !(link.link.id === NAVIGATION_LINKS.PROFILE.id)
-                    ? undefined
-                    : link.link.href + user.id
+                  link.link.id === NAVIGATION_LINKS.PROFILE.id ||
+                  link.link.id === NAVIGATION_LINKS.SETTINGS.id
+                    ? link.link.href + user.id
+                    : undefined
                 }
                 icon={link.iconName}
                 key={link.link.id}

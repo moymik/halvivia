@@ -9,3 +9,4 @@ export { DownloadIcon } from './DownloadIcon';
 export { StarIcon } from './StarIcon';
 export { AddIcon } from './AddIcon';
 export { ArrowIcon } from './ArrowIcon';
+export { SettingsIcon } from './SettingsIcon';
