@@ -3,8 +3,8 @@ import FilmCard from '@/entities/films/ui/FilmCard';
 
 type FilmWishlistGridProps = {
   userId: string;
-  limit: number;
-  page: number;
+  limit?: number;
+  page?: number;
 };
 
 export async function FilmWishlistGrid({ userId, limit = 24, page = 1 }: FilmWishlistGridProps) {
