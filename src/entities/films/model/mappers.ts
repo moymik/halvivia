@@ -106,7 +106,7 @@ export function mapDbFilmWithGenresToFilm(db: DbFilmWithGenres): Film {
 export function mapDbFilmToFilmCardProps(film: DbFilm): FilmCardProps {
   return {
     id: film.id,
-    name: film.name_ru,
+    name: film.name_ru || film.name_en || film.name_original || 'Без названия',
     posterUrl: film.poster_url,
     ratingAvg: Number(film.rating_avg),
   };
