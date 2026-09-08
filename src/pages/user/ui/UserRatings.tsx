@@ -1,14 +1,40 @@
-import RatedBooksShelf from '@/widgets/UserRatingsLists/ui/RatedBooksShelf';
-import RatedFilmsCarousel from '@/widgets/UserRatingsLists/ui/RatedFilmsCarousel';
+import { getUserBooksWithRating, getUserFilmsWithRating } from '@/widgets/UserRatingsLists/api/db';
+import { RatingHistory } from '@/widgets/UserRatingsLists/ui/RatingHistory';
 
-export type UserRatingsTabProps = { userId: string };
+type UserRatingsProps = {
+  userId: string;
+  searchParams: {
+    booksPage?: string;
+    filmsPage?: string;
+  };
+};
 
-export function UserRatings({ userId }: UserRatingsTabProps) {
+const PAGE_SIZE = 20;
+
+function getPage(value?: string): number {
+  const page = Number(value);
+
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
+export async function UserRatings({ userId, searchParams }: UserRatingsProps) {
+  const booksPage = getPage(searchParams.booksPage);
+  const filmsPage = getPage(searchParams.filmsPage);
+
+  const [books, films] = await Promise.all([
+    getUserBooksWithRating(userId, booksPage, PAGE_SIZE),
+
+    getUserFilmsWithRating(userId, filmsPage, PAGE_SIZE),
+  ]);
+
   return (
-    <div>
-      <RatedFilmsCarousel userId={userId} />
-      <RatedBooksShelf userId={userId} />
-    </div>
+    <RatingHistory
+      books={books}
+      films={films}
+      booksPage={booksPage}
+      filmsPage={filmsPage}
+      pageSize={PAGE_SIZE}
+    />
   );
 }
 

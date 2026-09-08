@@ -1,7 +1,7 @@
 import type { Book } from '@/entities/books/model/types';
 import BookCard from '@/entities/books/ui/BookCard';
 import { ArrowIcon } from '@/shared/ui/icons';
-import { BookWithUserRating, isBookWithRating } from '@/widgets/UserRatingsLists/model';
+import { BookWithUserRating, isBookWithRating } from '@/widgets/UserRatingsLists/model/types';
 
 type BookShelfProps = {
   title: string;
