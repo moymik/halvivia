@@ -8,7 +8,10 @@ export default async function RatedFilmsCarousel({ userId }: { userId: string })
     <Carousel className={'text-text-inverse'} href={'/cinema/lists'} label={'Смотрильня'}>
       {films.map((film) => (
         <li className={'relative'} key={film.id}>
-          <FilmCard {...film}>
+          <FilmCard
+            {...film}
+            name={film.nameRu || film.nameEn || film.nameOriginal || `без названия`}
+          >
             <div className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-sm font-bold text-white">
               {film.userRating}
             </div>
