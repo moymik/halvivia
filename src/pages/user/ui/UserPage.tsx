@@ -17,6 +17,8 @@ export type UserPageProps = {
   searchParams: Promise<{
     tab?: string;
     page?: string;
+    booksPage?: string;
+    filmsPage?: string;
   }>;
 };
 
@@ -27,11 +29,7 @@ function getPage(value?: string): number {
 }
 
 export async function UserPage({ params, searchParams }: UserPageProps) {
-  const [session, { id }, { tab, page }] = await Promise.all([
-    verifySession(),
-    params,
-    searchParams,
-  ]);
+  const [session, { id }, query] = await Promise.all([verifySession(), params, searchParams]);
 
   if (session.status === 'unauthenticated') {
     redirect(ROUTES.LOGIN);
@@ -45,15 +43,19 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
 
   const isOwner = session.payload.userId === user.id;
 
-  const activeTab = getUserTab(tab);
-  const wishlistPage = getPage(page);
+  const activeTab = getUserTab(query.tab);
+
+  // Эта страница нужна только wishlist.
+  const wishlistPage = getPage(query.page);
 
   return (
     <div className="flex w-full flex-col py-4.5 md:py-7">
       <div className="page-content-width">
-        <UserAvatarMini className={'border-none lg:h-[4.9vw] lg:w-[4.9vw]'} user={user} />
+        <UserAvatarMini className="border-none lg:h-[4.9vw] lg:w-[4.9vw]" user={user} />
+
         <div className="mt-0.5 flex items-center gap-2 md:mt-1.5">
           <h1 className="text-text-inverse text-xl font-semibold md:text-2xl">{user.name}</h1>
+
           {isOwner && (
             <Link
               href={ROUTES.SETTINGS + user.id}
@@ -66,18 +68,22 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
           )}
         </div>
       </div>
-      <div> tabspan</div>
+
+      <div>tabspan</div>
 
       <div className="page-content-width">
         <UserTabs userId={user.id} />
       </div>
-      <Separator className={'bg-border-second w-screen'} />
-      <div className={'page-content-width min-h-40'}>
+
+      <Separator className="bg-border-second w-screen" />
+
+      <div className="page-content-width min-h-40">
         <UserTabContent
           userId={user.id}
           activeTab={activeTab}
           page={wishlistPage}
           canRemoveFromWishlist={isOwner}
+          searchParams={query}
         />
       </div>
     </div>

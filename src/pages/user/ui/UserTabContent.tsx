@@ -8,6 +8,12 @@ type UserTabContentProps = {
   activeTab: UserTab;
   page: number;
   canRemoveFromWishlist: boolean;
+  searchParams: {
+    tab?: string;
+    page?: string;
+    booksPage?: string;
+    filmsPage?: string;
+  };
 };
 
 export function UserTabContent({
@@ -15,16 +21,20 @@ export function UserTabContent({
   activeTab,
   page,
   canRemoveFromWishlist,
+  searchParams,
 }: UserTabContentProps) {
   switch (activeTab) {
     case USER_TABS.BOOKS:
       return <BookWishlistGrid userId={userId} page={page} canRemove={canRemoveFromWishlist} />;
+
     case USER_TABS.MOVIES:
       return <FilmWishlistGrid userId={userId} page={page} canRemove={canRemoveFromWishlist} />;
+
     case USER_TABS.RATINGS:
-      return <UserRatings userId={userId} />;
+      return <UserRatings userId={userId} searchParams={searchParams} />;
+
     case USER_TABS.UPLOADS:
-      return <div className={'mt-4 text-gray-500'}>Данный раздел пока не реализован</div>;
+      return <div className="mt-4 text-gray-500">Данный раздел пока не реализован</div>;
   }
 }
 

@@ -8,7 +8,7 @@ export type DbRating = {
   subject_type: string;
   subject_id: string;
 
-  rating: number | null;
+  rating: RatingValue;
 
   created_at: string; // TIMESTAMPTZ -> ISO string
 };

@@ -3,10 +3,10 @@ import Carousel from '@/shared/ui/carousel/Carousel';
 import FilmCard from '@/entities/films/ui/FilmCard';
 
 export default async function RatedFilmsCarousel({ userId }: { userId: string }) {
-  const films = await getUserFilmsWithRating(userId);
+  const response = await getUserFilmsWithRating(userId);
   return (
     <Carousel className={'text-text-inverse'} href={'/cinema/lists'} label={'Смотрильня'}>
-      {films.map((film) => (
+      {response.items.map((film) => (
         <li className={'relative'} key={film.id}>
           <FilmCard
             {...film}

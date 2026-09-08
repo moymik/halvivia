@@ -5,16 +5,13 @@ import { LibraryToolbar } from './LibraryToolbar';
 import PlannedBooksShelf from '@/features/wishlist/ui/PlannedBooksShelf';
 
 const RECENT_BOOKS_TITLE = 'Новинки';
-const PLANNED_BOOKS_TITLE = 'Планирую прочитать';
 const RECENT_EMPTY_TEXT = 'Книги появятся здесь после добавления.';
-const PLANNED_EMPTY_TEXT = 'Planned Books пока не реализован.';
 const SHELF_EMPTY_TEXT = 'В этом разделе пока пусто.';
 const PRIORITY_BOOK_COVERS_COUNT = 4;
 
 export async function LibraryPage() {
   await connection();
-  const { recentBooks, plannedBooks, sectionShelves, canAddBooks } =
-    await getLibraryPageViewModel();
+  const { recentBooks, sectionShelves, canAddBooks } = await getLibraryPageViewModel();
 
   return (
     <>
