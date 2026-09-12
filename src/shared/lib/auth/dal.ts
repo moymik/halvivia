@@ -50,32 +50,46 @@ export async function issueSession(payload: SessionPayload) {
   return { accessToken, refreshToken };
 }
 
-//Для server components(cached)
 export const verifySession = cache(async (): Promise<SessionResult> => {
   const cookieStore = await cookies();
 
   const accessToken = cookieStore.get('access_token')?.value;
   const refreshToken = cookieStore.get('refresh_token')?.value;
 
-  if (!refreshToken || !accessToken) {
+  if (!refreshToken) {
     return { status: 'unauthenticated' };
   }
 
-  try {
-    const session = await verifyAccessToken(accessToken);
-    if (session) {
-      return { status: 'authenticated', payload: session };
-    }
+  if (accessToken) {
+    try {
+      const session = await verifyAccessToken(accessToken);
 
-    //тут проверяем refreshToken без бд просто на соответсвие
-    const refreshSession = await jwtVerify(refreshToken, refreshSecret, { algorithms: ['HS256'] });
+      if (session) {
+        return {
+          status: 'authenticated',
+          payload: session,
+        };
+      }
+    } catch {
+      // Access token expired / invalid.
+    }
+  }
+
+  try {
+    const refreshSession = await jwtVerify(refreshToken, refreshSecret, {
+      algorithms: ['HS256'],
+    });
+
     return {
       status: 'refreshable',
       payload: refreshSession.payload as SessionPayload,
     };
   } catch (e) {
-    console.error(e);
-    return { status: 'unauthenticated' };
+    console.error('Refresh token verification failed:', e);
+
+    return {
+      status: 'unauthenticated',
+    };
   }
 });
 
@@ -117,31 +131,46 @@ export async function withAuth(): Promise<
   const accessToken = cookieStore.get('access_token')?.value;
   const refreshToken = cookieStore.get('refresh_token')?.value;
 
-  if (!accessToken || !refreshToken) {
+  if (!refreshToken) {
     return { status: 'unauthenticated' };
   }
-  // 1. Access token check (fast path)
+
+  if (accessToken) {
+    try {
+      const session = await verifyAccessToken(accessToken);
+
+      if (session) {
+        return {
+          status: 'authenticated',
+          payload: session,
+        };
+      }
+    } catch {
+      // Access token expired / invalid.
+    }
+  }
 
   try {
-    const session = await verifyAccessToken(accessToken);
-
-    if (session) {
-      return { status: 'authenticated', payload: session };
-    }
-
     const refreshed = await refreshSession(refreshToken);
 
     if (!refreshed) {
       return { status: 'unauthenticated' };
     }
 
-    // 4. Set cookies (side effect)
+    await setSessionCookies({
+      accessToken: refreshed.accessToken,
+      refreshToken: refreshed.refreshToken,
+    });
 
-    await setSessionCookies(refreshed);
-
-    return { status: 'authenticated', payload: refreshed.session };
+    return {
+      status: 'authenticated',
+      payload: refreshed.session,
+    };
   } catch (e) {
-    console.error(e);
-    return { status: 'unauthenticated' };
+    console.error('Session refresh failed:', e);
+
+    return {
+      status: 'unauthenticated',
+    };
   }
 }
