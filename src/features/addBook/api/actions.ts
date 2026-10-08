@@ -11,7 +11,6 @@ import type {
 import { BOOK_SECTION_IDS, isBookSectionId } from '@/entities/books/model/sections';
 import { verifySession, withAuth } from '@/shared/lib/auth';
 import { ROUTES } from '@/shared/config';
-import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { checkRateLimit } from '@/shared/lib/rateLimit';
@@ -102,7 +101,7 @@ export async function addBookAction(input: AddBookSelectionInput): Promise<AddBo
   const session = await withAuth();
 
   if (session.status === 'unauthenticated') {
-    redirect(ROUTES.LOGIN);
+    return { success: false, error: 'UNAUTHORIZED' };
   }
 
   if (session.payload.role !== 'MEMBER') {

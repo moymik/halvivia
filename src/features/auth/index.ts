@@ -7,3 +7,5 @@ export {
 } from './api/startDiscordAuthAction';
 export { useAuthModalStore } from './model/AuthModalStore';
 export { logout } from './api/logout';
+export { OpenAuthModalButton } from './ui/OpenAuthModalButton';
+export { AuthRequired } from './ui/AuthRequired';

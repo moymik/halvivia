@@ -25,7 +25,7 @@ export async function FilmWishlistGrid({
 
   return (
     <>
-      <div className="grid w-full grid-cols-2 gap-3 py-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid w-full grid-cols-2 gap-3 py-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {result.films.map((film) => (
           <div
             key={film.id}

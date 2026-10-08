@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { userDropdownLinks } from '@/widgets/Header/model/dropdown.config';
 import DropdownLink from '@/widgets/Header/ui/DropdownLink';
 import { User } from '@/entities/user';
-import { logout } from '@/features/auth';
+import { logout, useAuthModalStore } from '@/features/auth';
 import { NAVIGATION_LINKS, ROUTES } from '@/shared/config';
 import Link from 'next/link';
 import { UserAvatarMini } from '@/entities/user/ui/UserAvatarMini';
@@ -15,11 +15,12 @@ type HeaderProps = React.ComponentPropsWithoutRef<'div'> & {
 
 export function HeaderDropdown({ user }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const { openModal, closeModal } = useAuthModalStore();
 
   return (
     <div className="flex flex-col items-end">
-      <button onClick={() => setOpen(!open)} className={'border-primary rounded-full border-2'}>
-        <UserAvatarMini user={user}></UserAvatarMini>
+      <button onClick={() => setOpen(!open)} className={'border-primary rounded-full border-1'}>
+        <UserAvatarMini className={'h-8.5 w-8.5 lg:h-11 lg:w-11'} user={user}></UserAvatarMini>
       </button>
 
       {open && (
@@ -49,7 +50,7 @@ export function HeaderDropdown({ user }: HeaderProps) {
             ))}
           </div>
           <div className="border-t-border-second flex w-screen flex-col gap-3 border-t pt-5 md:w-auto">
-            <DropdownLink setOpen={setOpen} link={NAVIGATION_LINKS.LOGIN} icon={'AddIcon'}>
+            <DropdownLink setOpen={setOpen} link={NAVIGATION_LINKS.CINEMA} icon={'AddIcon'}>
               Сменить аккаунт
             </DropdownLink>
             <button
@@ -62,7 +63,7 @@ export function HeaderDropdown({ user }: HeaderProps) {
                 onClick={(e) => {
                   e.preventDefault();
                 }}
-                link={NAVIGATION_LINKS.LOGIN}
+                link={NAVIGATION_LINKS.CINEMA}
               >
                 Выйти
               </DropdownLink>

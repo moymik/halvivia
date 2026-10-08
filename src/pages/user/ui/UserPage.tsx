@@ -1,7 +1,7 @@
 import { findUserById } from '@/entities/user';
 import { verifySession } from '@/shared/lib/auth';
-import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
+import { AuthRequired } from '@/features/auth';
 import UserAvatarMini from '@/entities/user/ui/UserAvatarMini';
 import { Separator } from '@/shared/ui/separator';
 import { UserTabs } from '@/pages/user/ui/UserTabs';
@@ -33,7 +33,7 @@ export async function UserPage({ params, searchParams }: UserPageProps) {
   const [session, { id }, query] = await Promise.all([verifySession(), params, searchParams]);
 
   if (session.status === 'unauthenticated') {
-    redirect(ROUTES.LOGIN);
+    return <AuthRequired />;
   }
 
   const user = await findUserById(id);

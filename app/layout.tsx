@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import '@/app/styles/globals.css';
 
 import { golosText, roboto } from 'src/shared/config';
-import { Footer } from 'src/widgets/Footer';
 import { Header } from 'src/widgets/Header';
 
 import 'src/app/styles/typography.css';
@@ -10,6 +9,8 @@ import { AuthModal } from '@/features/auth/ui/AuthModal';
 import { AuthForm } from '@/features/auth/ui/AuthForm';
 import { QueryProvider } from '@/app/providers/QueryProvider';
 import { TooltipProvider } from '@/shared/ui/tooltip/Tooltip';
+import { MainContent } from './MainContent';
+import { AddSubjectDialogs } from '@/features/addSubject/ui/AddSubjectDialogs';
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -25,16 +26,17 @@ export const metadata: Metadata = {
 function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
-      <body className="flex min-h-full flex-col justify-between">
+      <body className="flex h-screen flex-col overflow-hidden">
         <QueryProvider>
           <TooltipProvider>
             <Header>
               <AuthModal>
-                <AuthForm></AuthForm>
+                <AuthForm />
               </AuthModal>
             </Header>
-            <main className="bg-bg-base text-text-secondary flex-1">{children}</main>
-            <Footer></Footer>
+
+            <MainContent>{children}</MainContent>
+            <AddSubjectDialogs />
           </TooltipProvider>
         </QueryProvider>
       </body>

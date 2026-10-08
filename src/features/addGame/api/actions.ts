@@ -8,7 +8,6 @@ import { verifySession, withAuth } from '@/shared/lib/auth';
 import { checkRateLimit } from '@/shared/lib/rateLimit';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import type { SteamGameSearchHit } from '@/features/addGame/model/types';
 import { parseSteamAppUrl, resolveSteamGame, searchSteamGames } from './steam';
 
@@ -55,7 +54,7 @@ async function requireMember() {
   const session = await withAuth();
 
   if (session.status === 'unauthenticated') {
-    redirect(ROUTES.LOGIN);
+    return null;
   }
 
   if (session.payload.role !== 'MEMBER') {

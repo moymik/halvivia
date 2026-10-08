@@ -16,59 +16,64 @@ export type FilmCardProps = {
   coverUrl: string;
 };
 
-const variants = {
-  grid: 'w-full',
-  fixed: 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-64.25',
-};
-
 const sizesByVariant = {
-  grid: '(max-width: 390px) 43vw, (max-width: 800px) 22vw, (max-width: 1400px) 17vw, 15vw',
-  fixed: '(max-width: 390px) 43vw, (max-width: 800px) 22vw, (max-width: 1400px) 17vw, 15vw',
+  grid: '16.66vw',
+  fixed: '(max-width: 390px) 43vw, (max-width: 800px) 22vw, (max-width: 1400px) 17vw, 256px',
 };
 
 export function FilmCard({
-  id = 'e9339093-33db-4dc8-b465-381efbf712eb',
-  posterUrl = '/posters/1143242_FgX7h_vrI',
+  id,
+  posterUrl,
   coverUrl,
-  name = 'Джентльмены ',
+  name = 'Джентльмены',
   ratingAvg = 0,
   variant = 'fixed',
+  className,
   hoverScale = true,
   children,
 }: FilmCardProps) {
+  const isGrid = variant === 'grid';
+
   return (
     <Link
       href={`${ROUTES.FILM_PAGE}${id}`}
-      className={`${variant === 'grid' ? 'w-full' : 'w-max'} relative block overflow-visible hover:z-50`}
+      className={cn(
+        'relative block overflow-visible',
+        isGrid ? 'w-full' : 'w-max max-w-[256px]',
+        className,
+      )}
     >
       <div
         className={cn(
-          `group default relative flex flex-col gap-1 overflow-visible transition-transform duration-300 ease-out ${
-            hoverScale ? 'hover:scale-110' : ''
-          }`,
-          variant === 'grid' && 'w-full',
-          variant === 'fixed' && 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-64.25',
+          'group relative flex flex-col gap-1 overflow-visible',
+          'transition-transform duration-300 ease-out',
+          hoverScale && 'hover:z-50 hover:scale-110',
+          isGrid ? 'aspect-[0.7] w-full' : 'w-[43vw] md:w-[22vw] xl:w-[17vw] 2xl:w-[256px]',
         )}
       >
         {children}
+
         <Image
           urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
-          alt={`${name}`}
-          className={`aspect-video h-full w-full object-cover object-center`}
+          alt={name}
+          className="h-full w-full rounded-xl border border-transparent object-cover object-center"
           width={166}
           height={93}
-          src={coverUrl || posterUrl}
-          loading={'lazy'}
+          src={posterUrl || coverUrl}
+          loading="lazy"
           sizes={sizesByVariant[variant]}
-        ></Image>
-        <div
-          className={`lg:font-heading lg:bg-bg-overlay-gray flex w-full flex-row items-center justify-between px-1 py-1 backdrop-opacity-40 transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:min-h-[25%] lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100`}
-        >
-          <span className={`line-clamp-2`}>{name}</span>
-          <span className={`inline-flex items-center ${ratingAvg === null && 'hidden'}`}>
-            <CardRatingStar averageRating={ratingAvg}></CardRatingStar>
-            &nbsp;
-            <span className={'hidden lg:block'}>{ratingAvg}</span>
+        />
+
+        <div className="lg:bg-bg-overlay-gray flex w-full flex-row items-center justify-between px-1 py-1 transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:min-h-[25%] lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100">
+          <span className="line-clamp-2">{name}</span>
+
+          <span className={cn('inline-flex items-center', ratingAvg === null && 'hidden')}>
+            <CardRatingStar averageRating={ratingAvg} />
+
+            <span className="hidden lg:block">
+              &nbsp;
+              {ratingAvg}
+            </span>
           </span>
         </div>
       </div>

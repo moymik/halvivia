@@ -1,33 +1,14 @@
 'use client';
 import { Button } from '@/shared/ui/Button';
-import { useState } from 'react';
-import KinopoiskForm from '@/features/addKinopoiskFilm/ui/KinopoiskForm';
-import Dialog from '@/shared/ui/Dialog/Dialog';
+import { useAddSubjectDialogStore } from '@/features/addSubject/model/addSubjectDialogStore';
 
 export function FilmDialogButton() {
-  const [filmDialogOpen, setFilmDialogOpen] = useState(false);
+  const openDialog = useAddSubjectDialogStore((state) => state.openDialog);
 
   return (
-    <div>
-      <Dialog
-        className={'overflow-visible'}
-        title={'Загрузи фильм'}
-        closeLabel={'Поиск фильмов'}
-        isOpen={filmDialogOpen}
-        onClose={() => setFilmDialogOpen(false)}
-      >
-        <KinopoiskForm />
-      </Dialog>
-      <Button
-        variant={'primary'}
-        className={'w-fit'}
-        onClick={() => {
-          setFilmDialogOpen(true);
-        }}
-      >
-        добавить фильм
-      </Button>
-    </div>
+    <Button variant="primary" className="w-fit" onClick={() => openDialog('film')}>
+      добавить фильм
+    </Button>
   );
 }
 

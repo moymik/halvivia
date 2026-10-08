@@ -3,14 +3,69 @@ import { getLibraryPageViewModel } from '../model/viewModel';
 import { BookShelf } from './BookShelf';
 import { LibraryToolbar } from './LibraryToolbar';
 import PlannedBooksShelf from '@/features/wishlist/ui/PlannedBooksShelf';
+import { getBookCategories, listBooks } from '@/entities/books/api/db';
+import { parseBookListFilters, BOOKS_PAGE_SIZE, booksCatalogHref } from '../model/searchParams';
+import { BookFilterForm } from './BookFilterForm';
+import { PaginationClient } from '@/pages/lists/PaginationClient';
+import { BookCard } from '@/entities/books/ui/BookCard';
+import Link from 'next/link';
 
 const RECENT_BOOKS_TITLE = 'Новинки';
 const RECENT_EMPTY_TEXT = 'Книги появятся здесь после добавления.';
 const SHELF_EMPTY_TEXT = 'В этом разделе пока пусто.';
 const PRIORITY_BOOK_COVERS_COUNT = 4;
 
-export async function LibraryPage() {
+type LibraryPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export async function LibraryPage({ searchParams }: LibraryPageProps) {
   await connection();
+
+  const filters = parseBookListFilters(await searchParams);
+
+  if (filters.section?.length) {
+    const [{ books, totalCount }, categories] = await Promise.all([
+      listBooks(filters),
+      getBookCategories(),
+    ]);
+    const totalPages = Math.ceil(totalCount / BOOKS_PAGE_SIZE);
+
+    return (
+      <section className="page-content-width py-6">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="flex min-w-0 flex-col gap-6">
+            <h1 className="text-2xl font-bold">{getSectionTitle(filters.section)}</h1>
+            {books.length > 0 ? (
+              <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 xl:grid-cols-4">
+                {books.map((book) => (
+                  <BookCard key={book.id} book={book} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-text-muted rounded-lg border border-dashed border-white/10 p-4 text-sm">
+                Ничего не найдено.{' '}
+                {filters.page > 1 && (
+                  <Link href={booksCatalogHref(filters)} className="text-text-primary underline">
+                    Вернуться к первой странице
+                  </Link>
+                )}
+              </div>
+            )}
+            <PaginationClient page={filters.page} totalPages={totalPages} />
+          </div>
+          <div className="sticky h-fit lg:top-6">
+            <BookFilterForm
+              key={JSON.stringify(filters)}
+              filters={filters}
+              categories={categories}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const { recentBooks, sectionShelves, canAddBooks } = await getLibraryPageViewModel();
 
   return (
@@ -44,6 +99,18 @@ export async function LibraryPage() {
       </section>
     </>
   );
+}
+
+function getSectionTitle(sectionIds: string[]) {
+  const sectionTitles: Record<string, string> = {
+    fiction: 'Художественная литература',
+    comics: 'Комиксы и манга',
+    nonfiction: 'Нон-фикшн',
+    'it-design': 'IT и дизайн',
+    classic: 'Классика',
+  };
+
+  return sectionIds.length === 1 ? (sectionTitles[sectionIds[0]] ?? 'Книги') : 'Книги';
 }
 
 export default LibraryPage;

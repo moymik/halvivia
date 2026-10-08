@@ -25,4 +25,27 @@ describe('parseGameListFilters', () => {
       page: 2,
     });
   });
+
+  it('parses supported game-specific filters and ignores invalid values', () => {
+    expect(
+      parseGameListFilters({
+        developer: 'Valve',
+        publisher: 'Steam',
+        ratingFrom: '8.5',
+        steamScoreFrom: '90',
+      }),
+    ).toEqual({
+      developer: 'Valve',
+      publisher: 'Steam',
+      ratingFrom: 8.5,
+      steamScoreFrom: 90,
+      sort: 'newest',
+      page: 1,
+    });
+
+    expect(parseGameListFilters({ ratingFrom: '11', steamScoreFrom: '80.5' })).toEqual({
+      sort: 'newest',
+      page: 1,
+    });
+  });
 });

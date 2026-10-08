@@ -31,6 +31,7 @@
 
   /* Brand */
   --color-primary: rgba(0, 90, 194, 1);
+  --color-primary-hover: rgba(0, 109, 235, 1);
   --color-primary-dark: rgba(0, 73, 156, 1);
   --color-primary-800: rgba(0, 90, 194, 0.8);
   --color-primary-static: rgba(0, 90, 194, 0.6);
@@ -160,17 +161,10 @@
 
   .page-content-width {
     width: 100%;
-    max-width: 1520px;
     margin-inline: auto;
-    padding-inline: 1rem;
-    @media (min-width: 800px) {
-      padding-inline: 2rem;
-    }
+    padding-inline: 16px;
     @media (min-width: 1280px) {
-      padding-inline: 5rem;
-    }
-    @media (min-width: 1440px) {
-      padding-inline: 6.375rem;
+      padding-inline: 40px;
     }
   }
 }

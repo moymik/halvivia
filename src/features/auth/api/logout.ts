@@ -15,5 +15,4 @@ export async function logout() {
   } finally {
     await clearSessionCookies();
   }
-  redirect('/auth/login');
 }

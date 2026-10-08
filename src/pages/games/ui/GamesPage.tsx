@@ -6,6 +6,7 @@ import { gamesCatalogHref, parseGameListFilters } from '../model/searchParams';
 import { getGamesPageViewModel } from '../model/viewModel';
 import { GamesPagination } from './GamesPagination';
 import { GamesToolbar } from './GamesToolbar';
+import { GamesFilterForm } from './GamesFilterForm';
 
 const EMPTY_TEXT = 'В игротеке пока пусто.';
 const NOT_FOUND_TEXT = 'Ничего не найдено.';
@@ -25,25 +26,36 @@ export async function GamesPage({ searchParams }: GamesPageProps) {
 
   return (
     <section>
-      <div className="page-content-width flex flex-col gap-8 py-8 lg:py-9">
-        <GamesToolbar canAddGames={canAddGames} search={filters.search} sort={filters.sort} />
-        {games.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {games.map((game) => (
-              <GameCard key={game.id} game={game} fill />
-            ))}
-          </div>
-        ) : (
-          <div className="text-text-muted flex min-h-29 flex-col justify-center gap-3 rounded-lg border border-dashed border-white/10 px-4 text-sm">
-            <p>{emptyText}</p>
-            {isOutOfRange && (
-              <Link href={gamesCatalogHref(filters)} className="text-text-primary w-fit underline">
-                К первой странице
-              </Link>
+      <div className="page-content-width flex flex-col gap-6 py-8 lg:py-9">
+        <GamesToolbar canAddGames={canAddGames} />
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="flex min-w-0 flex-col gap-6">
+            <h1 className="text-2xl font-bold">Игры</h1>
+            {games.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+                {games.map((game) => (
+                  <GameCard key={game.id} game={game} fill />
+                ))}
+              </div>
+            ) : (
+              <div className="text-text-muted flex min-h-29 flex-col justify-center gap-3 rounded-lg border border-dashed border-white/10 px-4 text-sm">
+                <p>{emptyText}</p>
+                {isOutOfRange && (
+                  <Link
+                    href={gamesCatalogHref(filters)}
+                    className="text-text-primary w-fit underline"
+                  >
+                    К первой странице
+                  </Link>
+                )}
+              </div>
             )}
+            <GamesPagination page={filters.page} totalPages={totalCount === 0 ? 0 : totalPages} />
           </div>
-        )}
-        <GamesPagination page={filters.page} totalPages={totalCount === 0 ? 0 : totalPages} />
+          <div className="sticky h-fit lg:top-6">
+            <GamesFilterForm key={JSON.stringify(filters)} filters={filters} />
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -16,12 +16,40 @@ export async function listGames(
   filters: GameListFilters,
 ): Promise<{ games: Game[]; totalCount: number }> {
   const values: unknown[] = [];
-  let whereSql = '';
+  const where: string[] = [];
 
   if (filters.search) {
     values.push(`%${escapeLike(filters.search)}%`);
-    whereSql = `WHERE name ILIKE $1 ESCAPE '\\'`;
+    where.push(`name ILIKE $${values.length} ESCAPE '\\'`);
   }
+
+  if (filters.developer) {
+    values.push(`%${escapeLike(filters.developer)}%`);
+    where.push(
+      `EXISTS (SELECT 1 FROM unnest(developers) AS developer(name) WHERE developer.name ILIKE $${values.length} ESCAPE '\\')`,
+    );
+  }
+
+  if (filters.publisher) {
+    values.push(`%${escapeLike(filters.publisher)}%`);
+    where.push(
+      `EXISTS (SELECT 1 FROM unnest(publishers) AS publisher(name) WHERE publisher.name ILIKE $${values.length} ESCAPE '\\')`,
+    );
+  }
+
+  if (filters.ratingFrom !== undefined) {
+    values.push(filters.ratingFrom);
+    where.push(`rating_avg >= $${values.length}`);
+  }
+
+  if (filters.steamScoreFrom !== undefined) {
+    values.push(filters.steamScoreFrom);
+    where.push(
+      `GREATEST(COALESCE(recent_review_score, 0), COALESCE(russian_review_score, 0)) >= $${values.length}`,
+    );
+  }
+
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
 
   const orderBy = GAME_SORT_MAP[filters.sort];
   const offset = (filters.page - 1) * GAMES_PAGE_SIZE;

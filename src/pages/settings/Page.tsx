@@ -2,6 +2,7 @@ import { findUserById } from '@/entities/user';
 import { verifySession } from '@/shared/lib/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
+import { AuthRequired } from '@/features/auth';
 import { UserAvatarFull } from '@/entities/user/ui/userAvatarFull';
 import DiscordLinkButton from '@/features/auth/ui/DiscordLinkButton';
 import { ImageKitUploader } from '@/widgets/ImageKitUploader';
@@ -17,7 +18,7 @@ export async function SettingsPage({ params }: SettingsPageProps) {
   const session = await verifySession();
 
   if (session.status === 'unauthenticated') {
-    redirect(ROUTES.LOGIN);
+    return <AuthRequired />;
   }
 
   const resolvedParams = await params;

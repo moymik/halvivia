@@ -2,7 +2,6 @@
 
 import { addFilmByKinopoiskId, searchFilmsByKeyword } from '@/features/addKinopoiskFilm/api/api';
 import { withAuth } from '@/shared/lib/auth';
-import { redirect } from 'next/navigation';
 import { ROUTES } from '@/shared/config';
 import { revalidatePath } from 'next/cache';
 import { FilmSearchByKeywordResponseSchema } from '@/features/addKinopoiskFilm/model/schemas';
@@ -20,7 +19,7 @@ export async function addKinopoiskFilmAction(id: number): Promise<AddKinopoiskFi
   const session = await withAuth();
 
   if (session.status === 'unauthenticated') {
-    redirect(ROUTES.LOGIN);
+    return { success: false, error: 'UNAUTHORIZED' };
   }
 
   if (session.payload.role !== 'MEMBER') {

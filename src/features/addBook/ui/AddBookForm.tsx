@@ -111,7 +111,7 @@ export function AddBookForm() {
     <div className="text-text-inverse flex w-full flex-col gap-3">
       <form className="flex" onSubmit={handleSearch}>
         <Input
-          searchIcon
+          searchIcon={'textEmpty'}
           value={query}
           onChange={(event) => handleQueryChange(event.target.value)}
           aria-label="Поиск книги"

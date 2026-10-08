@@ -3,8 +3,95 @@ import 'server-only';
 import type { AddBookInput, Book, BookSectionId } from '@/entities/books/model/types';
 import { mapDbBook } from '@/entities/books/model/mappers';
 import { isPgError, pool } from '@/shared/lib/db';
+import {
+  BOOK_SORT_MAP,
+  BOOKS_PAGE_SIZE,
+  type BookListFilters,
+} from '@/pages/library/model/searchParams';
 
 const UNIQUE_VIOLATION_CODE = '23505';
+
+function escapeLike(value: string) {
+  return value.replace(/[\\%_]/g, (char) => `\\${char}`);
+}
+
+export async function listBooks(
+  filters: BookListFilters,
+): Promise<{ books: Book[]; totalCount: number }> {
+  const values: unknown[] = [];
+  const where: string[] = [];
+
+  if (filters.search) {
+    values.push(`%${escapeLike(filters.search)}%`);
+    where.push(
+      `(title ILIKE $${values.length} ESCAPE '\\' OR subtitle ILIKE $${values.length} ESCAPE '\\')`,
+    );
+  }
+
+  if (filters.author) {
+    values.push(`%${escapeLike(filters.author)}%`);
+    where.push(
+      `EXISTS (SELECT 1 FROM unnest(authors) AS author(name) WHERE author.name ILIKE $${values.length} ESCAPE '\\')`,
+    );
+  }
+
+  if (filters.publisher) {
+    values.push(`%${escapeLike(filters.publisher)}%`);
+    where.push(`publisher ILIKE $${values.length} ESCAPE '\\'`);
+  }
+
+  if (filters.language) {
+    values.push(filters.language);
+    where.push(`language ILIKE $${values.length}`);
+  }
+
+  if (filters.ratingFrom !== undefined) {
+    values.push(filters.ratingFrom);
+    where.push(`rating_avg >= $${values.length}`);
+  }
+
+  if (filters.category?.length) {
+    values.push(filters.category);
+    where.push(`categories && $${values.length}::text[]`);
+  }
+
+  if (filters.section?.length) {
+    values.push(filters.section);
+    where.push(`section_ids && $${values.length}::text[]`);
+  }
+
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  const offset = (filters.page - 1) * BOOKS_PAGE_SIZE;
+  const pageValues = [...values, BOOKS_PAGE_SIZE, offset];
+
+  const [countResult, pageResult] = await Promise.all([
+    pool.query<{ total_count: number }>(
+      `SELECT COUNT(*)::int AS total_count FROM books ${whereSql}`,
+      values,
+    ),
+    pool.query(
+      `SELECT * FROM books ${whereSql} ORDER BY ${BOOK_SORT_MAP[filters.sort]} LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
+      pageValues,
+    ),
+  ]);
+
+  return {
+    books: pageResult.rows.map(mapDbBook),
+    totalCount: Number(countResult.rows[0]?.total_count ?? 0),
+  };
+}
+
+export async function getBookCategories(): Promise<string[]> {
+  const { rows } = await pool.query<{ category: string }>(`
+    SELECT DISTINCT trim(category) AS category
+    FROM books
+    CROSS JOIN LATERAL unnest(categories) AS category(name)
+    WHERE trim(category.name) <> ''
+    ORDER BY category
+  `);
+
+  return rows.map((row) => row.category);
+}
 
 export async function getLibraryBooks(): Promise<Book[]> {
   const { rows } = await pool.query(`

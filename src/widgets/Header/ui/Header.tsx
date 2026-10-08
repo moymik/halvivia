@@ -1,36 +1,37 @@
-import TabPanel from './TabPanel';
-import { headerTabLinks } from '@/widgets/Header/model/header.config';
 import { Icon } from '@/shared/ui/icon';
 import { AppLink } from '@/shared/ui/app-link';
 import { NAVIGATION_LINKS } from '@/shared/config';
 import HeaderUserBar from '@/widgets/Header/ui/HeaderUserBar';
 import { Suspense } from 'react';
-import { BurgerMenu } from '@/widgets/Header/ui/BurgerMenu';
+import { BurgerButton } from '@/widgets/Header/ui/BurgerButton';
+import { Input } from '@/shared/ui/Input';
+import { Button } from '@/shared/ui/Button';
 
 export async function Header({ children }: { children: React.ReactNode }) {
   return (
     <header
       className={
-        'border-border-default bg-bg-surface sticky top-0 z-500 flex h-18 w-full flex-row items-center justify-between border-b px-4 md:z-100 md:px-8.5 lg:h-23 lg:px-20 xl:px-25.5 2xl:px-[15%]'
+        'border-border-default bg-bg-surface sticky top-0 z-500 flex h-18 w-full flex-row items-center justify-between border-b px-4 md:z-100 lg:h-25 lg:px-10'
       }
     >
-      <BurgerMenu aria-label="Открыть меню" aria-controls="main-navigation"></BurgerMenu>
-
-      <div className="absolute top-1/2 left-1/2 flex h-full -translate-x-1/2 -translate-y-1/2 items-center justify-between lg:static lg:translate-0">
+      <div className={'flex gap-3.5 lg:gap-7.5'}>
+        <BurgerButton aria-label="Открыть меню" aria-controls="main-navigation"></BurgerButton>
         <AppLink
           link={NAVIGATION_LINKS.CINEMA}
-          className="mr-19 flex items-center gap-2"
+          className="flex items-center gap-3 lg:gap-4"
           aria-label="Halva and Povidlo homepage"
           hideLabel
         >
           <Icon name={'LogoIcon'} className="w-4 md:w-4.5 lg:w-6"></Icon>
-          <span className="hidden leading-none md:inline-block">
+          <span className="inline-block leading-none">
             Halva&
             <br />
             Povidlo
           </span>
         </AppLink>
-        <TabPanel className="h-full" links={headerTabLinks} />
+      </div>
+      <div className={'space-between hidden w-1/3 lg:flex'}>
+        <Input variant={'dark'} searchIcon={'always'} placeholder="Поиск"></Input>
       </div>
       <Suspense fallback={'loading...'}>
         <HeaderUserBar></HeaderUserBar>

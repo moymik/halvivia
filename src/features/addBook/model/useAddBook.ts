@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 import { ROUTES } from '@/shared/config';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
 
 import { addBookAction } from '../api/actions';
 import type { AddBookStatus } from './types';
@@ -68,6 +69,11 @@ export function useAddBook() {
 
         if (response.success) {
           router.push(`${ROUTES.LIBRARY}/${response.bookId}`);
+          return null;
+        }
+
+        if (response.error === 'UNAUTHORIZED') {
+          useAuthModalStore.getState().openModal();
           return null;
         }
 

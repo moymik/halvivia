@@ -5,6 +5,7 @@ import { DbGenre, FilmFilterKey, FilmFilters } from '@/entities/films/model/type
 import { FILM_TYPE_OPTIONS } from '@/entities/films/model/constants';
 import { useListQuery } from '@/shared/lib/url/hooks';
 import { useDebouncedCallback } from 'use-debounce';
+import { Input } from '@/shared/ui/Input';
 
 type Props = {
   filters: FilmFilters;
@@ -18,15 +19,16 @@ export default function FilterForm({ filters, genres }: Props) {
   }, 1000);
 
   return (
-    <aside className="flex flex-col gap-6 rounded-lg border p-5">
+    <aside className="bg-bg-surface border-border-default flex h-full w-81 flex-col gap-6 border-x px-6 py-10">
       <h2 className="text-xl font-bold">Фильтры</h2>
 
       {/* Поиск */}
       <div>
         <label>Поиск</label>
 
-        <input
-          className="w-full border p-2"
+        <Input
+          variant={'dark'}
+          searchIcon={'textEmpty'}
           defaultValue={filters.search ?? ''}
           placeholder="Название фильма"
           onChange={(e) => debouncedUpdateParam('search', e.target.value)}

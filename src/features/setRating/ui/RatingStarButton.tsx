@@ -5,8 +5,7 @@ import { useState } from 'react';
 import { Icon } from '@/shared/ui/icon';
 import { SetRatingRadio } from '@/features/setRating/ui/SetRatingRadio';
 import { useCurrentUserStore } from '@/entities/user/model/currentUserStore';
-import { redirect } from 'next/navigation';
-import { ROUTES } from '@/shared/config';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
 import { useRatingQuery } from '../model/useRatingQuery';
 import { cn } from '@/shared';
 
@@ -74,7 +73,7 @@ export function RatingStarButton({ subject, variant = 'onDark', className }: set
           aria-expanded={isOpen}
           onClick={() => {
             if (currentUser) setIsOpen(!isOpen);
-            else redirect(ROUTES.LOGIN);
+            else useAuthModalStore.getState().openModal();
           }}
         >
           {isLoading ? (

@@ -1,13 +1,17 @@
 import { ROUTES } from '@/shared/config';
-import { IconName } from '@/shared/ui/icon/Icon';
+
+import BookIcon from '@/shared/assets/books.svg';
+import GameIcon from '@/shared/assets/games.svg';
+import FilmIcon from '@/shared/assets/films.svg';
 
 type MenuItem = {
   title: string;
   href: string;
-  icon: IconName;
+  matchSearch?: boolean;
 };
 
 export type MenuSection = {
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
   title: string;
   href: string;
   items: MenuItem[];
@@ -15,35 +19,73 @@ export type MenuSection = {
 
 export const menuSections: MenuSection[] = [
   {
-    title: 'Смотрильня',
+    icon: FilmIcon,
+    title: 'Кино',
     href: ROUTES.CINEMA,
     items: [
       {
-        title: 'Добавить фильм',
+        title: 'Все',
         href: ROUTES.CINEMA,
-        icon: 'AddIcon',
+        matchSearch: true,
+      },
+      {
+        title: 'Фильмы',
+        href: ROUTES.CINEMA + '?type=FILM',
+      },
+      {
+        title: 'Сериалы',
+        href: ROUTES.CINEMA + '?type=SERIES',
+      },
+      {
+        title: 'Аниме',
+        href: ROUTES.CINEMA + '?type=ANIME',
+      },
+      {
+        title: 'Мультфильмы',
+        href: ROUTES.CINEMA + '?type=CARTOON',
       },
     ],
   },
   {
-    title: 'Читальня',
+    icon: BookIcon,
+    title: 'Книги',
     href: ROUTES.LIBRARY,
     items: [
       {
-        title: 'Добавить книгу',
+        title: 'Все книги',
         href: ROUTES.LIBRARY,
-        icon: 'AddIcon',
+        matchSearch: true,
+      },
+      {
+        title: 'Художественная литература',
+        href: ROUTES.LIBRARY + '?section=fiction',
+      },
+      {
+        title: 'Комиксы и манга',
+        href: ROUTES.LIBRARY + '?section=comics',
+      },
+      {
+        title: 'Нон-фикшн',
+        href: ROUTES.LIBRARY + '?section=nonfiction',
+      },
+      {
+        title: 'IT и дизайн',
+        href: ROUTES.LIBRARY + '?section=it-design',
+      },
+      {
+        title: 'Классика',
+        href: ROUTES.LIBRARY + '?section=classic',
       },
     ],
   },
   {
-    title: 'Игротека',
+    icon: GameIcon,
+    title: 'Игры',
     href: ROUTES.GAMES,
     items: [
       {
-        title: 'Добавить игру',
+        title: 'Все игры',
         href: ROUTES.GAMES,
-        icon: 'AddIcon',
       },
     ],
   },

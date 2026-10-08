@@ -4,8 +4,6 @@ export const ROUTES = {
   LIBRARY: '/library',
   TERMS: '/terms',
   PRIVACY: '/privacy',
-  LOGIN: '/auth/login',
-  REGISTER: '/auth/register',
   PROFILE: '/user/',
   SETTINGS: '/user/settings/',
   REVIEWS: '/reviews',

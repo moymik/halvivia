@@ -4,6 +4,7 @@ import type { BookSearchResultPreview, BookSectionId } from '@/entities/books/mo
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchBooksAction } from '../api/actions';
 import { getInitialSections } from './bookSearchPreview';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
 
 const SEARCH_DEBOUNCE_MS = 450;
 
@@ -50,6 +51,11 @@ export function useBookSearch() {
       }
 
       if (!response.success) {
+        if (response.error === 'UNAUTHORIZED') {
+          useAuthModalStore.getState().openModal();
+          return;
+        }
+
         setResults([]);
         setSelectedBook(null);
         setErrorMessage(
@@ -57,7 +63,6 @@ export function useBookSearch() {
             QUERY_TOO_SHORT: 'Введи хотя бы два символа',
             QUERY_TOO_LONG: 'Запрос слишком длинный',
             RATE_LIMITED: 'Слишком много запросов, попробуй чуть позже',
-            UNAUTHORIZED: 'Поиск книг доступен только участникам сообщества',
             SEARCH_FAILED: 'Не удалось найти книги',
           }[response.error],
         );

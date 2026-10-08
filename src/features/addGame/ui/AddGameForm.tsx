@@ -15,6 +15,7 @@ import type { SteamGameSearchHit } from '@/features/addGame/model/types';
 import { ROUTES } from '@/shared/config';
 import { Button } from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input/Input';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
 
 const searchErrors = {
   UNAUTHORIZED: 'Добавлять игры могут только участники.',
@@ -62,6 +63,11 @@ export function AddGameForm() {
       const result = await searchGamesAction(query);
 
       if (!result.success) {
+        if (result.error === 'UNAUTHORIZED') {
+          useAuthModalStore.getState().openModal();
+          return;
+        }
+
         setResults([]);
         setErrorMessage(searchErrors[result.error]);
         return;
@@ -115,6 +121,11 @@ export function AddGameForm() {
       return;
     }
 
+    if (result.error === 'UNAUTHORIZED') {
+      useAuthModalStore.getState().openModal();
+      return;
+    }
+
     setErrorMessage(addErrors[result.error]);
   }
 
@@ -152,7 +163,7 @@ export function AddGameForm() {
     <div className="text-text-inverse flex w-full flex-col gap-4">
       <form className="flex" onSubmit={(event) => void handleSearch(event)}>
         <Input
-          searchIcon
+          searchIcon={'textEmpty'}
           value={query}
           onChange={(event) => {
             resetMessages();

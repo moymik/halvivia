@@ -4,6 +4,34 @@ import { ROUTES } from '@/shared/config/navigation/routes';
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
+function parseNumber(value: string | string[] | undefined) {
+  if (typeof value !== 'string' || value.trim() === '') return undefined;
+
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function parseNumberInRange(
+  value: string | string[] | undefined,
+  min: number,
+  max: number,
+  integer = false,
+) {
+  const parsed = parseNumber(value);
+
+  if (
+    parsed === undefined ||
+    parsed < min ||
+    parsed > max ||
+    (integer && !Number.isInteger(parsed))
+  ) {
+    return undefined;
+  }
+
+  return parsed;
+}
+
 export function parseGameListFilters(params: SearchParams): GameListFilters {
   const search = typeof params.search === 'string' ? params.search : undefined;
   const sort = GameSortSchema.safeParse(typeof params.sort === 'string' ? params.sort : undefined);
@@ -12,6 +40,16 @@ export function parseGameListFilters(params: SearchParams): GameListFilters {
 
   return GameListFiltersSchema.parse({
     search: search?.trim() ? search : undefined,
+    developer:
+      typeof params.developer === 'string' && params.developer.trim()
+        ? params.developer
+        : undefined,
+    publisher:
+      typeof params.publisher === 'string' && params.publisher.trim()
+        ? params.publisher
+        : undefined,
+    ratingFrom: parseNumberInRange(params.ratingFrom, 0, 10),
+    steamScoreFrom: parseNumberInRange(params.steamScoreFrom, 0, 100, true),
     sort: sort.success ? sort.data : undefined,
     page,
   });
@@ -22,6 +60,22 @@ export function gamesCatalogHref(filters: GameListFilters, page = 1) {
 
   if (filters.search) {
     params.set('search', filters.search);
+  }
+
+  if (filters.developer) {
+    params.set('developer', filters.developer);
+  }
+
+  if (filters.publisher) {
+    params.set('publisher', filters.publisher);
+  }
+
+  if (filters.ratingFrom !== undefined) {
+    params.set('ratingFrom', String(filters.ratingFrom));
+  }
+
+  if (filters.steamScoreFrom !== undefined) {
+    params.set('steamScoreFrom', String(filters.steamScoreFrom));
   }
 
   if (filters.sort !== 'newest') {

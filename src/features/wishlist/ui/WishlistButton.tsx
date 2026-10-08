@@ -3,8 +3,7 @@
 import { useState, useTransition } from 'react';
 
 import type { ActionResult } from '@/shared/model';
-import { redirect } from 'next/navigation';
-import { ROUTES } from '@/shared/config';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
 import WishlistIcon from '@/shared/assets/wishlist.svg';
 import { CrossIcon } from '@/shared/ui/icons/CrossIcon';
 
@@ -37,7 +36,7 @@ export function WishlistButton({
         );
 
         if (result.error === 'UNAUTHORIZED') {
-          redirect(ROUTES.LOGIN);
+          useAuthModalStore.getState().openModal();
         }
 
         return;

@@ -2,6 +2,8 @@
 
 import { cn } from '@/shared';
 import { ArrowIcon } from '@/shared/ui/icons';
+import { CrossIcon } from '@/shared/ui/icons/CrossIcon';
+
 import {
   type KeyboardEvent,
   type MouseEvent,
@@ -10,16 +12,37 @@ import {
   useId,
   useRef,
 } from 'react';
-import { CrossIcon } from '@/shared/ui/icons/CrossIcon';
 
 const backdropClassName =
   'backdrop-blur-2xs text-text-inverse fixed inset-0 z-100 flex items-center justify-center bg-black/60 mt-18 md:mt-0 md:p-4';
 
 const dialogClassName =
-  'bg-bg-inverse border-border-inverse-500 h-full relative z-500 flex md:max-h-[calc(100vh-32px)] w-full flex-col items-center gap-8 overflow-y-auto overscroll-contain md:rounded-2xl border px-4 py-12 md:px-10 md:py-13 md:h-fit md:w-fit';
+  'bg-bg-inverse border-border-inverse-500 relative z-500 flex h-full w-full flex-col items-center gap-8 overflow-y-auto overscroll-contain border px-4 py-12 md:h-fit md:max-h-[calc(100vh-32px)] md:w-fit md:rounded-2xl md:px-10 md:py-13';
 
 const closeButtonClassName =
-  'text-text-inverse absolute top-4 right-4 flex cursor-pointer items-center gap-1 text-xs opacity-50 transition-opacity hover:opacity-100';
+  'absolute top-4 right-4 flex cursor-pointer items-center gap-1 text-xs opacity-50 transition-opacity hover:opacity-100';
+
+const titleClassName = 'text-[clamp(20px,1.5vw,32px)] font-semibold lg:font-bold';
+
+const variants = {
+  light: {
+    dialog: '',
+    closeButton: 'text-text-inverse size-5 shrink-0',
+    title: 'text-text-inverse',
+  },
+  dark: {
+    dialog: 'bg-bg-surface border-border-default',
+    closeButton: 'text-[#F9F9F9] opacity-50',
+    title: 'text-text-primary',
+  },
+} satisfies Record<
+  'light' | 'dark',
+  {
+    dialog: string;
+    closeButton: string;
+    title: string;
+  }
+>;
 
 const focusableElementSelector = [
   'a[href]',
@@ -31,6 +54,7 @@ const focusableElementSelector = [
 ].join(',');
 
 type DialogProps = {
+  variant?: 'light' | 'dark';
   isOpen: boolean;
   title?: string;
   children: ReactNode;
@@ -39,25 +63,36 @@ type DialogProps = {
   onClose: () => void;
 };
 
-export function Dialog({ isOpen, children, title, onClose, className, closeLabel }: DialogProps) {
+export function Dialog({
+  isOpen,
+  children,
+  title,
+  onClose,
+  className,
+  closeLabel,
+  variant = 'light',
+}: DialogProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
+  const variantStyles = variants[variant];
 
   useEffect(() => {
     if (!isOpen) return;
 
     const previouslyFocusedElement = document.activeElement;
     const previousBodyOverflow = document.body.style.overflow;
+
     document.body.style.overflow = 'hidden';
 
     window.setTimeout(() => {
       const firstFocusableElement =
         dialogRef.current?.querySelector<HTMLElement>(focusableElementSelector);
+
       (firstFocusableElement ?? dialogRef.current)?.focus();
     }, 0);
 
-    const handleEsc = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') {
+    const handleEsc = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
@@ -113,7 +148,7 @@ export function Dialog({ isOpen, children, title, onClose, className, closeLabel
     <div className={backdropClassName} onMouseDown={handleBackdropMouseDown}>
       <div
         ref={dialogRef}
-        className={cn(dialogClassName, className)}
+        className={cn(dialogClassName, variantStyles.dialog, className)}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
@@ -124,22 +159,25 @@ export function Dialog({ isOpen, children, title, onClose, className, closeLabel
         <button
           type="button"
           onClick={onClose}
-          className={closeButtonClassName}
+          className={cn(closeButtonClassName, variantStyles.closeButton)}
           aria-label={closeLabel ?? 'Закрыть'}
         >
-          <ArrowIcon className="inline-block h-2.5 scale-x-[-1] md:hidden" />
-          <span className="md:hidden">{closeLabel}</span>
-          <CrossIcon className="hidden md:inline-block" />
+          {closeLabel ? (
+            <>
+              <ArrowIcon className="inline-block h-2.5 scale-x-[-1] md:hidden" />
+              <span className="md:hidden">{closeLabel}</span>
+            </>
+          ) : (
+            <CrossIcon className="inline-block" />
+          )}
         </button>
 
         {title && (
-          <h2
-            id={titleId}
-            className="text-text-inverse text-[clamp(20px,1.5vw,32px)] font-semibold lg:font-bold"
-          >
+          <h2 id={titleId} className={cn(titleClassName, variantStyles.title)}>
             {title}
           </h2>
         )}
+
         {children}
       </div>
     </div>

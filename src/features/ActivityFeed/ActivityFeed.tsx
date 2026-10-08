@@ -1,8 +1,7 @@
 import { getRecentActivity } from '@/entities/activity/api/db';
 import { ActivityItem } from '@/features/ActivityFeed/ActivityItem';
+import { OpenAuthModalButton } from '@/features/auth';
 import { verifySession } from '@/shared/lib/auth';
-import { ROUTES } from '@/shared/config';
-import Link from 'next/link';
 
 type ActivityFeedProps = {
   limit?: number;
@@ -14,10 +13,8 @@ export async function ActivityFeed({ limit = 25 }: ActivityFeedProps) {
   if (session.status === 'unauthenticated')
     return (
       <div className="text-muted-foreground px-4 py-12 text-center text-sm">
-        <Link className={'text-text-primary'} href={ROUTES.LOGIN}>
-          Войдите
-        </Link>
-        , чтобы посмотреть последнюю активность
+        <OpenAuthModalButton className="text-text-primary">Войдите</OpenAuthModalButton>, чтобы
+        посмотреть последнюю активность
       </div>
     );
 

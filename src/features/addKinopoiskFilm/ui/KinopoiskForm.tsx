@@ -18,6 +18,7 @@ import { Film } from '@/entities/films/model/types';
 
 import { useCurrentUserStore } from '@/entities/user/model/currentUserStore';
 import { AddedSubjectRating } from '@/entities/rating/ui/AddedSubjectRating';
+import { useAuthModalStore } from '@/features/auth/model/AuthModalStore';
 
 export function parseKinopoiskFilmId(url: string): number | null {
   if (typeof url !== 'string') return null;
@@ -48,6 +49,11 @@ export function KinopoiskForm() {
       const res = await addKinopoiskFilmAction(filmId);
 
       if (!res.success) {
+        if (res.error === 'UNAUTHORIZED') {
+          useAuthModalStore.getState().openModal();
+          return;
+        }
+
         setAddFailed(true);
         return;
       }
@@ -131,7 +137,7 @@ export function KinopoiskForm() {
             setKeyword(value);
             debouncedSearch(value);
           }}
-          searchIcon
+          searchIcon={'textEmpty'}
           placeholder="Поиск"
           className="text-sm md:text-base lg:text-xl"
           type="text"
