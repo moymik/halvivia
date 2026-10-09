@@ -1,6 +1,7 @@
-'server-only';
+import 'server-only';
 
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 import { DbFilm, DbFilmWithGenres, DbGenre, Film } from '@/entities/films/model/types';
 import { isPgError, pool, sql } from '@/shared/lib/db';
@@ -8,7 +9,7 @@ import { isPgError, pool, sql } from '@/shared/lib/db';
 const UNIQUE_VIOLATION_CODE = '23505';
 
 export async function findFilmIdByKinopoiskId(kinopoiskId: number): Promise<string | null> {
-  const { rows } = await pool.query<{ id: string }>(
+  const rows = (await sql.query(
     `
     SELECT id
     FROM films
@@ -16,7 +17,7 @@ export async function findFilmIdByKinopoiskId(kinopoiskId: number): Promise<stri
     LIMIT 1
     `,
     [kinopoiskId],
-  );
+  )) as { id: string }[];
 
   return rows[0]?.id ?? null;
 }
@@ -208,7 +209,7 @@ export async function getInitialCinemaFilms() {
 }
 
 export async function getRecentFilms(limit = 10) {
-  const { rows } = await pool.query<DbFilm>(
+  const rows = (await sql.query(
     `
     SELECT *
     FROM films
@@ -216,13 +217,13 @@ export async function getRecentFilms(limit = 10) {
     LIMIT $1
   `,
     [limit],
-  );
+  )) as DbFilm[];
 
   return rows;
 }
 
 export async function getFilmsByType(type: string, limit = 10) {
-  const { rows } = await pool.query<DbFilm>(
+  const rows = (await sql.query(
     `
     SELECT *
     FROM films
@@ -231,7 +232,7 @@ export async function getFilmsByType(type: string, limit = 10) {
     LIMIT $2
   `,
     [type, limit],
-  );
+  )) as DbFilm[];
 
   return rows;
 }
@@ -239,6 +240,8 @@ export async function getFilmsByType(type: string, limit = 10) {
 export async function getDbFilmGenres(): Promise<DbGenre[]> {
   'use cache';
   cacheLife('days');
+  // Новые жанры появляются вместе с новым фильмом.
+  cacheTag(cacheTags.catalog('film'));
 
   const rows = await sql`
     SELECT *

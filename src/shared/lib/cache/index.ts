@@ -1,0 +1,1 @@
+export { cacheTags } from './tags';

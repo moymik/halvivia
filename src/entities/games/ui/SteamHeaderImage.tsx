@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { CoverImage } from '@/shared/ui/cover-image';
 import { useState } from 'react';
 
 type SteamHeaderImageProps = {
@@ -22,7 +22,7 @@ export function SteamHeaderImage({ src, alt, sizes, priority = false }: SteamHea
   }
 
   return (
-    <Image
+    <CoverImage
       src={src}
       alt={alt}
       fill

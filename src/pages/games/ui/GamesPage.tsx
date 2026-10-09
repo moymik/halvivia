@@ -1,11 +1,9 @@
 import GameCard from '@/entities/games/ui/GameCard';
 import { GAMES_PAGE_SIZE } from '@/entities/games/model/constants';
-import { connection } from 'next/server';
 import Link from 'next/link';
 import { gamesCatalogHref, parseGameListFilters } from '../model/searchParams';
 import { getGamesPageViewModel } from '../model/viewModel';
 import { GamesPagination } from './GamesPagination';
-import { GamesToolbar } from './GamesToolbar';
 import { GamesFilterForm } from './GamesFilterForm';
 
 const EMPTY_TEXT = 'В игротеке пока пусто.';
@@ -17,9 +15,8 @@ type GamesPageProps = {
 };
 
 export async function GamesPage({ searchParams }: GamesPageProps) {
-  await connection();
   const filters = parseGameListFilters(await searchParams);
-  const { games, totalCount, canAddGames } = await getGamesPageViewModel(filters);
+  const { games, totalCount } = await getGamesPageViewModel(filters);
   const totalPages = Math.max(1, Math.ceil(totalCount / GAMES_PAGE_SIZE));
   const isOutOfRange = games.length === 0 && totalCount > 0;
   const emptyText = isOutOfRange ? OUT_OF_RANGE_TEXT : filters.search ? NOT_FOUND_TEXT : EMPTY_TEXT;

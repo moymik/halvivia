@@ -10,6 +10,7 @@ import {
 import { SubjectSchema } from '@/shared/model/subject/schema';
 import { mapActivityEventDb } from '@/entities/activity/model/mappers';
 import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 export const CreateActivityEventSchema = z.object({
   actorId: z.string().uuid(),
@@ -130,9 +131,12 @@ export async function getRecentActivity(limit = 30) {
       LIMIT ${safeLimit};
   `;
 
-  return rows.map((row) => {
-    const parsed = ActivityEventDbSchema.parse(row);
+  const events = rows.map((row) => mapActivityEventDb(ActivityEventDbSchema.parse(row)));
 
-    return mapActivityEventDb(parsed);
-  });
+  const actorIds = new Set(rows.map((row) => String(row.actor_id)));
+  if (actorIds.size > 0) {
+    cacheTag(...[...actorIds].map((actorId) => cacheTags.userProfile(actorId)));
+  }
+
+  return events;
 }

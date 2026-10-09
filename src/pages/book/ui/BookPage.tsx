@@ -2,17 +2,14 @@ import { getBookById } from '@/entities/books/api/db';
 import { ROUTES } from '@/shared/config';
 import { sanitizeHtml } from '@/shared/lib/sanitizeHtml';
 import { ArrowIcon } from '@/shared/ui/icons';
-import Image from 'next/image';
-import { connection } from 'next/server';
+import { CoverImage } from '@/shared/ui/cover-image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { CommentSection } from '@/widgets/CommentSection/ui/CommentSection';
 import RatingStarButton from '@/features/setRating/ui/RatingStarButton';
 import SubjectRatingStar from '@/widgets/SubjectRatingStar/SubjectRatingStar';
-import { BookWishlistButton } from '@/features/wishlist/ui/BookWishlistButton';
-import { verifySession } from '@/shared/lib/auth';
-import { isBookInWishlist } from '@/features/wishlist/api/db';
+import { SessionWishlistButton } from '@/features/wishlist/ui/SessionWishlistButton';
 
 type BookPageProps = {
   params: Promise<{
@@ -20,10 +17,8 @@ type BookPageProps = {
   }>;
 };
 
-export async function BookPageContent({ params }: BookPageProps) {
-  await connection();
-
-  const [{ id }, session] = await Promise.all([params, verifySession()]);
+export async function BookPage({ params }: BookPageProps) {
+  const { id } = await params;
   const book = await getBookById(id);
 
   if (!book) {
@@ -31,10 +26,6 @@ export async function BookPageContent({ params }: BookPageProps) {
   }
 
   const descriptionHtml = book.description ? sanitizeHtml(book.description) : null;
-  const isInWishlist =
-    session.status !== 'unauthenticated'
-      ? await isBookInWishlist(session.payload.userId, book.id)
-      : false;
 
   return (
     <>
@@ -50,7 +41,7 @@ export async function BookPageContent({ params }: BookPageProps) {
         <div className="grid gap-6 md:grid-cols-[180px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]">
           <div className="relative aspect-104/171 w-full max-w-55 overflow-hidden bg-neutral-200">
             {book.thumbnailUrl ? (
-              <Image
+              <CoverImage
                 src={book.thumbnailUrl}
                 alt={book.title}
                 fill
@@ -90,7 +81,9 @@ export async function BookPageContent({ params }: BookPageProps) {
               />
             )}
             <div className="flex flex-row gap-2">
-              <BookWishlistButton bookId={book.id} isInWishlist={isInWishlist} />
+              <Suspense fallback={null}>
+                <SessionWishlistButton type="book" id={book.id} />
+              </Suspense>
               <RatingStarButton subject={{ type: 'book', id: book.id }} />
             </div>
           </div>
@@ -100,19 +93,5 @@ export async function BookPageContent({ params }: BookPageProps) {
         <CommentSection entityType={'book'} entityId={id}></CommentSection>
       </section>
     </>
-  );
-}
-
-export function BookPage(props: BookPageProps) {
-  return (
-    <Suspense
-      fallback={
-        <main className="bg-bg-base text-text-secondary px-4 py-10 md:px-8">
-          Загружаем книгу...
-        </main>
-      }
-    >
-      <BookPageContent {...props} />
-    </Suspense>
   );
 }

@@ -1,12 +1,13 @@
+import 'server-only';
+
 import { ActionResult } from '@/shared/model';
-
-('server-only');
-
 import { sql } from '@/shared/lib/db';
 import { DbFilmWithGenres, Film, FilmFilters } from '@/entities/films/model/types';
 import { FILM_SORT_MAP } from '@/entities/films/model/constants';
 import { FilmFiltersSchema } from '@/entities/films/model/Schemas';
 import { mapDbFilmWithGenresToFilm } from '@/entities/films/model/mappers';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 type QueryBuilder = {
   where: string[];
@@ -123,7 +124,12 @@ export type DbFilmQueryResult = {
   totalCount: number;
 };
 
+// Кэшируется уровень БД, а не filmsQuery: иначе в кэш на час попадал бы и { success: false } при сбое БД.
 export async function filmsQueryDb(filters: FilmFilters): Promise<DbFilmQueryResult> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.catalog('film'));
+
   const { where, values } = buildFilmWhere(filters);
 
   const { limit, offset } = getPagination(filters);

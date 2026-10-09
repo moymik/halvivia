@@ -2,20 +2,21 @@ import { DbGenre, Film } from '@/entities/films/model/types';
 import { getDBFilmWithGenresById, getDbFilmGenres } from '@/entities/films/api/db';
 import { mapDbFilmWithGenresToFilm } from '@/entities/films/model/mappers';
 import { ActionResult } from '@/shared/model';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 export async function getFilmById(id: string): Promise<Film | null> {
   'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.subject({ type: 'film', id }));
   const res = await getDBFilmWithGenresById(id);
 
   if (!res) return null;
   return mapDbFilmWithGenresToFilm(res);
 }
 
+// Без 'use cache': кэшируется getDbFilmGenres, а ответ с ошибкой БД кэшировать нельзя.
 export async function getFilmGenres(): Promise<ActionResult<DbGenre[]>> {
-  'use cache';
-  cacheLife('days');
-
   try {
     const rows = await getDbFilmGenres();
 

@@ -1,7 +1,8 @@
 'use server';
 import { withAuth } from '@/shared/lib/auth';
 import { findUserById, setAvatar, updateUserName } from '@/entities/user/api/db';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 import { isPgError } from '@/shared/lib/db';
 import { UserNameSchema } from '@/entities/user/model/types';
 import { ROUTES } from '@/shared/config';
@@ -16,6 +17,7 @@ export async function setUserAvatarUrl(url: string) {
   const user = await findUserById(session.payload.userId);
 
   await setAvatar(session.payload.userId, url);
+  updateTag(cacheTags.userProfile(session.payload.userId));
   await revalidatePath('/'); // Header image updates too
   return url;
 }
@@ -48,6 +50,7 @@ export async function updateUserNameAction(
       return { success: false, error: 'Пользователь не найден.' };
     }
 
+    updateTag(cacheTags.userProfile(user.id));
     revalidatePath('/');
     revalidatePath(ROUTES.PROFILE + user.id);
     revalidatePath(ROUTES.SETTINGS + user.id);

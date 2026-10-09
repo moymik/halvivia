@@ -1,4 +1,4 @@
-import { connection } from 'next/server';
+import { Suspense } from 'react';
 import { getLibraryPageViewModel } from '../model/viewModel';
 import { BookShelf } from './BookShelf';
 import PlannedBooksShelf from '@/features/wishlist/ui/PlannedBooksShelf';
@@ -19,8 +19,6 @@ type LibraryPageProps = {
 };
 
 export async function LibraryPage({ searchParams }: LibraryPageProps) {
-  await connection();
-
   const filters = parseBookListFilters(await searchParams);
 
   if (filters.section?.length) {
@@ -68,7 +66,7 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
     );
   }
 
-  const { recentBooks, sectionShelves, canAddBooks } = await getLibraryPageViewModel();
+  const { recentBooks, sectionShelves } = await getLibraryPageViewModel();
 
   return (
     <>
@@ -86,7 +84,9 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-42 bg-[url('/library-vector.png')] bg-size-[100%_auto] bg-bottom bg-no-repeat opacity-45 md:h-52" />
         <div className="page-content-width relative flex flex-col gap-10 py-8 lg:py-9">
-          <PlannedBooksShelf></PlannedBooksShelf>
+          <Suspense fallback={null}>
+            <PlannedBooksShelf />
+          </Suspense>
           {sectionShelves.map((section) => (
             <BookShelf
               key={section.id}

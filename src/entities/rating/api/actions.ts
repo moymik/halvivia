@@ -4,14 +4,11 @@ import { getRatingByUserIdAndSubject, getRatingsBySubject } from '@/entities/rat
 import { mapDbRatingToRating, mapDbToRatingWithUser } from '@/entities/rating/model/mappers';
 import { Rating, RatingWithUser } from '@/entities/rating/model/types';
 import { ActionResult, Subject } from '@/shared/model';
-import { cacheTag } from 'next/cache';
 
 export async function getRatingsBySubjectAction(params: {
   subject: Subject;
 }): Promise<ActionResult<RatingWithUser[]>> {
-  'use cache';
-  cacheTag(`ratings:${params.subject.type}:${params.subject.id}`);
-
+  // Кэшируется getRatingsBySubject: ответ с ошибкой БД сюда попадать не должен.
   try {
     const dbRatings = await getRatingsBySubject({
       subject: params.subject,

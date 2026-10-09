@@ -1,6 +1,6 @@
 import type { Book } from '@/entities/books/model/types';
 import { ROUTES } from '@/shared/config';
-import Image from 'next/image';
+import { CoverImage } from '@/shared/ui/cover-image';
 import Link from 'next/link';
 import { CardRatingStar } from '@/entities/rating/ui/CardRatingStar';
 
@@ -28,7 +28,7 @@ export function BookCard({ book, priority = false, hoverLift = true, children }:
       {children}
       <div className="relative aspect-104/171 w-26 sm:w-32 lg:w-37">
         {book.thumbnailUrl ? (
-          <Image
+          <CoverImage
             fill
             src={book.thumbnailUrl}
             alt={book.title}
