@@ -2,7 +2,7 @@
 
 @theme {
   --font-body: var(--font-roboto);
-  --font-heading: var(--font-golos);
+  --font-heading: var(--font-tiktok);
 
   --color-green-base: rgba(18, 214, 0, 1);
   --color-red-base: rgba(224, 0, 0, 1);
@@ -28,15 +28,17 @@
   --color-bg-inverse-050: rgba(249, 249, 249, 0.05);
   --color-bg-overlay: rgba(0, 0, 0, 0.6);
   --color-bg-overlay-gray: rgba(40, 40, 40, 0.85);
+  --color-bg-hover: rgba(28, 28, 28, 1);
+  --color-bg-selected: rgba(29, 44, 63, 1);
 
   /* Brand */
-  --color-primary: rgba(0, 90, 194, 1);
-  --color-primary-hover: rgba(0, 109, 235, 1);
-  --color-primary-dark: rgba(0, 73, 156, 1);
-  --color-primary-800: rgba(0, 90, 194, 0.8);
-  --color-primary-static: rgba(0, 90, 194, 0.6);
-  --color-primary-disabled: rgba(0, 90, 194, 0.4);
-  --color-primary-080: rgba(0, 90, 194, 0.08);
+  --color-primary: rgba(37, 89, 190, 1);
+  --color-primary-hover: rgba(44, 109, 229, 1);
+  --color-primary-dark: rgba(28, 60, 109, 1);
+  --color-primary-800: rgba(37, 89, 190, 0.8);
+  --color-primary-static: rgba(37, 89, 190, 0.6);
+  --color-primary-disabled: rgba(37, 89, 190, 0.4);
+  --color-primary-080: rgba(37, 89, 190, 0.08);
 
   /* Text */
   --color-text-primary: rgba(249, 249, 249, 1);

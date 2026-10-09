@@ -8,6 +8,7 @@ import { BookFilterForm } from './BookFilterForm';
 import { PaginationClient } from '@/pages/lists/PaginationClient';
 import { BookCard } from '@/entities/books/ui/BookCard';
 import Link from 'next/link';
+import { CatalogLayout } from '@/widgets/CatalogFilters';
 
 const RECENT_BOOKS_TITLE = 'Новинки';
 const RECENT_EMPTY_TEXT = 'Книги появятся здесь после добавления.';
@@ -29,38 +30,29 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
     const totalPages = Math.ceil(totalCount / BOOKS_PAGE_SIZE);
 
     return (
-      <section className="page-content-width pr-0">
-        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="flex min-w-0 flex-col gap-6 py-4 lg:py-6">
-            <h1 className="text-text-primary text-2xl font-bold">
-              {getSectionTitle(filters.section)}
-            </h1>
-
-            {books.length > 0 ? (
-              <div className="grid grid-cols-[repeat(auto-fill,148px)] justify-start gap-5 max-lg:grid-cols-[repeat(auto-fill,128px)] max-sm:grid-cols-[repeat(auto-fill,104px)]">
-                {books.map((book) => (
-                  <BookCard key={book.id} book={book} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-text-muted rounded-lg border border-dashed border-white/10 p-4 text-sm">
-                Ничего не найдено.{' '}
-                {filters.page > 1 && (
-                  <Link href={booksCatalogHref(filters)} className="text-text-primary underline">
-                    Вернуться к первой странице
-                  </Link>
-                )}
-              </div>
-            )}
-
-            <PaginationClient page={filters.page} totalPages={totalPages} />
+      <CatalogLayout
+        title={getSectionTitle(filters.section)}
+        filters={<BookFilterForm filters={filters} categories={categories} />}
+      >
+        {books.length > 0 ? (
+          <div className="grid grid-cols-[repeat(auto-fill,148px)] justify-start gap-5 max-lg:grid-cols-[repeat(auto-fill,128px)] max-sm:grid-cols-[repeat(auto-fill,104px)]">
+            {books.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
           </div>
+        ) : (
+          <div className="text-text-muted rounded-lg border border-dashed border-white/10 p-4 text-sm">
+            Ничего не найдено.{' '}
+            {filters.page > 1 && (
+              <Link href={booksCatalogHref(filters)} className="text-text-primary underline">
+                Вернуться к первой странице
+              </Link>
+            )}
+          </div>
+        )}
 
-          <aside className="h-full w-full min-w-0 lg:justify-self-end">
-            <BookFilterForm filters={filters} categories={categories} />
-          </aside>
-        </div>
-      </section>
+        <PaginationClient page={filters.page} totalPages={totalPages} />
+      </CatalogLayout>
     );
   }
 

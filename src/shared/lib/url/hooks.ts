@@ -26,8 +26,19 @@ export function useListQuery<TKey extends string = string>() {
       pushParams(toggleListArrayParam(searchParams, key, value));
     },
 
-    reset() {
-      router.push(pathname);
+    // keep — параметры, которые задают сам раздел (например, ?type=FILM), их сброс не трогает.
+    reset(keep: readonly TKey[] = []) {
+      const params = new URLSearchParams();
+
+      for (const key of keep) {
+        const value = searchParams?.get(key);
+
+        if (value) {
+          params.set(key, value);
+        }
+      }
+
+      pushParams(params);
     },
   };
 }

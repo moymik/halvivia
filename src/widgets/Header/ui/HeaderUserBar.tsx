@@ -9,8 +9,11 @@ export async function HeaderUserBar() {
   const user = await getCurrentUser();
 
   return (
-    <div className="flex items-center gap-4 lg:gap-6">
-      <AddDropDown></AddDropDown>
+    <div className="flex shrink-0 items-center gap-3 lg:gap-5">
+      {/* Ниже lg кнопка «Добавить» живет во второй строке хедера */}
+      <div className="hidden lg:mr-2.5 lg:block">
+        <AddDropDown></AddDropDown>
+      </div>
       <UserClient user={user}></UserClient>
       <ActivityDropdown></ActivityDropdown>
 

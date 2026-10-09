@@ -25,13 +25,11 @@ export function BookShelf({
 }: BookShelfProps) {
   return (
     <section className="flex flex-col gap-4">
-      <Link href={href}>
-        <h2
-          className={`text-text-primary flex items-center gap-2 text-2xl leading-tight font-bold md:text-3xl ${variant === 'onLight' && 'text-text-inverse'}`}
-        >
-          {title}
-        </h2>
-      </Link>
+      <h2
+        className={`font-heading flex items-center gap-2 text-xl leading-tight font-bold ${variant === 'onLight' ? 'text-text-inverse' : 'text-text-primary'}`}
+      >
+        <Link href={href}>{title}</Link>
+      </h2>
       {books.length > 0 ? (
         <div className="flex gap-3 overflow-x-auto overflow-y-visible pb-5 md:gap-4">
           {books.map((book, index) => (

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { cn } from '@/shared';
-import { ArrowIcon } from '@/shared/ui/icons';
+import { ArrowRight } from 'lucide-react';
 
 export type CarouselProps = {
   children?: ReactNode;
@@ -17,17 +17,23 @@ export function Carousel({
   className,
 }: CarouselProps) {
   return (
-    <section className="w-full py-4">
-      <div className={cn('relative flex w-full flex-row items-center justify-between', className)}>
-        <Link href={href} className="text-text-primary text-[clamp(20px,2.5vw,2rem)] font-bold">
-          {label}
-        </Link>
+    <section className="w-full py-2.5">
+      <div
+        className={cn(
+          'text-text-primary relative flex w-full flex-row items-center justify-between',
+          className,
+        )}
+      >
+        <h2 className="font-heading text-xl leading-tight font-bold">
+          <Link href={href}>{label}</Link>
+        </h2>
 
         <Link
           href={href}
-          className="text-primary text-base leading-[1.15rem] font-medium visited:text-[rgba(0,90,194,0.5)] sm:hidden"
+          className="text-primary hover:text-primary-hover flex items-center gap-1 text-base leading-tight font-medium transition-colors duration-200"
         >
           Все
+          <ArrowRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
         </Link>
       </div>
 

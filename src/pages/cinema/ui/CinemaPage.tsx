@@ -11,6 +11,7 @@ import { filmsQuery } from '@/entities/films/api/filmsQuery';
 import { getFilmGenres } from '@/entities/films/api/api';
 import FilterForm from '@/pages/lists/FilterForm';
 import { PaginationClient } from '@/pages/lists/PaginationClient';
+import { CatalogLayout } from '@/widgets/CatalogFilters';
 
 type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -28,32 +29,28 @@ export async function CinemaPage({ searchParams }: Props) {
     if (!genresResult.success) return <>Не удалось загрузить жанры</>;
 
     return (
-      <section className="page-content-width text-text-primary pr-0">
-        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="flex min-w-0 flex-col gap-6 py-4 lg:py-10">
-            <h1 className="text-2xl font-bold">{getCinemaSectionTitle(filters.type)}</h1>
-            <div className="grid w-full grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {filmsResult.data.films.map((film) => (
-                <FilmCard
-                  key={film.id}
-                  id={film.id}
-                  name={film.nameRu}
-                  posterUrl={film.posterUrl}
-                  ratingAvg={film.ratingAvg}
-                  variant="grid"
-                  coverUrl={film.coverUrl}
-                />
-              ))}
-            </div>
-            <PaginationClient
-              page={filters.page}
-              totalPages={Math.ceil(filmsResult.data.totalCount / filters.limit)}
+      <CatalogLayout
+        title={getCinemaSectionTitle(filters.type)}
+        filters={<FilterForm filters={filters} genres={genresResult.data} />}
+      >
+        <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-5">
+          {filmsResult.data.films.map((film) => (
+            <FilmCard
+              key={film.id}
+              id={film.id}
+              name={film.nameRu}
+              posterUrl={film.posterUrl}
+              ratingAvg={film.ratingAvg}
+              variant="grid"
+              coverUrl={film.coverUrl}
             />
-          </div>
-
-          <FilterForm filters={filters} genres={genresResult.data} />
+          ))}
         </div>
-      </section>
+        <PaginationClient
+          page={filters.page}
+          totalPages={Math.ceil(filmsResult.data.totalCount / filters.limit)}
+        />
+      </CatalogLayout>
     );
   }
 
@@ -61,7 +58,7 @@ export async function CinemaPage({ searchParams }: Props) {
   return (
     <>
       <section className={'w-full'}>
-        <div className={'page-content-width flex flex-col gap-5 py-10'}>
+        <div className={'page-content-width flex flex-col pt-7.5 pb-10'}>
           <Carousel
             className={'text-text-primary'}
             href={'/cinema?type=FILM%2CSERIES%2CANIME%2CCARTOON%2COTHERS'}

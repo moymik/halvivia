@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import '@/app/styles/globals.css';
 
-import { golosText, roboto } from 'src/shared/config';
+import { roboto, tiktokSans } from 'src/shared/config';
 import { Header } from 'src/widgets/Header';
 
 import 'src/app/styles/typography.css';
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`h-full antialiased ${roboto.variable} ${golosText.variable}`}>
+    <html lang="en" className={`h-full antialiased ${roboto.variable} ${tiktokSans.variable}`}>
       <body className="flex h-screen flex-col overflow-hidden">
         <QueryProvider>
           <TooltipProvider>

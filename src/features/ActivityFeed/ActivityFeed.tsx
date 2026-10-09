@@ -10,32 +10,47 @@ type ActivityFeedProps = {
 export async function ActivityFeed({ limit = 25 }: ActivityFeedProps) {
   const session = await verifySession();
 
-  if (session.status === 'unauthenticated')
-    return (
-      <div className="text-muted-foreground px-4 py-12 text-center text-sm">
-        <OpenAuthModalButton className="text-text-primary">Войдите</OpenAuthModalButton>, чтобы
-        посмотреть последнюю активность
+  return (
+    // Высоты из макета: 305px до lg, 255px на десктопе. Список скроллится до самой нижней
+    // кромки панели — нижний отступ живет внутри скролла, а не режет видимую область.
+    <div className="flex max-h-76.25 flex-col lg:max-h-63.75">
+      <div className="px-4 pt-4">
+        <h2 className="font-heading border-border-default border-b pb-2.5 text-base leading-5 font-medium">
+          Уведомления
+        </h2>
       </div>
-    );
 
-  const events = await getRecentActivity(limit);
-  if (events.length === 0) {
+      <ActivityFeedBody limit={limit} authenticated={session.status !== 'unauthenticated'} />
+    </div>
+  );
+}
+
+async function ActivityFeedBody({
+  limit,
+  authenticated,
+}: {
+  limit: number;
+  authenticated: boolean;
+}) {
+  if (!authenticated) {
     return (
-      <div className="text-muted-foreground px-4 py-8 text-center text-sm">Пока нет активности</div>
+      <p className="text-text-secondary px-4 pt-3 pb-4 text-sm">
+        <OpenAuthModalButton className="text-primary hover:underline">Войдите</OpenAuthModalButton>,
+        чтобы посмотреть последнюю активность
+      </p>
     );
   }
 
-  return (
-    <div className="max-h-screen overflow-y-auto md:max-h-[457px]">
-      <div className="border-border-default border px-4 py-4">
-        <h2 className="text-sm font-semibold">Уведомления</h2>
-      </div>
+  const events = await getRecentActivity(limit);
+  if (events.length === 0) {
+    return <p className="text-text-secondary px-4 pt-3 pb-4 text-sm">Пока нет активности</p>;
+  }
 
-      <div className="flex flex-col gap-5 px-4 py-4">
-        {events.map((event) => (
-          <ActivityItem key={event.id} event={event} />
-        ))}
-      </div>
+  return (
+    <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pt-3 pb-4">
+      {events.map((event) => (
+        <ActivityItem key={event.id} event={event} />
+      ))}
     </div>
   );
 }

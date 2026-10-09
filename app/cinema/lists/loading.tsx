@@ -1,5 +1,5 @@
 import { CatalogSkeleton } from '@/widgets/PageSkeleton';
 
 export default function Loading() {
-  return <CatalogSkeleton card="poster" filters="left" />;
+  return <CatalogSkeleton card="poster" />;
 }

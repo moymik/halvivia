@@ -1,10 +1,12 @@
 'use client';
 
+import { useId } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+
 import type { GameListFilters } from '@/entities/games/model/schemas';
 import { GAME_SORT_OPTIONS } from '@/entities/games/model/constants';
 import { useListQuery } from '@/shared/lib/url/hooks';
-import { useDebouncedCallback } from 'use-debounce';
-import { Input } from '@/shared/ui/Input';
+import { FilterField, FilterInput, FilterPanel, FilterSelect } from '@/widgets/CatalogFilters';
 
 type Props = {
   filters: GameListFilters;
@@ -19,6 +21,7 @@ type GameFilterKey =
   | 'steamScoreFrom';
 
 export function GamesFilterForm({ filters }: Props) {
+  const id = useId();
   const { updateParam, reset } = useListQuery<GameFilterKey>();
 
   const debouncedUpdate = useDebouncedCallback((key: GameFilterKey, value: string) => {
@@ -26,71 +29,51 @@ export function GamesFilterForm({ filters }: Props) {
   }, 1000);
 
   return (
-    <aside className="bg-bg-surface text-text-primary border-border-default flex h-full flex-col gap-6 border-x px-6 py-10">
-      <h2 className="text-xl font-bold">Фильтры</h2>
+    <FilterPanel
+      onReset={() => {
+        debouncedUpdate.cancel();
+        reset();
+      }}
+    >
+      <FilterInput
+        withSearchIcon
+        type="search"
+        aria-label="Поиск по названию игры"
+        defaultValue={filters.search ?? ''}
+        placeholder="Поиск"
+        onChange={(event) => debouncedUpdate('search', event.target.value)}
+      />
 
-      {/* Поиск */}
-      <div>
-        <Input
-          variant="dark"
-          searchIcon="textEmpty"
-          defaultValue={filters.search ?? ''}
-          placeholder="Название игры"
-          onChange={(event) => debouncedUpdate('search', event.target.value)}
-        />
-      </div>
-
-      {/* Сортировка */}
-      <div>
-        <label htmlFor="game-sort">Сортировка</label>
-
-        <select
-          id="game-sort"
-          className="bg-bg-base text-text-primary border-default w-full rounded-xl border p-2"
+      <FilterField label="Сортировка" htmlFor={`${id}-sort`}>
+        <FilterSelect
+          id={`${id}-sort`}
+          options={GAME_SORT_OPTIONS}
           value={filters.sort}
           onChange={(event) => updateParam('sort', event.target.value)}
-        >
-          {GAME_SORT_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
+        />
+      </FilterField>
 
-      {/* Разработчик */}
-      <div>
-        <label htmlFor="game-developer">Разработчик</label>
-
-        <Input
-          id="game-developer"
-          variant="dark"
+      <FilterField label="Разработчик" htmlFor={`${id}-developer`}>
+        <FilterInput
+          id={`${id}-developer`}
           defaultValue={filters.developer ?? ''}
           placeholder="Например, Valve"
           onChange={(event) => debouncedUpdate('developer', event.target.value)}
         />
-      </div>
+      </FilterField>
 
-      {/* Издатель */}
-      <div>
-        <label htmlFor="game-publisher">Издатель</label>
-
-        <Input
-          id="game-publisher"
-          variant="dark"
+      <FilterField label="Издатель" htmlFor={`${id}-publisher`}>
+        <FilterInput
+          id={`${id}-publisher`}
           defaultValue={filters.publisher ?? ''}
           placeholder="Например, Devolver Digital"
           onChange={(event) => debouncedUpdate('publisher', event.target.value)}
         />
-      </div>
+      </FilterField>
 
-      {/* Рейтинг пользователей */}
-      <div>
-        <label htmlFor="game-rating">Рейтинг пользователей от</label>
-
-        <Input
-          id="game-rating"
-          variant="dark"
+      <FilterField label="Рейтинг пользователей от" htmlFor={`${id}-rating`}>
+        <FilterInput
+          id={`${id}-rating`}
           type="number"
           min={0}
           max={10}
@@ -98,28 +81,19 @@ export function GamesFilterForm({ filters }: Props) {
           defaultValue={filters.ratingFrom ?? ''}
           onChange={(event) => debouncedUpdate('ratingFrom', event.target.value)}
         />
-      </div>
+      </FilterField>
 
-      {/* Оценка Steam */}
-      <div>
-        <label htmlFor="game-steam-score">Оценка Steam от</label>
-
-        <Input
-          id="game-steam-score"
-          variant="dark"
+      <FilterField label="Оценка Steam от" htmlFor={`${id}-steam-score`}>
+        <FilterInput
+          id={`${id}-steam-score`}
           type="number"
           min={0}
           max={100}
           defaultValue={filters.steamScoreFrom ?? ''}
           onChange={(event) => debouncedUpdate('steamScoreFrom', event.target.value)}
         />
-      </div>
-
-      {/* Сброс */}
-      <button type="button" className="rounded border p-2" onClick={reset}>
-        Сбросить
-      </button>
-    </aside>
+      </FilterField>
+    </FilterPanel>
   );
 }
 
