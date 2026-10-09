@@ -22,6 +22,7 @@ export async function PlannedBooksShelf({ userId }: PlannedBooksShelfProps) {
 
   return (
     <BookShelf
+      href={`/user/${session.payload.userId}?tab=books`}
       title="Планирую прочитать"
       books={wishlist.books}
       emptyText="Здесь пока пусто"

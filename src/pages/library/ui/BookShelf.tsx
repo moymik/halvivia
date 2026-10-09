@@ -2,6 +2,7 @@ import type { Book } from '@/entities/books/model/types';
 import BookCard from '@/entities/books/ui/BookCard';
 import { ArrowIcon } from '@/shared/ui/icons';
 import { BookWithUserRating, isBookWithRating } from '@/widgets/UserRatingsLists/model/types';
+import Link from 'next/link';
 
 type BookShelfProps = {
   title: string;
@@ -10,6 +11,7 @@ type BookShelfProps = {
   muted?: boolean;
   priorityCount?: number;
   variant?: 'base' | 'onLight';
+  href?: string;
 };
 
 export function BookShelf({
@@ -19,14 +21,17 @@ export function BookShelf({
   muted = false,
   priorityCount = 0,
   variant = 'base',
+  href = '/library',
 }: BookShelfProps) {
   return (
     <section className="flex flex-col gap-4">
-      <h2
-        className={`text-text-primary flex items-center gap-2 text-2xl leading-tight font-bold md:text-3xl ${variant === 'onLight' && 'text-text-inverse'}`}
-      >
-        {title}
-      </h2>
+      <Link href={href}>
+        <h2
+          className={`text-text-primary flex items-center gap-2 text-2xl leading-tight font-bold md:text-3xl ${variant === 'onLight' && 'text-text-inverse'}`}
+        >
+          {title}
+        </h2>
+      </Link>
       {books.length > 0 ? (
         <div className="flex gap-3 overflow-x-auto overflow-y-visible pb-5 md:gap-4">
           {books.map((book, index) => (

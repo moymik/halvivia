@@ -5,26 +5,31 @@ export const BOOK_SECTIONS = [
     id: 'fiction',
     label: 'Художественная литература',
     googleCategoryHints: ['fiction', 'literary', 'novel', 'роман', 'проза'],
+    href: '/library?section=fiction',
   },
   {
     id: 'comics',
     label: 'Комиксы и манга',
     googleCategoryHints: ['comics', 'graphic novels', 'manga', 'манга', 'комикс'],
+    href: '/library?section=comics',
   },
   {
     id: 'nonfiction',
     label: 'Нон-фикшн',
     googleCategoryHints: ['self-help', 'psychology', 'business', 'history', 'science'],
+    href: '/library?section=fiction',
   },
   {
     id: 'it-design',
     label: 'IT и дизайн',
     googleCategoryHints: ['computers', 'design', 'programming', 'technology'],
+    href: '/library?section=it-design',
   },
   {
     id: 'classic',
     label: 'Классика',
     googleCategoryHints: ['classic', 'classics', 'literary collections'],
+    href: '/library?section=classic',
   },
 ] as const satisfies readonly BookSection[];
 

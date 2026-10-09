@@ -1,7 +1,8 @@
 'use client';
 
-import type { BookListFilters } from '@/pages/library/model/searchParams';
+import type { BookListFilters, BookSort } from '@/pages/library/model/searchParams';
 import { BOOK_SORT_OPTIONS } from '@/pages/library/model/searchParams';
+import { BOOK_SECTIONS } from '@/entities/books/model/sections';
 import { useListQuery } from '@/shared/lib/url/hooks';
 import { useDebouncedCallback } from 'use-debounce';
 import { Input } from '@/shared/ui/Input';
@@ -19,7 +20,8 @@ type BookFilterKey =
   | 'publisher'
   | 'language'
   | 'ratingFrom'
-  | 'category';
+  | 'category'
+  | 'section';
 
 export function BookFilterForm({ filters, categories }: Props) {
   const { updateParam, toggleArrayParam, reset } = useListQuery<BookFilterKey>();
@@ -27,6 +29,17 @@ export function BookFilterForm({ filters, categories }: Props) {
   const debouncedUpdate = useDebouncedCallback((key: BookFilterKey, value: string) => {
     updateParam(key, value);
   }, 1000);
+
+  const allSectionsSelected = filters.section?.length === BOOK_SECTIONS.length;
+
+  function handleToggleAllSections() {
+    if (allSectionsSelected) {
+      updateParam('section', '');
+      return;
+    }
+
+    updateParam('section', BOOK_SECTIONS.map((section) => section.id).join(','));
+  }
 
   return (
     <aside className="bg-bg-surface text-text-primary border-border-default flex h-full flex-col gap-6 border-x px-6 py-10">
@@ -59,6 +72,36 @@ export function BookFilterForm({ filters, categories }: Props) {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Разделы книг */}
+      <div>
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <label className="block font-medium">Разделы книг</label>
+
+          <button
+            type="button"
+            className="text-text-muted hover:text-text-primary text-xs underline"
+            onClick={handleToggleAllSections}
+          >
+            {allSectionsSelected ? 'Снять все' : 'Выбрать все'}
+          </button>
+        </div>
+
+        <div className="max-h-64 overflow-y-auto rounded border p-2">
+          {BOOK_SECTIONS.map((section) => (
+            <label key={section.id} className="flex cursor-pointer items-center gap-2 py-1">
+              <Checkbox
+                checked={filters.section?.includes(section.id) ?? false}
+                onCheckedChange={() => toggleArrayParam('section', section.id)}
+              />
+
+              <span>{section.label}</span>
+            </label>
+          ))}
+        </div>
+
+        <p className="text-text-muted mt-2 text-xs">Можно выбрать один или несколько разделов.</p>
       </div>
 
       {/* Автор */}
@@ -122,7 +165,7 @@ export function BookFilterForm({ filters, categories }: Props) {
 
         <div className="max-h-64 overflow-y-auto rounded border p-2">
           {categories.map((category) => (
-            <label key={category} className="flex items-center gap-2 py-1">
+            <label key={category} className="flex cursor-pointer items-center gap-2 py-1">
               <Checkbox
                 checked={filters.category?.includes(category) ?? false}
                 onCheckedChange={() => toggleArrayParam('category', category)}

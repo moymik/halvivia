@@ -32,7 +32,9 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
       <section className="page-content-width pr-0">
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
           <div className="flex min-w-0 flex-col gap-6 py-4 lg:py-6">
-            <h1 className="text-2xl font-bold">{getSectionTitle(filters.section)}</h1>
+            <h1 className="text-text-primary text-2xl font-bold">
+              {getSectionTitle(filters.section)}
+            </h1>
 
             {books.length > 0 ? (
               <div className="grid grid-cols-[repeat(auto-fill,148px)] justify-start gap-5 max-lg:grid-cols-[repeat(auto-fill,128px)] max-sm:grid-cols-[repeat(auto-fill,104px)]">
@@ -55,11 +57,7 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
           </div>
 
           <aside className="h-full w-full min-w-0 lg:justify-self-end">
-            <BookFilterForm
-              key={JSON.stringify(filters)}
-              filters={filters}
-              categories={categories}
-            />
+            <BookFilterForm filters={filters} categories={categories} />
           </aside>
         </div>
       </section>
@@ -77,6 +75,7 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
             books={recentBooks}
             emptyText={RECENT_EMPTY_TEXT}
             priorityCount={PRIORITY_BOOK_COVERS_COUNT}
+            href={'/library?section=nonfiction%2Cfiction%2Ccomics%2Cit-design%2Cclassic'}
           />
         </div>
       </section>
@@ -89,6 +88,7 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
           </Suspense>
           {sectionShelves.map((section) => (
             <BookShelf
+              href={section.href}
               key={section.id}
               title={section.title}
               books={section.books}

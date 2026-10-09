@@ -4,6 +4,7 @@ export type BookSection = {
   id: BookSectionId;
   label: string;
   googleCategoryHints: string[];
+  href: string;
 };
 
 export type BookExternalRating = {

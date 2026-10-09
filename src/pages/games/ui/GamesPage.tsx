@@ -49,7 +49,7 @@ export async function GamesPage({ searchParams }: GamesPageProps) {
             <GamesPagination page={filters.page} totalPages={totalCount === 0 ? 0 : totalPages} />
           </div>
           <div className="h-full">
-            <GamesFilterForm key={JSON.stringify(filters)} filters={filters} />
+            <GamesFilterForm filters={filters} />
           </div>
         </div>
       </div>

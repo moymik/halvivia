@@ -7,6 +7,7 @@ export type LibraryShelfViewModel = {
   id: string;
   title: string;
   books: Book[];
+  href?: string;
 };
 
 export type LibraryPageViewModel = {
@@ -30,6 +31,7 @@ export async function getLibraryPageViewModel(): Promise<LibraryPageViewModel> {
     id: section.id,
     title: section.label,
     books: books.slice(0, SECTION_BOOKS_LIMIT),
+    href: section.href,
   }));
 
   return {

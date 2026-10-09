@@ -51,7 +51,7 @@ export async function CinemaPage({ searchParams }: Props) {
             />
           </div>
 
-          <FilterForm key={JSON.stringify(filters)} filters={filters} genres={genresResult.data} />
+          <FilterForm filters={filters} genres={genresResult.data} />
         </div>
       </section>
     );
@@ -62,7 +62,11 @@ export async function CinemaPage({ searchParams }: Props) {
     <>
       <section className={'w-full'}>
         <div className={'page-content-width flex flex-col gap-5 py-10'}>
-          <Carousel className={'text-text-primary'} href={'/cinema/lists'} label={'Новинки'}>
+          <Carousel
+            className={'text-text-primary'}
+            href={'/cinema?type=FILM%2CSERIES%2CANIME%2CCARTOON%2COTHERS'}
+            label={'Новинки'}
+          >
             {initialCards.recentCards.map((prop) => (
               <FilmCard key={prop.id} variant={'grid'} {...prop} />
             ))}
