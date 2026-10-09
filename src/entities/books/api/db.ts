@@ -1,13 +1,15 @@
 import 'server-only';
 
 import type { AddBookInput, Book, BookSectionId } from '@/entities/books/model/types';
-import { mapDbBook } from '@/entities/books/model/mappers';
-import { isPgError, pool } from '@/shared/lib/db';
+import { mapDbBook, type DbBook } from '@/entities/books/model/mappers';
+import { isPgError, pool, sql } from '@/shared/lib/db';
 import {
   BOOK_SORT_MAP,
   BOOKS_PAGE_SIZE,
   type BookListFilters,
 } from '@/pages/library/model/searchParams';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 const UNIQUE_VIOLATION_CODE = '23505';
 
@@ -18,6 +20,10 @@ function escapeLike(value: string) {
 export async function listBooks(
   filters: BookListFilters,
 ): Promise<{ books: Book[]; totalCount: number }> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.catalog('book'));
+
   const values: unknown[] = [];
   const where: string[] = [];
 
@@ -64,48 +70,42 @@ export async function listBooks(
   const offset = (filters.page - 1) * BOOKS_PAGE_SIZE;
   const pageValues = [...values, BOOKS_PAGE_SIZE, offset];
 
-  const [countResult, pageResult] = await Promise.all([
-    pool.query<{ total_count: number }>(
-      `SELECT COUNT(*)::int AS total_count FROM books ${whereSql}`,
-      values,
-    ),
-    pool.query(
+  const [countRows, pageRows] = await Promise.all([
+    sql.query(`SELECT COUNT(*)::int AS total_count FROM books ${whereSql}`, values),
+    sql.query(
       `SELECT * FROM books ${whereSql} ORDER BY ${BOOK_SORT_MAP[filters.sort]} LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
       pageValues,
     ),
   ]);
 
   return {
-    books: pageResult.rows.map(mapDbBook),
-    totalCount: Number(countResult.rows[0]?.total_count ?? 0),
+    books: (pageRows as DbBook[]).map(mapDbBook),
+    totalCount: Number(countRows[0]?.total_count ?? 0),
   };
 }
 
 export async function getBookCategories(): Promise<string[]> {
-  const { rows } = await pool.query<{ category: string }>(`
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.catalog('book'));
+
+  const rows = (await sql.query(`
     SELECT DISTINCT trim(category) AS category
     FROM books
     CROSS JOIN LATERAL unnest(categories) AS category(name)
     WHERE trim(category.name) <> ''
     ORDER BY category
-  `);
+  `)) as { category: string }[];
 
   return rows.map((row) => row.category);
 }
 
-export async function getLibraryBooks(): Promise<Book[]> {
-  const { rows } = await pool.query(`
-    SELECT *
-    FROM books
-    ORDER BY created_at DESC
-    LIMIT 80
-  `);
-
-  return rows.map(mapDbBook);
-}
-
 export async function getRecentBooks(limit: number): Promise<Book[]> {
-  const { rows } = await pool.query(
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.catalog('book'));
+
+  const rows = (await sql.query(
     `
     SELECT *
     FROM books
@@ -113,13 +113,17 @@ export async function getRecentBooks(limit: number): Promise<Book[]> {
     LIMIT $1
   `,
     [limit],
-  );
+  )) as DbBook[];
 
   return rows.map(mapDbBook);
 }
 
 export async function getBooksBySection(sectionId: BookSectionId, limit: number): Promise<Book[]> {
-  const { rows } = await pool.query(
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.catalog('book'));
+
+  const rows = (await sql.query(
     `
     SELECT *
     FROM books
@@ -128,13 +132,17 @@ export async function getBooksBySection(sectionId: BookSectionId, limit: number)
     LIMIT $2
   `,
     [sectionId, limit],
-  );
+  )) as DbBook[];
 
   return rows.map(mapDbBook);
 }
 
 export async function getBookById(id: string): Promise<Book | null> {
-  const { rows } = await pool.query(
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.subject({ type: 'book', id }));
+
+  const rows = (await sql.query(
     `
     SELECT *
     FROM books
@@ -142,7 +150,7 @@ export async function getBookById(id: string): Promise<Book | null> {
     LIMIT 1
   `,
     [id],
-  );
+  )) as DbBook[];
 
   return rows[0] ? mapDbBook(rows[0]) : null;
 }
@@ -157,7 +165,7 @@ export async function findBookByExternalId(params: {
     return null;
   }
 
-  const { rows } = await pool.query(
+  const rows = (await sql.query(
     `
     SELECT *
     FROM books
@@ -166,7 +174,7 @@ export async function findBookByExternalId(params: {
     LIMIT 1
   `,
     [googleBooksId ?? null, openLibraryKey ?? null],
-  );
+  )) as DbBook[];
 
   return rows[0] ? mapDbBook(rows[0]) : null;
 }
@@ -255,4 +263,12 @@ export async function addBookOrGetExisting(
 
     return { book: existingBook, created: false };
   }
+}
+
+export async function setBookThumbnailUrl(id: string, thumbnailUrl: string): Promise<void> {
+  await sql`
+    UPDATE books
+    SET thumbnail_url = ${thumbnailUrl}
+    WHERE id = ${id}
+  `;
 }

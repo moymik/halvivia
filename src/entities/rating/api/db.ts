@@ -4,6 +4,8 @@ import { sql, pool } from '@/shared/lib/db';
 import { DbRating, DbRatingWithUser } from '@/entities/rating/model/types';
 import { Subject } from '@/shared/model';
 import { SubjectType } from '@/shared/model/subject/types';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 const RATING_TABLE_BY_SUBJECT = {
   film: 'films',
@@ -112,9 +114,13 @@ export async function getRatingsBySubject(params: {
   subject: Subject;
   limit?: number;
 }): Promise<DbRatingWithUser[]> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(`ratings:${params.subject.type}:${params.subject.id}`);
+
   const limit = params.limit ?? 20;
 
-  return (await sql`
+  const ratings = (await sql`
     SELECT
       ratings.*,
       json_build_object(
@@ -129,6 +135,12 @@ export async function getRatingsBySubject(params: {
     ORDER BY ratings.created_at DESC
     LIMIT ${limit};
   `) as DbRatingWithUser[];
+
+  if (ratings.length > 0) {
+    cacheTag(...new Set(ratings.map((rating) => cacheTags.userProfile(rating.user.id))));
+  }
+
+  return ratings;
 }
 
 export async function getRatingByUserIdAndSubject(params: {

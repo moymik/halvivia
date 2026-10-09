@@ -1,10 +1,12 @@
 import 'server-only';
 
 import { GAME_SORT_MAP, GAMES_PAGE_SIZE } from '@/entities/games/model/constants';
-import { mapDbGame } from '@/entities/games/model/mappers';
+import { mapDbGame, type DbGame } from '@/entities/games/model/mappers';
 import type { GameListFilters } from '@/entities/games/model/schemas';
 import type { Game, NewGameInput } from '@/entities/games/model/types';
-import { isPgError, pool } from '@/shared/lib/db';
+import { isPgError, pool, sql } from '@/shared/lib/db';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 const UNIQUE_VIOLATION_CODE = '23505';
 
@@ -15,6 +17,10 @@ function escapeLike(value: string) {
 export async function listGames(
   filters: GameListFilters,
 ): Promise<{ games: Game[]; totalCount: number }> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.catalog('game'));
+
   const values: unknown[] = [];
   const where: string[] = [];
 
@@ -55,12 +61,9 @@ export async function listGames(
   const offset = (filters.page - 1) * GAMES_PAGE_SIZE;
   const pageValues = [...values, GAMES_PAGE_SIZE, offset];
 
-  const [countResult, pageResult] = await Promise.all([
-    pool.query<{ total_count: number }>(
-      `SELECT COUNT(*)::int AS total_count FROM games ${whereSql}`,
-      values,
-    ),
-    pool.query(
+  const [countRows, pageRows] = await Promise.all([
+    sql.query(`SELECT COUNT(*)::int AS total_count FROM games ${whereSql}`, values),
+    sql.query(
       `
       SELECT *
       FROM games
@@ -74,13 +77,17 @@ export async function listGames(
   ]);
 
   return {
-    games: pageResult.rows.map(mapDbGame),
-    totalCount: Number(countResult.rows[0]?.total_count ?? 0),
+    games: (pageRows as DbGame[]).map(mapDbGame),
+    totalCount: Number(countRows[0]?.total_count ?? 0),
   };
 }
 
 export async function getGameById(id: string): Promise<Game | null> {
-  const { rows } = await pool.query(
+  'use cache';
+  cacheLife('hours');
+  cacheTag(cacheTags.subject({ type: 'game', id }));
+
+  const rows = (await sql.query(
     `
     SELECT *
     FROM games
@@ -88,13 +95,13 @@ export async function getGameById(id: string): Promise<Game | null> {
     LIMIT 1
   `,
     [id],
-  );
+  )) as DbGame[];
 
   return rows[0] ? mapDbGame(rows[0]) : null;
 }
 
 export async function findGameBySteamAppId(steamAppId: number): Promise<Game | null> {
-  const { rows } = await pool.query(
+  const rows = (await sql.query(
     `
     SELECT *
     FROM games
@@ -102,7 +109,7 @@ export async function findGameBySteamAppId(steamAppId: number): Promise<Game | n
     LIMIT 1
   `,
     [steamAppId],
-  );
+  )) as DbGame[];
 
   return rows[0] ? mapDbGame(rows[0]) : null;
 }
@@ -171,4 +178,12 @@ export async function addGameOrGetExisting(
 
     return { game: existingGame, created: false };
   }
+}
+
+export async function setGameHeaderImage(id: string, headerImage: string): Promise<void> {
+  await sql`
+    UPDATE games
+    SET header_image = ${headerImage}
+    WHERE id = ${id}
+  `;
 }

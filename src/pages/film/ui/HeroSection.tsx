@@ -8,9 +8,8 @@ import { ROUTES } from '@/shared/config';
 import Link from 'next/link';
 import { mapFilmToInfoItems } from '@/pages/film/model/mapFilmToInfoItems';
 import SubjectRatingStar from '@/widgets/SubjectRatingStar/SubjectRatingStar';
-import { FilmWishlistButton } from '@/features/wishlist/ui/FilmWishlistButton';
-import { verifySession } from '@/shared/lib/auth';
-import { isFilmInWishlist } from '@/features/wishlist/api/db';
+import { SessionWishlistButton } from '@/features/wishlist/ui/SessionWishlistButton';
+import { Suspense } from 'react';
 
 type HeroSectionProps = {
   film: Film;
@@ -21,14 +20,7 @@ function parseAgeLimits(age: string | null) {
   return age.substring(3) + '+';
 }
 
-export async function HeroSection({ film }: HeroSectionProps) {
-  const session = await verifySession();
-
-  const isInWishlist =
-    session.status !== 'unauthenticated'
-      ? await isFilmInWishlist(session.payload.userId, film.id)
-      : false;
-
+export function HeroSection({ film }: HeroSectionProps) {
   return (
     <>
       <div className="page-content-width grid grid-cols-1 items-start gap-y-6 py-8 md:grid-cols-[auto_1fr] md:gap-x-8">
@@ -67,7 +59,9 @@ export async function HeroSection({ film }: HeroSectionProps) {
             items={mapFilmToInfoItems(film)}
           />
           <div className="flex flex-row gap-2">
-            <FilmWishlistButton isInWishlist={isInWishlist} filmId={film.id}></FilmWishlistButton>
+            <Suspense fallback={null}>
+              <SessionWishlistButton type="film" id={film.id} />
+            </Suspense>
             <RatingStarButton className="md:self-start" subject={{ type: 'film', id: film.id }} />
           </div>
         </div>

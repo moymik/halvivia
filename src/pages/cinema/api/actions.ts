@@ -1,11 +1,13 @@
 'use server';
 import { getInitialCinemaFilms } from '@/entities/films/api/db';
 import { mapFilms } from '@/entities/films/model/mappers';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 
 export async function getInitialCardsAction() {
   'use cache';
   cacheLife('hours');
+  cacheTag(cacheTags.catalog('film'));
   const initialFilmsObj = await getInitialCinemaFilms();
 
   return {

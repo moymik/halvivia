@@ -10,9 +10,11 @@ import type {
 } from '@/entities/books/model/types';
 import { BOOK_SECTION_IDS, isBookSectionId } from '@/entities/books/model/sections';
 import { verifySession, withAuth } from '@/shared/lib/auth';
-import { ROUTES } from '@/shared/config';
-import { revalidatePath } from 'next/cache';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 import { headers } from 'next/headers';
+import { after } from 'next/server';
+import { mirrorBookCover } from './mirrorBookCover';
 import { checkRateLimit } from '@/shared/lib/rateLimit';
 import { getExternalBookBySelection, searchExternalBooks } from './bookSearch';
 import { tryCreateActivityEvent } from '@/entities/activity/api/queries';
@@ -150,7 +152,8 @@ export async function addBookAction(input: AddBookSelectionInput): Promise<AddBo
       };
     }
 
-    revalidatePath(ROUTES.LIBRARY);
+    updateTag(cacheTags.catalog('book'));
+    after(() => mirrorBookCover(book));
 
     await tryCreateActivityEvent({
       eventType: 'subject.created',

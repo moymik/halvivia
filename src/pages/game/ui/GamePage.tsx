@@ -9,10 +9,8 @@ import { ROUTES } from '@/shared/config';
 import { ArrowIcon } from '@/shared/ui/icons';
 import SubjectRatingStar from '@/widgets/SubjectRatingStar/SubjectRatingStar';
 import { CommentSection } from '@/widgets/CommentSection/ui/CommentSection';
-import { connection } from 'next/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
 type GamePageProps = {
   params: Promise<{
@@ -20,9 +18,7 @@ type GamePageProps = {
   }>;
 };
 
-export async function GamePageContent({ params }: GamePageProps) {
-  await connection();
-
+export async function GamePage({ params }: GamePageProps) {
   const { id } = await params;
   const game = await getGameById(id);
 
@@ -92,17 +88,5 @@ export async function GamePageContent({ params }: GamePageProps) {
         <CommentSection entityType="game" entityId={id} />
       </section>
     </>
-  );
-}
-
-export function GamePage(props: GamePageProps) {
-  return (
-    <Suspense
-      fallback={
-        <main className="bg-bg-base text-text-secondary px-4 py-10 md:px-8">Загружаем игру...</main>
-      }
-    >
-      <GamePageContent {...props} />
-    </Suspense>
   );
 }

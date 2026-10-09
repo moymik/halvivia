@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 
 import { useBurgerMenuStore } from '@/widgets/Header/model/burgerMenuStore';
 import BurgerMenu from '@/widgets/Header/ui/BurgerMenu';
@@ -26,7 +26,7 @@ export function MainContent({ children }: MainContentProps) {
       </nav>
 
       <main className="bg-bg-base text-text-secondary min-w-0 flex-1 overflow-y-auto">
-        <Suspense>{children}</Suspense>
+        {children}
 
         <Footer />
       </main>

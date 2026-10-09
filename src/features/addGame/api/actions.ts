@@ -3,11 +3,13 @@
 import { addGameOrGetExisting } from '@/entities/games/api/db';
 import type { Game } from '@/entities/games/model/types';
 import { tryCreateActivityEvent } from '@/entities/activity/api/queries';
-import { ROUTES } from '@/shared/config';
 import { verifySession, withAuth } from '@/shared/lib/auth';
 import { checkRateLimit } from '@/shared/lib/rateLimit';
 import { headers } from 'next/headers';
-import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
+import { mirrorGameHeaderImage } from './mirrorGameHeaderImage';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 import type { SteamGameSearchHit } from '@/features/addGame/model/types';
 import { parseSteamAppUrl, resolveSteamGame, searchSteamGames } from './steam';
 
@@ -138,8 +140,8 @@ async function saveResolvedGame(steamAppId: number): Promise<AddGameResult> {
       };
     }
 
-    revalidatePath(ROUTES.GAMES);
-    revalidatePath(`${ROUTES.GAME_PAGE}${game.id}`);
+    updateTag(cacheTags.catalog('game'));
+    after(() => mirrorGameHeaderImage(game));
 
     await tryCreateActivityEvent({
       eventType: 'subject.created',

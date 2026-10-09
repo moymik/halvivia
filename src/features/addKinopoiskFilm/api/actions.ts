@@ -2,8 +2,8 @@
 
 import { addFilmByKinopoiskId, searchFilmsByKeyword } from '@/features/addKinopoiskFilm/api/api';
 import { withAuth } from '@/shared/lib/auth';
-import { ROUTES } from '@/shared/config';
-import { revalidatePath } from 'next/cache';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 import { FilmSearchByKeywordResponseSchema } from '@/features/addKinopoiskFilm/model/schemas';
 import { FilmSearchByKeywordItem } from '@/features/addKinopoiskFilm/model/types';
 import { Film } from '@/entities/films/model/types';
@@ -38,7 +38,7 @@ export async function addKinopoiskFilmAction(id: number): Promise<AddKinopoiskFi
       };
     }
 
-    revalidatePath(ROUTES.CINEMA);
+    updateTag(cacheTags.catalog('film'));
 
     await tryCreateActivityEvent({
       eventType: 'subject.created',

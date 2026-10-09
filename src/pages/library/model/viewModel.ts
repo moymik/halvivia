@@ -1,7 +1,6 @@
 import { getBooksBySection, getRecentBooks } from '@/entities/books/api/db';
 import { BOOK_SECTIONS } from '@/entities/books/model/sections';
 import type { Book } from '@/entities/books/model/types';
-import { verifySession } from '@/shared/lib/auth';
 import { RECENT_BOOKS_LIMIT, SECTION_BOOKS_LIMIT, SECTION_BOOKS_QUERY_LIMIT } from './constants';
 
 export type LibraryShelfViewModel = {
@@ -14,11 +13,10 @@ export type LibraryPageViewModel = {
   recentBooks: Book[];
   plannedBooks: Book[];
   sectionShelves: LibraryShelfViewModel[];
-  canAddBooks: boolean;
 };
 
 export async function getLibraryPageViewModel(): Promise<LibraryPageViewModel> {
-  const [recentBooks, sectionBooks, session] = await Promise.all([
+  const [recentBooks, sectionBooks] = await Promise.all([
     getRecentBooks(RECENT_BOOKS_LIMIT),
     Promise.all(
       BOOK_SECTIONS.map(async (section) => ({
@@ -26,7 +24,6 @@ export async function getLibraryPageViewModel(): Promise<LibraryPageViewModel> {
         books: await getBooksBySection(section.id, SECTION_BOOKS_QUERY_LIMIT),
       })),
     ),
-    verifySession(),
   ]);
 
   const sectionShelves = sectionBooks.map(({ section, books }) => ({
@@ -39,6 +36,5 @@ export async function getLibraryPageViewModel(): Promise<LibraryPageViewModel> {
     recentBooks,
     plannedBooks: [],
     sectionShelves,
-    canAddBooks: session.status !== 'unauthenticated' && session.payload.role === 'MEMBER',
   };
 }

@@ -6,6 +6,7 @@ import { upsertRating } from '@/entities/rating/api/db';
 import { mapDbRatingToRating } from '@/entities/rating/model/mappers';
 import { withAuth } from '@/shared/lib/auth';
 import { updateTag } from 'next/cache';
+import { cacheTags } from '@/shared/lib/cache';
 import { tryCreateActivityEvent } from '@/entities/activity/api/queries';
 
 export async function setRatingAction(params: {
@@ -29,6 +30,9 @@ export async function setRatingAction(params: {
 
     updateTag(`user:${userId}:ratings`);
     updateTag(`ratings:${params.subject.type}:${params.subject.id}`);
+    // rating_avg пересчитан: обновляем карточки в каталоге и страницу элемента.
+    updateTag(cacheTags.catalog(params.subject.type));
+    updateTag(cacheTags.subject(params.subject));
 
     await tryCreateActivityEvent({
       actorId: userId,
