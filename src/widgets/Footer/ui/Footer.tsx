@@ -13,7 +13,7 @@ export function Footer() {
       {/* Top logo */}
       <a href={ROUTES.HOME} className="flex h-7.5 w-33.5 flex-row items-center gap-2.5">
         <LogoIcon className={'w-4'}></LogoIcon>
-        <h4 className={'text-sm font-normal'}>Halva&Povidlo</h4>
+        <h4 className={'text-sm font-normal'}>Халва Повидло</h4>
       </a>
 
       {/* Navigation */}

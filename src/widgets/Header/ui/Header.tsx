@@ -4,39 +4,40 @@ import { NAVIGATION_LINKS } from '@/shared/config';
 import HeaderUserBar from '@/widgets/Header/ui/HeaderUserBar';
 import { Suspense } from 'react';
 import { BurgerButton } from '@/widgets/Header/ui/BurgerButton';
-import { Input } from '@/shared/ui/Input';
-import { Button } from '@/shared/ui/Button';
 import HeaderSearch from '@/widgets/Header/ui/HeaderSearch';
+import { HeaderMobileNav } from '@/widgets/Header/ui/HeaderMobileNav';
 
 export async function Header({ children }: { children: React.ReactNode }) {
   return (
-    <header
-      className={
-        'border-border-default bg-bg-surface sticky top-0 z-500 flex h-18 w-full flex-row items-center justify-between border-b px-4 md:z-100 lg:h-25 lg:px-10'
-      }
-    >
-      <div className={'flex gap-3.5 lg:gap-7.5'}>
-        <BurgerButton aria-label="Открыть меню" aria-controls="main-navigation"></BurgerButton>
-        <AppLink
-          link={NAVIGATION_LINKS.CINEMA}
-          className="flex items-center gap-3 lg:gap-4"
-          aria-label="Halva and Povidlo homepage"
-          hideLabel
-        >
-          <Icon name={'LogoIcon'} className="w-4 md:w-4.5 lg:w-6"></Icon>
-          <span className="inline-block leading-none">
-            Halva&
-            <br />
-            Povidlo
-          </span>
-        </AppLink>
+    <header className="border-border-default bg-bg-surface relative z-500 flex w-full flex-col border-b">
+      <div className="border-border-default flex h-17.5 items-center justify-between gap-4 border-b px-4 lg:h-25 lg:gap-8 lg:border-b-0 lg:pr-10 lg:pl-0">
+        <div className="flex items-center gap-3.5 lg:gap-0">
+          {/* На десктопе бургер стоит по центру колонки свернутого меню, логотип — сразу за ней */}
+          <div className="flex items-center lg:w-21.25 lg:justify-center">
+            <BurgerButton />
+          </div>
+          <AppLink
+            link={NAVIGATION_LINKS.CINEMA}
+            className="flex items-center gap-2 lg:gap-3.5"
+            aria-label="Халва Повидло — на главную"
+            hideLabel
+          >
+            <Icon name={'LogoIcon'} className="w-4 shrink-0 lg:w-6"></Icon>
+            <span className="font-heading text-sm leading-3.5 font-normal lg:text-xl lg:leading-5">
+              Халва
+              <br />
+              Повидло
+            </span>
+          </AppLink>
+        </div>
+        <div className="hidden w-full max-w-132 lg:block">
+          <HeaderSearch />
+        </div>
+        <Suspense fallback={null}>
+          <HeaderUserBar></HeaderUserBar>
+        </Suspense>
       </div>
-      <div className={'space-between hidden w-1/3 lg:flex'}>
-        <HeaderSearch />
-      </div>
-      <Suspense fallback={'loading...'}>
-        <HeaderUserBar></HeaderUserBar>
-      </Suspense>
+      <HeaderMobileNav />
       {children}
     </header>
   );

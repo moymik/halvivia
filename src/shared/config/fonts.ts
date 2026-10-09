@@ -1,9 +1,11 @@
-import { Golos_Text, Roboto } from 'next/font/google';
+import { Roboto, TikTok_Sans } from 'next/font/google';
 
-export const golosText = Golos_Text({
+export const tiktokSans = TikTok_Sans({
   subsets: ['latin', 'cyrillic'],
-  weight: ['500', '700'],
-  variable: '--font-golos',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-tiktok',
+  // У Next нет метрик TikTok Sans для подстройки fallback-шрифта — без этого сыплет ошибками в лог.
+  adjustFontFallback: false,
 });
 
 export const roboto = Roboto({

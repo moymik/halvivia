@@ -1,7 +1,13 @@
 import Link from 'next/link';
-import { ReadonlyURLSearchParams, usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import ArrowIcon from '@/shared/assets/SmallArrowIcon.svg';
+import { ChevronRight } from 'lucide-react';
+
+import { cn } from '@/shared';
+import { isCurrentMenuItem, isCurrentMenuSection } from '@/widgets/Header/model/menuMatch';
+
+// Ниже lg меню — выезжающая шторка поверх контента, её нужно закрывать после перехода.
+const DRAWER_MEDIA_QUERY = '(max-width: 1279px)';
 
 type MenuSectionProps = {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -27,9 +33,11 @@ export function BurgerMenuSection({
   const [sectionOpened, setSectionOpened] = useState<boolean | null>(null);
   const pathname = usePathname() ?? '/';
   const searchParams = useSearchParams();
-  const sectionIsCurrent = pathname === href || pathname.startsWith(`${href}/`);
+  const sectionIsCurrent = isCurrentMenuSection(href, pathname);
 
   const sectionExpanded = sectionOpened === null ? sectionIsCurrent : sectionOpened;
+  const itemsVisible = menuOpened && sectionExpanded;
+
   const toggleSection = () => {
     setSectionOpened((prev) => {
       if (prev === null) {
@@ -39,76 +47,99 @@ export function BurgerMenuSection({
     });
   };
 
+  const closeDrawer = () => {
+    if (window.matchMedia(DRAWER_MEDIA_QUERY).matches) {
+      onClose();
+    }
+  };
+
   return (
     <section className="flex flex-col">
-      <div className="flex h-11 items-center">
-        <Link href={href} onClick={onClose} className="group inline-flex h-11 items-center">
-          <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-sm hover:bg-[#1C1C1C]">
-            <IconComponent className="size-5 shrink-0" />
-          </span>
+      <div
+        className={cn(
+          'flex items-center transition-[height,padding] duration-300 ease-in-out',
+          menuOpened ? 'h-7 pl-3.75' : 'h-11 pl-5',
+        )}
+      >
+        <Link
+          href={href}
+          onClick={onClose}
+          aria-label={title}
+          aria-current={sectionIsCurrent ? 'true' : undefined}
+          className={cn(
+            'flex h-full w-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-200',
+            !menuOpened && (sectionIsCurrent ? 'bg-bg-hover' : 'hover:bg-bg-hover'),
+          )}
+        >
+          <IconComponent className="size-5 shrink-0" />
         </Link>
 
         <button
           type="button"
           onClick={toggleSection}
-          className={`flex h-11 items-center gap-2 text-xl font-bold whitespace-nowrap transition-[opacity,transform] duration-200 ${
+          aria-expanded={itemsVisible}
+          tabIndex={menuOpened ? 0 : -1}
+          className={cn(
+            'font-heading flex h-full items-center gap-2 text-base font-bold whitespace-nowrap transition-[opacity,transform] duration-200',
             menuOpened
               ? 'translate-x-0 opacity-100'
-              : 'pointer-events-none -translate-x-2 opacity-0'
-          } `}
+              : 'pointer-events-none -translate-x-2 opacity-0',
+          )}
         >
           <span>{title}</span>
-
-          <span className="flex size-4 shrink-0 items-center justify-center">
-            <ArrowIcon
-              className={`size-3.5 transition-transform duration-200 ${sectionExpanded ? 'rotate-90' : ''} `}
-            />
-          </span>
+          <ChevronRight
+            aria-hidden="true"
+            strokeWidth={1.75}
+            className={cn(
+              'size-4 shrink-0 transition-transform duration-200',
+              sectionExpanded && 'rotate-90',
+            )}
+          />
         </button>
       </div>
 
-      <ul
-        className={`flex flex-col gap-2 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
-          menuOpened && sectionExpanded
-            ? 'mt-4 max-h-96 opacity-100'
-            : 'pointer-events-none max-h-0 opacity-0'
-        } `}
+      <div
+        className={cn(
+          'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out',
+          itemsVisible
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'pointer-events-none grid-rows-[0fr] opacity-0',
+        )}
       >
-        {items.map((item) => (
-          <li key={item.href} className="text-text-secondary flex items-center gap-2 px-10">
-            <Link
-              href={item.href}
-              className={`flex min-h-10 w-full items-center rounded-lg px-4 py-2 transition-colors ${
-                isCurrentMenuItem(item.href, item.matchSearch, pathname, searchParams)
-                  ? 'bg-primary-080 border-primary text-text-primary border-l-4'
-                  : 'hover:text-text-primary'
-              }`}
-            >
-              {item.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+        <div className="overflow-hidden">
+          <ul className="flex flex-col gap-2 pt-4 pr-10 pl-15">
+            {items.map((item) => {
+              const itemIsCurrent = isCurrentMenuItem(
+                item.href,
+                item.matchSearch,
+                pathname,
+                searchParams,
+              );
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={closeDrawer}
+                    tabIndex={itemsVisible ? 0 : -1}
+                    aria-current={itemIsCurrent ? 'page' : undefined}
+                    className={cn(
+                      'flex min-h-10 w-full items-center rounded-lg border-l-3 py-2 pr-3 pl-3 text-sm transition-colors duration-200',
+                      itemIsCurrent
+                        ? 'bg-bg-selected border-primary text-text-primary'
+                        : 'text-text-secondary hover:text-text-primary border-transparent',
+                    )}
+                  >
+                    {item.title}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="border-border-default mx-6 mt-5 border-t" />
+        </div>
+      </div>
     </section>
   );
-}
-
-function isCurrentMenuItem(
-  href: string,
-  matchSearch: boolean | undefined,
-  pathname: string,
-  searchParams: ReadonlyURLSearchParams | null,
-) {
-  const [itemPathname, itemQuery = ''] = href.split('?');
-  if (pathname !== itemPathname) {
-    return false;
-  }
-  const expectedParams = new URLSearchParams(itemQuery);
-  if (expectedParams.size === 0) {
-    return !matchSearch || !searchParams || searchParams.size === 0;
-  }
-  if (!searchParams) {
-    return false;
-  }
-  return [...expectedParams.entries()].every(([key, value]) => searchParams.get(key) === value);
 }

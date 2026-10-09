@@ -12,9 +12,11 @@ export function BurgerButton() {
       type="button"
       onClick={toggleMenu}
       aria-expanded={menuOpened}
-      aria-label={menuOpened ? 'Close menu' : 'Open menu'}
+      aria-controls="main-navigation"
+      aria-label={menuOpened ? 'Закрыть меню' : 'Открыть меню'}
+      className="hover:bg-bg-hover -ml-2.5 flex size-10 items-center justify-center rounded-lg transition-colors duration-200 lg:ml-0"
     >
-      <Icon name="BurgerIcon" className="w-4 md:w-5.5" />
+      <Icon name="BurgerIcon" className="w-5.5" />
     </button>
   );
 }

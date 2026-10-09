@@ -1,172 +1,77 @@
 'use client';
 
-import { DbGenre, FilmFilterKey, FilmFilters } from '@/entities/films/model/types';
-
-import { FILM_TYPE_OPTIONS } from '@/entities/films/model/constants';
-import { useListQuery } from '@/shared/lib/url/hooks';
+import { useId } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { Input } from '@/shared/ui/Input';
-import { Checkbox } from '@/shared/ui/checkbox/Checkbox';
+
+import { DbGenre, FilmFilterKey, FilmFilters } from '@/entities/films/model/types';
+import { useListQuery } from '@/shared/lib/url/hooks';
+import {
+  FilterCheckboxList,
+  FilterField,
+  FilterInput,
+  FilterPanel,
+  FilterSelect,
+} from '@/widgets/CatalogFilters';
 
 type Props = {
   filters: FilmFilters;
   genres: DbGenre[];
 };
 
+const FILM_SORT_OPTIONS = [
+  { value: 'newest', label: 'Новые' },
+  { value: 'oldest', label: 'Старые' },
+  { value: 'rating_desc', label: 'Рейтинг ↓' },
+  { value: 'rating_asc', label: 'Рейтинг ↑' },
+  { value: 'year_desc', label: 'Год ↓' },
+  { value: 'year_asc', label: 'Год ↑' },
+] as const;
+
+// Тип задается пунктом бокового меню (?type=FILM), поэтому сброс фильтров его сохраняет.
+const RESET_KEPT_KEYS = ['type'] as const satisfies readonly FilmFilterKey[];
+
 export default function FilterForm({ filters, genres }: Props) {
+  const id = useId();
   const { updateParam, toggleArrayParam, reset } = useListQuery<FilmFilterKey>();
   const debouncedUpdateParam = useDebouncedCallback((key: FilmFilterKey, value: string) => {
     updateParam(key, value);
   }, 1000);
 
+  const genreOptions = genres.map((genre) => ({ value: genre.id, label: genre.name }));
+
   return (
-    <aside className="bg-bg-surface text-text-primary border-border-default flex h-full flex-col gap-6 border-x px-6 py-10">
-      <h2 className="text-xl font-bold">Фильтры</h2>
+    <FilterPanel
+      onReset={() => {
+        debouncedUpdateParam.cancel();
+        reset(RESET_KEPT_KEYS);
+      }}
+    >
+      <FilterInput
+        withSearchIcon
+        type="search"
+        aria-label="Поиск по названию"
+        defaultValue={filters.search ?? ''}
+        placeholder="Поиск"
+        onChange={(e) => debouncedUpdateParam('search', e.target.value)}
+      />
 
-      {/* Поиск */}
-      <div>
-        <Input
-          variant={'dark'}
-          searchIcon={'textEmpty'}
-          defaultValue={filters.search ?? ''}
-          placeholder="Поиск"
-          onChange={(e) => debouncedUpdateParam('search', e.target.value)}
-        />
-      </div>
-
-      {/* Сортировка */}
-      <div>
-        <label>Сортировка</label>
-
-        <select
-          className="bg-bg-base text-text-primary border-default w-full rounded-xl border p-2"
+      <FilterField label="Сортировка" htmlFor={`${id}-sort`}>
+        <FilterSelect
+          id={`${id}-sort`}
+          options={FILM_SORT_OPTIONS}
           value={filters.sort}
           onChange={(e) => updateParam('sort', e.target.value)}
-        >
-          <option value="newest">Новые</option>
-          <option value="oldest">Старые</option>
-          <option value="rating_desc">Рейтинг ↓</option>
-          <option value="rating_asc">Рейтинг ↑</option>
-          <option value="year_desc">Год ↓</option>
-          <option value="year_asc">Год ↑</option>
-        </select>
-      </div>
+        />
+      </FilterField>
 
-      {/* Количество */}
-      <div>
-        <label>На странице</label>
-
-        <select
-          className="bg-bg-surface border p-2"
-          value={filters.limit}
-          onChange={(e) => updateParam('limit', e.target.value)}
-        >
-          <option value="12">12</option>
-          <option value="24">24</option>
-          <option value="48">48</option>
-        </select>
-      </div>
-
-      {/* Тип */}
-      <div>
-        <label>Тип</label>
-
-        <div className="text-text-primary flex flex-col gap-2">
-          {FILM_TYPE_OPTIONS.map((type) => (
-            <label key={type.value} className="flex items-center gap-2">
-              <Checkbox
-                checked={filters.type?.includes(type.value) ?? false}
-                onCheckedChange={() => toggleArrayParam('type', type.value)}
-                className="inline"
-              ></Checkbox>
-              {type.label}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Годы */}
-      <div>
-        <label>Годы</label>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder="От"
-            className="w-1/2 border p-2"
-            defaultValue={filters.yearFrom ?? ''}
-            min={1800}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              if (value === '' || Number(value) >= 1800) {
-                debouncedUpdateParam('yearFrom', value);
-              }
-            }}
-          />
-
-          <Input
-            type="number"
-            placeholder="До"
-            className="w-1/2 border p-2"
-            defaultValue={filters.yearTo ?? ''}
-            min={1800}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              if (value === '') {
-                debouncedUpdateParam('yearTo', '');
-                return;
-              }
-
-              const year = Number(value);
-
-              if (year >= 1800 && year <= new Date().getFullYear() + 5) {
-                debouncedUpdateParam('yearTo', value);
-              }
-            }}
-          />
-        </div>
-      </div>
-      {/* Сериал */}
-      <div>
-        <label>Сериал</label>
-
-        <select
-          className="bg-bg-surface w-full border p-2"
-          value={filters.serial === undefined ? '' : String(filters.serial)}
-          onChange={(e) => updateParam('serial', e.target.value)}
-        >
-          <option value="">Все</option>
-          <option value="true">Только сериалы</option>
-          <option value="false">Только фильмы</option>
-        </select>
-      </div>
-      <div>
-        <label className="mb-2 block">Жанры</label>
-
-        <div className="max-h-64 overflow-y-auto rounded border p-2">
-          {genres.map((genre) => (
-            <label key={genre.id} className="flex items-center gap-2 py-1">
-              <Checkbox
-                checked={filters.genreIds?.includes(genre.id) ?? false}
-                onCheckedChange={() => toggleArrayParam('genreIds', String(genre.id))}
-              />
-
-              {genre.name}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <button
-        type="button"
-        className="rounded border p-2"
-        onClick={() => {
-          reset();
-        }}
-      >
-        Сбросить
-      </button>
-    </aside>
+      <FilterField label="Жанры">
+        <FilterCheckboxList
+          label="Жанры"
+          options={genreOptions}
+          isChecked={(genreId) => filters.genreIds?.includes(genreId) ?? false}
+          onToggle={(genreId) => toggleArrayParam('genreIds', String(genreId))}
+        />
+      </FilterField>
+    </FilterPanel>
   );
 }

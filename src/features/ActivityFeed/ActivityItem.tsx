@@ -11,19 +11,22 @@ type ActivityItemProps = {
 
 export function ActivityItem({ event }: ActivityItemProps) {
   return (
-    <article className="flex items-start gap-2">
+    <article className="flex shrink-0 items-start gap-3">
       <UserLink userId={event.actor.id} className="shrink-0">
-        <UserAvatarMini className="h-12 w-12 border-0" avatarUrl={event.actor.avatarUrl} />
+        <UserAvatarMini className="size-9 border-0 md:size-9" avatarUrl={event.actor.avatarUrl} />
       </UserLink>
 
-      <p className="text-muted-foreground">
-        <span className="text-primary font-medium hover:underline">
-          <UserLink userId={event.actor.id}>{event.actor.username} </UserLink>
-        </span>
-        {renderEventText(event)}
-        <br />
-        <span className="text-text-primary-700 text-xs">{formatRelativeTime(event.createdAt)}</span>
-      </p>
+      <div className="min-w-0 text-sm leading-4">
+        <p className="text-text-primary break-words">
+          <UserLink userId={event.actor.id} className="text-primary hover:underline">
+            {event.actor.username}
+          </UserLink>{' '}
+          {renderEventText(event)}
+        </p>
+        <p className="text-text-secondary mt-1 text-xs leading-4">
+          {formatRelativeTime(event.createdAt)}
+        </p>
+      </div>
     </article>
   );
 }
@@ -32,12 +35,12 @@ function renderEventText(event: ActivityFeedItem) {
   const subjectHref = getSubjectRef(event.subject);
 
   const subjectLink = (
-    <Link href={subjectHref} className="text-text-primary-700 font-medium hover:underline">
-      {`"${
+    <Link href={subjectHref} className="text-text-secondary hover:underline">
+      {`“${
         event.subject.title.length > 30
           ? event.subject.title.slice(0, 30) + '...'
           : event.subject.title
-      }"`}
+      }”`}
     </Link>
   );
 
@@ -49,8 +52,7 @@ function renderEventText(event: ActivityFeedItem) {
       const value = getRatingValue(event.metadata);
       return (
         <>
-          оценил {subjectLink} на{' '}
-          <span className={`font-medium ${getRatingColorClass(value)}`}>{value}</span>
+          оценил {subjectLink} на <span className={getRatingColorClass(value)}>{value}</span>
         </>
       );
     }
@@ -65,7 +67,7 @@ function renderEventText(event: ActivityFeedItem) {
             ответил на комментарий к {subjectLink}:<br />
             {commentPreview && (
               <>
-                <span className="text-muted-foreground text-sm">«{commentPreview}»</span>
+                <span className="text-text-secondary">«{commentPreview}»</span>
               </>
             )}
           </>
@@ -77,7 +79,7 @@ function renderEventText(event: ActivityFeedItem) {
           оставил комментарий к {subjectLink}:<br />
           {commentPreview && (
             <>
-              <span className="text-muted-foreground text-sm">«{commentPreview}»</span>
+              <span className="text-text-secondary">«{commentPreview}»</span>
             </>
           )}
         </>

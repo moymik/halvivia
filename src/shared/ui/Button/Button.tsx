@@ -11,7 +11,8 @@ const baseStyles =
   'btn flex w-fit items-center justify-center gap-4 h-[40px] px-5 rounded-[8px]  whitespace-nowrap font-medium disabled:opacity-40 transition-[background-color,border-color,color,opacity] duration-300 ease-in ';
 
 const variants = {
-  primary: 'bg-primary text-text-primary hover:bg-[#006DEB] disabled:text-[#F9F9F980]',
+  primary:
+    'bg-primary text-text-primary hover:bg-primary-hover disabled:bg-primary-hover disabled:text-text-secondary disabled:opacity-100',
   primaryOnLight: 'bg-primary text-text-primary hover:bg-primary-dark', //пока что есть 2 варианта
   outline: 'hover:bg-primary  border-border-white border hover:border-primary',
 
