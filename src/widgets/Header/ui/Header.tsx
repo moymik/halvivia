@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import { BurgerButton } from '@/widgets/Header/ui/BurgerButton';
 import { Input } from '@/shared/ui/Input';
 import { Button } from '@/shared/ui/Button';
+import HeaderSearch from '@/widgets/Header/ui/HeaderSearch';
 
 export async function Header({ children }: { children: React.ReactNode }) {
   return (
@@ -31,7 +32,7 @@ export async function Header({ children }: { children: React.ReactNode }) {
         </AppLink>
       </div>
       <div className={'space-between hidden w-1/3 lg:flex'}>
-        <Input variant={'dark'} searchIcon={'always'} placeholder="Поиск"></Input>
+        <HeaderSearch />
       </div>
       <Suspense fallback={'loading...'}>
         <HeaderUserBar></HeaderUserBar>

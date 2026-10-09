@@ -1,7 +1,6 @@
 import { connection } from 'next/server';
 import { getLibraryPageViewModel } from '../model/viewModel';
 import { BookShelf } from './BookShelf';
-import { LibraryToolbar } from './LibraryToolbar';
 import PlannedBooksShelf from '@/features/wishlist/ui/PlannedBooksShelf';
 import { getBookCategories, listBooks } from '@/entities/books/api/db';
 import { parseBookListFilters, BOOKS_PAGE_SIZE, booksCatalogHref } from '../model/searchParams';
@@ -32,12 +31,13 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
     const totalPages = Math.ceil(totalCount / BOOKS_PAGE_SIZE);
 
     return (
-      <section className="page-content-width py-6">
+      <section className="page-content-width pr-0">
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="flex min-w-0 flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6 py-4 lg:py-6">
             <h1 className="text-2xl font-bold">{getSectionTitle(filters.section)}</h1>
+
             {books.length > 0 ? (
-              <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-[repeat(auto-fill,148px)] justify-start gap-5 max-lg:grid-cols-[repeat(auto-fill,128px)] max-sm:grid-cols-[repeat(auto-fill,104px)]">
                 {books.map((book) => (
                   <BookCard key={book.id} book={book} />
                 ))}
@@ -52,15 +52,17 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
                 )}
               </div>
             )}
+
             <PaginationClient page={filters.page} totalPages={totalPages} />
           </div>
-          <div className="sticky h-fit lg:top-6">
+
+          <aside className="h-full w-full min-w-0 lg:justify-self-end">
             <BookFilterForm
               key={JSON.stringify(filters)}
               filters={filters}
               categories={categories}
             />
-          </div>
+          </aside>
         </div>
       </section>
     );
@@ -70,7 +72,7 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
 
   return (
     <>
-      <section className="bg-bg-inverse text-text-inverse">
+      <section className="bg-bg-base text-text-primary">
         <div className="page-content-width flex flex-col gap-5 py-8 lg:py-9">
           <BookShelf
             title={RECENT_BOOKS_TITLE}
@@ -84,7 +86,6 @@ export async function LibraryPage({ searchParams }: LibraryPageProps) {
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-42 bg-[url('/library-vector.png')] bg-size-[100%_auto] bg-bottom bg-no-repeat opacity-45 md:h-52" />
         <div className="page-content-width relative flex flex-col gap-10 py-8 lg:py-9">
-          <LibraryToolbar canAddBooks={canAddBooks} />
           <PlannedBooksShelf></PlannedBooksShelf>
           {sectionShelves.map((section) => (
             <BookShelf

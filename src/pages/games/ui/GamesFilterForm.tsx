@@ -4,6 +4,7 @@ import type { GameListFilters } from '@/entities/games/model/schemas';
 import { GAME_SORT_OPTIONS } from '@/entities/games/model/constants';
 import { useListQuery } from '@/shared/lib/url/hooks';
 import { useDebouncedCallback } from 'use-debounce';
+import { Input } from '@/shared/ui/Input';
 
 type Props = {
   filters: GameListFilters;
@@ -17,35 +18,35 @@ type GameFilterKey =
   | 'ratingFrom'
   | 'steamScoreFrom';
 
-const inputClassName =
-  'bg-bg-surface text-text-primary placeholder:text-text-muted w-full rounded border border-white/15 p-2';
-
 export function GamesFilterForm({ filters }: Props) {
   const { updateParam, reset } = useListQuery<GameFilterKey>();
+
   const debouncedUpdate = useDebouncedCallback((key: GameFilterKey, value: string) => {
     updateParam(key, value);
-  }, 500);
+  }, 1000);
 
   return (
-    <aside className="flex flex-col gap-6 rounded-lg border border-white/15 p-5">
+    <aside className="bg-bg-surface text-text-primary border-border-default flex h-full flex-col gap-6 border-x px-6 py-10">
       <h2 className="text-xl font-bold">Фильтры</h2>
 
+      {/* Поиск */}
       <div>
-        <label htmlFor="game-search">Поиск</label>
-        <input
-          id="game-search"
-          className={inputClassName}
+        <Input
+          variant="dark"
+          searchIcon="textEmpty"
           defaultValue={filters.search ?? ''}
           placeholder="Название игры"
-          onChange={(event) => debouncedUpdate('search', event.target.value.trim())}
+          onChange={(event) => debouncedUpdate('search', event.target.value)}
         />
       </div>
 
+      {/* Сортировка */}
       <div>
         <label htmlFor="game-sort">Сортировка</label>
+
         <select
           id="game-sort"
-          className={inputClassName}
+          className="bg-bg-base text-text-primary border-default w-full rounded-xl border p-2"
           value={filters.sort}
           onChange={(event) => updateParam('sort', event.target.value)}
         >
@@ -57,56 +58,65 @@ export function GamesFilterForm({ filters }: Props) {
         </select>
       </div>
 
+      {/* Разработчик */}
       <div>
         <label htmlFor="game-developer">Разработчик</label>
-        <input
+
+        <Input
           id="game-developer"
-          className={inputClassName}
+          variant="dark"
           defaultValue={filters.developer ?? ''}
           placeholder="Например, Valve"
-          onChange={(event) => debouncedUpdate('developer', event.target.value.trim())}
+          onChange={(event) => debouncedUpdate('developer', event.target.value)}
         />
       </div>
 
+      {/* Издатель */}
       <div>
         <label htmlFor="game-publisher">Издатель</label>
-        <input
+
+        <Input
           id="game-publisher"
-          className={inputClassName}
+          variant="dark"
           defaultValue={filters.publisher ?? ''}
           placeholder="Например, Devolver Digital"
-          onChange={(event) => debouncedUpdate('publisher', event.target.value.trim())}
+          onChange={(event) => debouncedUpdate('publisher', event.target.value)}
         />
       </div>
 
+      {/* Рейтинг пользователей */}
       <div>
         <label htmlFor="game-rating">Рейтинг пользователей от</label>
-        <input
+
+        <Input
           id="game-rating"
-          className={inputClassName}
+          variant="dark"
           type="number"
-          min="0"
-          max="10"
-          step="0.1"
+          min={0}
+          max={10}
+          step={0.1}
           defaultValue={filters.ratingFrom ?? ''}
           onChange={(event) => debouncedUpdate('ratingFrom', event.target.value)}
         />
       </div>
 
+      {/* Оценка Steam */}
       <div>
         <label htmlFor="game-steam-score">Оценка Steam от</label>
-        <input
+
+        <Input
           id="game-steam-score"
-          className={inputClassName}
+          variant="dark"
           type="number"
-          min="0"
-          max="100"
+          min={0}
+          max={100}
           defaultValue={filters.steamScoreFrom ?? ''}
           onChange={(event) => debouncedUpdate('steamScoreFrom', event.target.value)}
         />
       </div>
 
-      <button type="button" className="rounded border border-white/30 p-2" onClick={reset}>
+      {/* Сброс */}
+      <button type="button" className="rounded border p-2" onClick={reset}>
         Сбросить
       </button>
     </aside>

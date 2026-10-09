@@ -23,10 +23,9 @@ export function BookShelf({
   return (
     <section className="flex flex-col gap-4">
       <h2
-        className={`flex items-center gap-2 text-2xl leading-tight font-bold md:text-3xl ${variant === 'onLight' && 'text-text-inverse'}`}
+        className={`text-text-primary flex items-center gap-2 text-2xl leading-tight font-bold md:text-3xl ${variant === 'onLight' && 'text-text-inverse'}`}
       >
         {title}
-        <ArrowIcon className="h-4 w-4" />
       </h2>
       {books.length > 0 ? (
         <div className="flex gap-3 overflow-x-auto overflow-y-visible pb-5 md:gap-4">

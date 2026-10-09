@@ -26,13 +26,12 @@ export async function GamesPage({ searchParams }: GamesPageProps) {
 
   return (
     <section>
-      <div className="page-content-width flex flex-col gap-6 py-8 lg:py-9">
-        <GamesToolbar canAddGames={canAddGames} />
+      <div className="page-content-width flex flex-col gap-6 pr-0">
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="flex min-w-0 flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6 py-6">
             <h1 className="text-2xl font-bold">Игры</h1>
             {games.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 2xl:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
                 {games.map((game) => (
                   <GameCard key={game.id} game={game} fill />
                 ))}
@@ -52,7 +51,7 @@ export async function GamesPage({ searchParams }: GamesPageProps) {
             )}
             <GamesPagination page={filters.page} totalPages={totalCount === 0 ? 0 : totalPages} />
           </div>
-          <div className="sticky h-fit lg:top-6">
+          <div className="h-full">
             <GamesFilterForm key={JSON.stringify(filters)} filters={filters} />
           </div>
         </div>

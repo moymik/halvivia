@@ -68,7 +68,7 @@ export function BurgerMenuSection({
       </div>
 
       <ul
-        className={`flex flex-col gap-4 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
+        className={`flex flex-col gap-2 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
           menuOpened && sectionExpanded
             ? 'mt-4 max-h-96 opacity-100'
             : 'pointer-events-none max-h-0 opacity-0'
@@ -78,10 +78,9 @@ export function BurgerMenuSection({
           <li key={item.href} className="text-text-secondary flex items-center gap-2 px-10">
             <Link
               href={item.href}
-              onClick={onClose}
-              className={`block rounded-sm px-2 py-1 transition-colors ${
+              className={`flex min-h-10 w-full items-center rounded-lg px-4 py-2 transition-colors ${
                 isCurrentMenuItem(item.href, item.matchSearch, pathname, searchParams)
-                  ? 'bg-primary-080 text-text-primary'
+                  ? 'bg-primary-080 border-primary text-text-primary border-l-4'
                   : 'hover:text-text-primary'
               }`}
             >

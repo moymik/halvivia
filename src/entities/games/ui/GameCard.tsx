@@ -29,7 +29,7 @@ export function GameCard({ game, fill = false }: GameCardProps) {
             {game.name}
           </div>
         )}
-        <div className="bg-bg-overlay-gray text-text-primary absolute right-0 bottom-0 left-0 hidden min-h-15 translate-y-full items-end justify-between gap-2 px-3 py-2 opacity-0 backdrop-blur-sm transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 lg:flex">
+        <div className="bg-bg-overlay-gray text-text-primary absolute right-0 bottom-0 left-0 hidden min-h-10 translate-y-full items-end justify-between gap-2 px-3 py-2 opacity-0 backdrop-blur-sm transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 lg:flex">
           <span className="line-clamp-2 text-base leading-tight font-bold lg:text-lg">
             {game.name}
           </span>

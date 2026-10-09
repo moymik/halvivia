@@ -22,18 +22,27 @@ export function AddDropDown() {
       <DropdownMenuTrigger asChild>
         <Button>Добавить</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-bg-surface z-1000 w-44.5">
-        <DropdownMenuItem className="flex items-center gap-2" onSelect={() => openDialog('film')}>
+      <DropdownMenuContent className="bg-bg-surface ring-border-default z-1000 w-44.5">
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center gap-2"
+          onSelect={() => openDialog('film')}
+        >
           <FilmIcon className="size-5 shrink-0" />
           Добавить фильм
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-2" onSelect={() => openDialog('book')}>
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center gap-2"
+          onSelect={() => openDialog('book')}
+        >
           <BookIcon className="size-5 shrink-0" />
           Добавить книгу
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-2" onSelect={() => openDialog('game')}>
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center gap-2"
+          onSelect={() => openDialog('game')}
+        >
           <GameIcon className="size-5" />
           Добавить игру
         </DropdownMenuItem>

@@ -28,8 +28,8 @@ export async function CinemaPage({ searchParams }: Props) {
     if (!genresResult.success) return <>Не удалось загрузить жанры</>;
 
     return (
-      <section className="page-content-width pr-0">
-        <div className="grid grid-cols-2 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+      <section className="page-content-width text-text-primary pr-0">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
           <div className="flex min-w-0 flex-col gap-6 py-4 lg:py-10">
             <h1 className="text-2xl font-bold">{getCinemaSectionTitle(filters.type)}</h1>
             <div className="grid w-full grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -60,20 +60,13 @@ export async function CinemaPage({ searchParams }: Props) {
   const initialCards = await getInitialCardsAction();
   return (
     <>
-      <section className={'bg-bg-inverse w-full pt-7.5 pb-4'}>
-        <div className={'page-content-width'}>
-          <Carousel className={'text-text-inverse'} href={'/cinema/lists'} label={'Новинки'}>
+      <section className={'w-full'}>
+        <div className={'page-content-width flex flex-col gap-5 py-10'}>
+          <Carousel className={'text-text-primary'} href={'/cinema/lists'} label={'Новинки'}>
             {initialCards.recentCards.map((prop) => (
               <FilmCard key={prop.id} variant={'grid'} {...prop} />
             ))}
           </Carousel>
-        </div>
-      </section>
-      <section className={'w-full'}>
-        <div className={'page-content-width flex flex-col gap-5 py-12'}>
-          <Suspense fallback={null}>
-            <Toolbar></Toolbar>
-          </Suspense>
           <FilmsGrid
             initialFilmCards={initialCards}
             PlannedFilms={

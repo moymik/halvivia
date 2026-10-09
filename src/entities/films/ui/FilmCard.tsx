@@ -64,10 +64,14 @@ export function FilmCard({
           sizes={sizesByVariant[variant]}
         />
 
-        <div className="lg:bg-bg-overlay-gray flex w-full flex-row items-center justify-between px-1 py-1 transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:min-h-[25%] lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100">
+        <div className="lg:bg-bg-overlay-gray text-text-primary flex w-full flex-col items-start justify-center gap-2.5 px-1 py-1 text-lg transition-opacity duration-300 ease-out lg:absolute lg:bottom-0 lg:h-[23%] lg:max-h-23.25 lg:rounded-b-xl lg:px-3 lg:font-semibold lg:opacity-0 lg:backdrop-blur-sm lg:group-hover:opacity-100">
           <span className="line-clamp-2">{name}</span>
-
-          <span className={cn('inline-flex items-center', ratingAvg === null && 'hidden')}>
+          <span
+            className={cn(
+              'inline-flex items-center font-bold lg:text-xl',
+              ratingAvg === null && 'hidden',
+            )}
+          >
             <CardRatingStar averageRating={ratingAvg} />
 
             <span className="hidden lg:block">

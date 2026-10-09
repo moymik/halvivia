@@ -22,7 +22,7 @@ export function ActivityDropdownClient({ children }: ActivityDropdownClientProps
 
       <DropdownMenuContent
         align="end"
-        className="bg-bg-base mt-5 w-screen rounded-t-none p-0 md:w-[339px] lg:mt-7"
+        className="bg-bg-base ring-border-default mt-5 w-screen rounded-t-none p-0 md:w-[339px] lg:mt-7"
       >
         {children}
       </DropdownMenuContent>

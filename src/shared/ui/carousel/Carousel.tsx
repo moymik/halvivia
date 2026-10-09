@@ -19,7 +19,7 @@ export function Carousel({
   return (
     <section className="w-full py-4">
       <div className={cn('relative flex w-full flex-row items-center justify-between', className)}>
-        <Link href={href} className="text-[clamp(20px,2.5vw,2rem)] font-bold">
+        <Link href={href} className="text-text-primary text-[clamp(20px,2.5vw,2rem)] font-bold">
           {label}
         </Link>
 
@@ -31,7 +31,7 @@ export function Carousel({
         </Link>
       </div>
 
-      <ul className="flex w-full scrollbar-thumb-transparent gap-3 overflow-x-auto py-4 hover:scrollbar-thumb-gray-800 md:py-6 [&>li]:shrink-0 [&>li]:basis-[calc((100%-1*max(4px,0.5vw))/2)] md:[&>li]:basis-[calc((100%-2*max(4px,0.5vw))/3)] lg:[&>li]:basis-[calc((100%-3*max(4px,0.5vw))/4)] xl:[&>li]:basis-[calc((100%-4*max(4px,0.5vw))/5)] 2xl:[&>li]:basis-[calc((100%-5*max(4px,0.5vw))/6)]">
+      <ul className="flex w-full scrollbar-thumb-transparent gap-3 overflow-x-auto py-4 hover:scrollbar-thumb-gray-800 md:py-6 [&>li]:shrink-0 [&>li]:basis-[calc((100%-1*12px)/2)] md:[&>li]:basis-[calc((100%-4*12px)/5)] lg:[&>li]:basis-[calc((100%-5*12px)/6)] xl:[&>li]:basis-[calc((100%-5*12px)/6)] 2xl:[&>li]:basis-[calc((100%-5*12px)/6)]">
         {React.Children.map(children, (child) => (
           <li>{child}</li>
         ))}

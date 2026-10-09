@@ -3,7 +3,6 @@ import { HeaderDropdown } from './HeaderDropdown';
 import { getCurrentUser } from '@/features/auth/api/getCurrentUser';
 import { UserClient } from '@/widgets/Header/ui/UserClient';
 import { ActivityDropdown } from '@/widgets/Header/ui/ActivityDropwdown';
-import { Button } from '@/shared/ui/Button';
 import AddDropDown from '@/widgets/Header/ui/AddDropDown';
 
 export async function HeaderUserBar() {

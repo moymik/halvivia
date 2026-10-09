@@ -6,6 +6,7 @@ import { FILM_TYPE_OPTIONS } from '@/entities/films/model/constants';
 import { useListQuery } from '@/shared/lib/url/hooks';
 import { useDebouncedCallback } from 'use-debounce';
 import { Input } from '@/shared/ui/Input';
+import { Checkbox } from '@/shared/ui/checkbox/Checkbox';
 
 type Props = {
   filters: FilmFilters;
@@ -19,18 +20,16 @@ export default function FilterForm({ filters, genres }: Props) {
   }, 1000);
 
   return (
-    <aside className="bg-bg-surface border-border-default flex h-full w-81 flex-col gap-6 border-x px-6 py-10">
+    <aside className="bg-bg-surface text-text-primary border-border-default flex h-full flex-col gap-6 border-x px-6 py-10">
       <h2 className="text-xl font-bold">Фильтры</h2>
 
       {/* Поиск */}
       <div>
-        <label>Поиск</label>
-
         <Input
           variant={'dark'}
           searchIcon={'textEmpty'}
           defaultValue={filters.search ?? ''}
-          placeholder="Название фильма"
+          placeholder="Поиск"
           onChange={(e) => debouncedUpdateParam('search', e.target.value)}
         />
       </div>
@@ -40,7 +39,7 @@ export default function FilterForm({ filters, genres }: Props) {
         <label>Сортировка</label>
 
         <select
-          className="bg-bg-surface w-full border p-2"
+          className="bg-bg-base text-text-primary border-default w-full rounded-xl border p-2"
           value={filters.sort}
           onChange={(e) => updateParam('sort', e.target.value)}
         >
@@ -72,14 +71,14 @@ export default function FilterForm({ filters, genres }: Props) {
       <div>
         <label>Тип</label>
 
-        <div className="flex flex-col gap-2">
+        <div className="text-text-primary flex flex-col gap-2">
           {FILM_TYPE_OPTIONS.map((type) => (
-            <label key={type.value}>
-              <input
-                type="checkbox"
+            <label key={type.value} className="flex items-center gap-2">
+              <Checkbox
                 checked={filters.type?.includes(type.value) ?? false}
-                onChange={() => toggleArrayParam('type', type.value)}
-              />{' '}
+                onCheckedChange={() => toggleArrayParam('type', type.value)}
+                className="inline"
+              ></Checkbox>
               {type.label}
             </label>
           ))}
@@ -90,7 +89,7 @@ export default function FilterForm({ filters, genres }: Props) {
       <div>
         <label>Годы</label>
         <div className="flex gap-2">
-          <input
+          <Input
             type="number"
             placeholder="От"
             className="w-1/2 border p-2"
@@ -105,7 +104,7 @@ export default function FilterForm({ filters, genres }: Props) {
             }}
           />
 
-          <input
+          <Input
             type="number"
             placeholder="До"
             className="w-1/2 border p-2"
@@ -148,10 +147,9 @@ export default function FilterForm({ filters, genres }: Props) {
         <div className="max-h-64 overflow-y-auto rounded border p-2">
           {genres.map((genre) => (
             <label key={genre.id} className="flex items-center gap-2 py-1">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={filters.genreIds?.includes(genre.id) ?? false}
-                onChange={() => toggleArrayParam('genreIds', String(genre.id))}
+                onCheckedChange={() => toggleArrayParam('genreIds', String(genre.id))}
               />
 
               {genre.name}
