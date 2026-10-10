@@ -30,7 +30,7 @@ function RatingTooltip({ item }: { item: RatingTableRow }) {
   return (
     <div
       className={cn(
-        'absolute top-full left-0 z-30 mt-2 hidden w-[min(20rem,calc(100vw-2rem))]',
+        'absolute top-full left-0 z-600 mt-2 hidden w-[min(20rem,calc(100vw-2rem))]',
         'rounded-xl border border-slate-200 bg-white p-3 shadow-xl',
         'group-focus-within:flex group-hover:flex',
         'md:left-4',
@@ -81,7 +81,7 @@ export function RatingTable({ items }: RatingTableProps) {
 
   return (
     <div className="rounded-xl border border-slate-200">
-      <div className="overflow-x-auto rounded-xl">
+      <div className="overflow-visible rounded-xl">
         <table className="w-full min-w-[360px] border-collapse text-left text-xs sm:min-w-[480px] sm:text-sm">
           <thead className="bg-slate-50">
             <tr>
