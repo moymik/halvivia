@@ -179,3 +179,85 @@ export async function getRatingsByUser(params: {
     LIMIT ${limit};
   `) as DbRating[];
 }
+
+export async function deleteRating({
+  userId,
+  subject,
+}: {
+  userId: string;
+  subject: Subject;
+}): Promise<DbRating | null> {
+  const client = await pool.connect();
+  const { id: subjectId, type: subjectType } = subject;
+  const table = RATING_TABLE_BY_SUBJECT[subjectType];
+
+  try {
+    await client.query('BEGIN');
+
+    // 1. Блокируем предмет, чтобы избежать гонок при пересчёте агрегатов.
+    const { rows: subjectRows } = await client.query(
+      `
+      SELECT rating_sum, rating_count
+      FROM ${table}
+      WHERE id = $1
+      FOR UPDATE
+      `,
+      [subjectId],
+    );
+
+    const dbSubject = subjectRows[0];
+
+    if (!dbSubject) {
+      throw new Error(`${subjectType} not found`);
+    }
+
+    // 2. Удаляем оценку только текущего пользователя.
+    const { rows: deletedRows } = await client.query(
+      `
+      DELETE FROM ratings
+      WHERE user_id = $1
+        AND subject_type = $2
+        AND subject_id = $3
+      RETURNING *
+      `,
+      [userId, subjectType, subjectId],
+    );
+
+    const deletedRating = (deletedRows[0] as DbRating | undefined) ?? null;
+
+    // Если оценки не было, агрегаты не меняем.
+    if (!deletedRating) {
+      await client.query('COMMIT');
+      return null;
+    }
+
+    // 3. Пересчитываем агрегаты.
+    const ratingSum = dbSubject.rating_sum - deletedRating.rating;
+    const ratingCount = Math.max(0, dbSubject.rating_count - 1);
+
+    const ratingAvg = ratingCount === 0 ? null : ratingSum / ratingCount;
+
+    // 4. Обновляем предмет.
+    await client.query(
+      `
+      UPDATE ${table}
+      SET
+        rating_sum = $1,
+        rating_count = $2,
+        rating_avg = $3,
+        halva_score = ABS($4::numeric / NULLIF($2, 0)) * $4
+      WHERE id = $5
+      `,
+      [ratingSum, ratingCount, ratingAvg, ratingSum, subjectId],
+    );
+
+    await client.query('COMMIT');
+
+    return deletedRating;
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+}

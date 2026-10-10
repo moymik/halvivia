@@ -2,7 +2,7 @@
 
 import { ActionResult, Subject } from '@/shared/model';
 import { Rating } from '@/entities/rating/model/types';
-import { upsertRating } from '@/entities/rating/api/db';
+import { deleteRating, upsertRating } from '@/entities/rating/api/db';
 import { mapDbRatingToRating } from '@/entities/rating/model/mappers';
 import { withAuth } from '@/shared/lib/auth';
 import { updateTag } from 'next/cache';
@@ -47,6 +47,43 @@ export async function setRatingAction(params: {
     };
   } catch (e) {
     console.error('setRating failed:', e);
+
+    return {
+      success: false,
+      error: 'DB_ERROR',
+    };
+  }
+}
+
+export async function deleteRatingAction(params: {
+  subject: Subject;
+}): Promise<ActionResult<null>> {
+  try {
+    const session = await withAuth();
+    if (session.status !== 'authenticated') {
+      return {
+        success: false,
+        error: 'UNAUTHENTICATED',
+      };
+    }
+
+    await deleteRating({
+      userId: session.payload.userId,
+      subject: params.subject,
+    });
+
+    updateTag(`user:${session.payload.userId}:ratings`);
+    updateTag(`ratings:${params.subject.type}:${params.subject.id}`);
+    // rating_avg пересчитан: обновляем карточки в каталоге и страницу элемента.
+    updateTag(cacheTags.catalog(params.subject.type));
+    updateTag(cacheTags.subject(params.subject));
+
+    return {
+      success: true,
+      data: null,
+    };
+  } catch (e) {
+    console.error('deleteRatingAction failed:', e);
 
     return {
       success: false,

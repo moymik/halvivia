@@ -1,6 +1,7 @@
 'use server';
 
 import { getRatingByUserIdAndSubject, getRatingsBySubject } from '@/entities/rating/api/db';
+
 import { mapDbRatingToRating, mapDbToRatingWithUser } from '@/entities/rating/model/mappers';
 import { Rating, RatingWithUser } from '@/entities/rating/model/types';
 import { ActionResult, Subject } from '@/shared/model';
