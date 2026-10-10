@@ -37,7 +37,7 @@ export function Carousel({
         </Link>
       </div>
 
-      <ul className="flex w-full scrollbar-thumb-transparent gap-3 overflow-x-auto py-4 hover:scrollbar-thumb-gray-800 md:py-6 [&>li]:shrink-0 [&>li]:basis-[calc((100%-1*12px)/2)] md:[&>li]:basis-[calc((100%-4*12px)/5)] lg:[&>li]:basis-[calc((100%-5*12px)/6)] xl:[&>li]:basis-[calc((100%-5*12px)/6)] 2xl:[&>li]:basis-[calc((100%-5*12px)/6)]">
+      <ul className="flex w-full scrollbar-thumb-transparent gap-3 overflow-x-auto py-4 hover:scrollbar-thumb-gray-800 md:py-6 2xl:py-7 [&>li]:shrink-0 [&>li]:basis-[calc((100%-1*12px)/2)] md:[&>li]:basis-[calc((100%-4*12px)/5)] lg:[&>li]:basis-[calc((100%-5*12px)/6)] xl:[&>li]:basis-[calc((100%-5*12px)/6)] 2xl:[&>li]:basis-[calc((100%-5*12px)/6)]">
         {React.Children.map(children, (child) => (
           <li>{child}</li>
         ))}
