@@ -4,6 +4,8 @@ import {
   BookWithUserRating,
   FilmWithUserRating,
   GameWithUserRating,
+  RatingSortBy,
+  SortOrder,
 } from '@/widgets/UserRatingsLists/model/types';
 import { DbBook, mapDbBook } from '@/entities/books/model/mappers';
 import { DbGame, mapDbGame } from '@/entities/games/model/mappers';
@@ -16,6 +18,8 @@ export async function getUserBooksWithRating(
   userId: string,
   page = 1,
   limit = 20,
+  sortBy: RatingSortBy = 'date',
+  sortOrder: SortOrder = 'desc',
 ): Promise<{
   items: BookWithUserRating[];
   totalPages: number;
@@ -30,18 +34,32 @@ export async function getUserBooksWithRating(
 
   const [rows, countRows] = await Promise.all([
     sql`
-      SELECT
-        b.*,
-        r.rating AS user_rating,
-        r.created_at AS user_rating_created_at
+      SELECT b.*,
+             r.rating     AS user_rating,
+             r.created_at AS user_rating_created_at
       FROM books b
              INNER JOIN ratings r
                         ON r.subject_id = b.id
                           AND r.subject_type = 'book'
                           AND r.user_id = ${userId}
-      ORDER BY r.created_at DESC
-      LIMIT ${limit}
-        OFFSET ${offset}
+      ORDER BY CASE
+                 WHEN ${sortBy} = 'date' AND ${sortOrder} = 'desc'
+                   THEN r.created_at
+                 END DESC,
+               CASE
+                 WHEN ${sortBy} = 'date' AND ${sortOrder} = 'asc'
+                   THEN r.created_at
+                 END ASC,
+               CASE
+                 WHEN ${sortBy} = 'rating' AND ${sortOrder} = 'desc'
+                   THEN r.rating
+                 END DESC,
+               CASE
+                 WHEN ${sortBy} = 'rating' AND ${sortOrder} = 'asc'
+                   THEN r.rating
+                 END ASC,
+               r.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
     `,
 
     sql`
@@ -80,6 +98,8 @@ export async function getUserFilmsWithRating(
   userId: string,
   page = 1,
   limit = 20,
+  sortBy: RatingSortBy = 'date',
+  sortOrder: SortOrder = 'desc',
 ): Promise<{
   items: FilmWithUserRating[];
   totalPages: number;
@@ -94,18 +114,32 @@ export async function getUserFilmsWithRating(
 
   const [rows, countRows] = await Promise.all([
     sql`
-      SELECT
-        f.*,
-        r.rating AS user_rating,
-        r.created_at AS user_rating_created_at
+      SELECT f.*,
+             r.rating     AS user_rating,
+             r.created_at AS user_rating_created_at
       FROM films f
              INNER JOIN ratings r
                         ON r.subject_id = f.id
                           AND r.subject_type = 'film'
                           AND r.user_id = ${userId}
-      ORDER BY r.created_at DESC
-      LIMIT ${limit}
-        OFFSET ${offset}
+      ORDER BY CASE
+                 WHEN ${sortBy} = 'date' AND ${sortOrder} = 'desc'
+                   THEN r.created_at
+                 END DESC,
+               CASE
+                 WHEN ${sortBy} = 'date' AND ${sortOrder} = 'asc'
+                   THEN r.created_at
+                 END ASC,
+               CASE
+                 WHEN ${sortBy} = 'rating' AND ${sortOrder} = 'desc'
+                   THEN r.rating
+                 END DESC,
+               CASE
+                 WHEN ${sortBy} = 'rating' AND ${sortOrder} = 'asc'
+                   THEN r.rating
+                 END ASC,
+               r.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
     `,
 
     sql`
@@ -144,6 +178,8 @@ export async function getUserGamesWithRating(
   userId: string,
   page = 1,
   limit = 20,
+  sortBy: RatingSortBy = 'date',
+  sortOrder: SortOrder = 'desc',
 ): Promise<{
   items: GameWithUserRating[];
   totalPages: number;
@@ -158,18 +194,32 @@ export async function getUserGamesWithRating(
 
   const [rows, countRows] = await Promise.all([
     sql`
-      SELECT
-        g.*,
-        r.rating AS user_rating,
-        r.created_at AS user_rating_created_at
+      SELECT g.*,
+             r.rating     AS user_rating,
+             r.created_at AS user_rating_created_at
       FROM games g
              INNER JOIN ratings r
                         ON r.subject_id = g.id
                           AND r.subject_type = 'game'
                           AND r.user_id = ${userId}
-      ORDER BY r.created_at DESC
-      LIMIT ${limit}
-        OFFSET ${offset}
+      ORDER BY CASE
+                 WHEN ${sortBy} = 'date' AND ${sortOrder} = 'desc'
+                   THEN r.created_at
+                 END DESC,
+               CASE
+                 WHEN ${sortBy} = 'date' AND ${sortOrder} = 'asc'
+                   THEN r.created_at
+                 END ASC,
+               CASE
+                 WHEN ${sortBy} = 'rating' AND ${sortOrder} = 'desc'
+                   THEN r.rating
+                 END DESC,
+               CASE
+                 WHEN ${sortBy} = 'rating' AND ${sortOrder} = 'asc'
+                   THEN r.rating
+                 END ASC,
+               r.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
     `,
 
     sql`

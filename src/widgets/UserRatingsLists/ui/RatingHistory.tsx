@@ -1,44 +1,52 @@
 'use client';
 
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { RatingHistoryChart } from './RatingHistoryChart';
-
-import {
-  mapBooksToRatingChartItems,
-  mapFilmsToRatingChartItems,
-  mapGamesToRatingChartItems,
-} from '@/widgets/UserRatingsLists/model/mappers';
+import { RatingTable } from './RatingTable';
 
 import {
   BookWithUserRating,
   FilmWithUserRating,
   GameWithUserRating,
-  RatingHistoryPage,
+  mapBooksToTableRows,
+  mapFilmsToTableRows,
+  mapGamesToTableRows,
+  RatingSortBy,
+  RatingTableRow,
+  SortOrder,
 } from '@/widgets/UserRatingsLists/model/types';
-
 import { Pagination } from '@/shared/ui/pagination/pagination';
 
 type Tab = 'books' | 'films' | 'games';
 
-const tabs = [
-  { id: 'books', label: 'Книги', pageKey: 'booksPage' },
-  { id: 'films', label: 'Фильмы', pageKey: 'filmsPage' },
-  { id: 'games', label: 'Игры', pageKey: 'gamesPage' },
-] as const satisfies readonly { id: Tab; label: string; pageKey: string }[];
-
 type RatingHistoryProps = {
-  books: RatingHistoryPage<BookWithUserRating>;
-  films: RatingHistoryPage<FilmWithUserRating>;
-  games: RatingHistoryPage<GameWithUserRating>;
+  books: BookWithUserRating[];
+  films: FilmWithUserRating[];
+  games: GameWithUserRating[];
 
   booksPage: number;
   filmsPage: number;
   gamesPage: number;
 
-  pageSize?: number;
+  booksTotalCount: number;
+  filmsTotalCount: number;
+  gamesTotalCount: number;
+
+  pageSize: number;
+  sortBy: RatingSortBy;
+  sortOrder: SortOrder;
 };
+
+const tabs: {
+  id: Tab;
+  label: string;
+  pageKey: string;
+}[] = [
+  { id: 'films', label: 'Фильмы', pageKey: 'filmsPage' },
+  { id: 'books', label: 'Книги', pageKey: 'booksPage' },
+  { id: 'games', label: 'Игры', pageKey: 'gamesPage' },
+];
 
 export function RatingHistory({
   books,
@@ -47,99 +55,171 @@ export function RatingHistory({
   booksPage,
   filmsPage,
   gamesPage,
-  pageSize = 20,
+  booksTotalCount,
+  filmsTotalCount,
+  gamesTotalCount,
+  pageSize,
+  sortBy,
+  sortOrder,
 }: RatingHistoryProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [tab, setTab] = useState<Tab>('books');
+  const [tab, setTab] = useState<Tab>('films');
 
-  const pages = {
-    books: booksPage,
-    films: filmsPage,
-    games: gamesPage,
-  } as const;
+  const currentTab = tabs.find((item) => item.id === tab)!;
 
-  const lists = {
-    books,
-    films,
-    games,
-  } as const;
+  const tabData = {
+    books: {
+      items: books,
+      page: booksPage,
+      totalCount: booksTotalCount,
+    },
+    films: {
+      items: films,
+      page: filmsPage,
+      totalCount: filmsTotalCount,
+    },
+    games: {
+      items: games,
+      page: gamesPage,
+      totalCount: gamesTotalCount,
+    },
+  }[tab];
 
-  const data = lists[tab];
-  const page = pages[tab];
-
-  const chartItems =
+  const tableItems: RatingTableRow[] =
     tab === 'books'
-      ? mapBooksToRatingChartItems(books.items)
+      ? mapBooksToTableRows(books)
       : tab === 'films'
-        ? mapFilmsToRatingChartItems(films.items)
-        : mapGamesToRatingChartItems(games.items);
+        ? mapFilmsToTableRows(films)
+        : mapGamesToTableRows(games);
 
-  const handlePageChange = (nextPage: number) => {
+  const totalPages = Math.ceil(tabData.totalCount / pageSize);
+
+  const updateQueryParams = (updates: Record<string, string>) => {
     const params = new URLSearchParams(searchParams?.toString() ?? '');
-    const pageKey = tabs.find((item) => item.id === tab)?.pageKey ?? 'booksPage';
 
-    params.set(pageKey, String(nextPage));
+    Object.entries(updates).forEach(([key, value]) => {
+      params.set(key, value);
+    });
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, {
+      scroll: false,
+    });
   };
 
-  const from = data.totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
+  const handleSortByChange = (value: RatingSortBy) => {
+    updateQueryParams({
+      sortBy: value,
+      [currentTab.pageKey]: '1',
+    });
+  };
 
-  const to = Math.min(page * pageSize, data.totalCount);
+  const handleSortOrderChange = () => {
+    updateQueryParams({
+      sortOrder: sortOrder === 'desc' ? 'asc' : 'desc',
+      [currentTab.pageKey]: '1',
+    });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateQueryParams({
+      [currentTab.pageKey]: String(page),
+    });
+  };
+
+  const handleTabChange = (nextTab: Tab) => {
+    setTab(nextTab);
+
+    const nextTabConfig = tabs.find((item) => item.id === nextTab)!;
+
+    // При переключении вкладки показываем первую страницу.
+    updateQueryParams({
+      [nextTabConfig.pageKey]: '1',
+    });
+  };
 
   return (
-    <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-slate-900">Мои оценки</h2>
+    <section className="w-full space-y-5 py-10">
+      {/* Вкладки */}
+      <div
+        className="flex flex-wrap gap-2 border-b border-slate-200 pb-3"
+        role="tablist"
+        aria-label="Тип оценок"
+      >
+        {tabs.map((item) => {
+          const isActive = tab === item.id;
 
-          <p className="mt-1 text-sm text-slate-500">История оценок</p>
-        </div>
-
-        {/* Books / Films */}
-        <div className="inline-flex w-fit rounded-lg bg-slate-100 p-1">
-          {tabs.map((item) => (
+          return (
             <button
               key={item.id}
               type="button"
-              onClick={() => setTab(item.id)}
-              className={`rounded-md px-4 py-2 text-sm font-medium transition ${
-                tab === item.id
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900'
-              } `}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => handleTabChange(item.id)}
+              className={[
+                'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
+                'focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none',
+                isActive
+                  ? 'bg-primary text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900',
+              ].join(' ')}
             >
               {item.label}
             </button>
-          ))}
+          );
+        })}
+      </div>
+
+      {/* Сортировка */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate-500">Всего оценок: {tabData.totalCount}</p>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="rating-sort-by" className="text-sm text-slate-600">
+            Сортировать:
+          </label>
+
+          <select
+            id="rating-sort-by"
+            value={sortBy}
+            onChange={(event) => handleSortByChange(event.target.value as RatingSortBy)}
+            className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100"
+          >
+            <option value="date">По дате</option>
+            <option value="rating">По оценке</option>
+          </select>
+
+          <button
+            type="button"
+            onClick={handleSortOrderChange}
+            aria-label={
+              sortOrder === 'desc'
+                ? 'Переключить на сортировку по возрастанию'
+                : 'Переключить на сортировку по убыванию'
+            }
+            className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none"
+          >
+            <span aria-hidden="true">{sortOrder === 'desc' ? '↓' : '↑'}</span>
+            {sortOrder === 'desc' ? 'По убыванию' : 'По возрастанию'}
+          </button>
         </div>
       </div>
 
-      {/* Chart */}
-      {chartItems.length > 0 ? (
-        <RatingHistoryChart items={chartItems} />
-      ) : (
-        <div className="flex h-[360px] items-center justify-center rounded-xl bg-slate-50 text-sm text-slate-500">
-          Пока нет оценок
-        </div>
-      )}
+      {/* Таблица */}
+      <div role="tabpanel">
+        <RatingTable items={tableItems} />
+      </div>
 
-      {/* Footer */}
-      {data.totalCount > 0 && (
-        <div className="mt-6 flex flex-col items-center gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-between">
-          <div className="text-sm text-slate-500">
-            {from}–{to} из {data.totalCount}
-          </div>
-
+      {/* Пагинация */}
+      {totalPages > 1 && (
+        <div className="flex justify-center pt-2">
           <Pagination
-            page={page}
-            totalPages={data.totalPages}
+            variant={'onLight'}
+            page={tabData.page}
+            totalPages={totalPages}
             onChange={handlePageChange}
-            variant="onLight"
           />
         </div>
       )}
