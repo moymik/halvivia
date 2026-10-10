@@ -14,10 +14,10 @@ import {
 } from 'react';
 
 const backdropClassName =
-  'backdrop-blur-2xs text-text-inverse fixed inset-0 z-100 flex items-center justify-center bg-black/60 mt-18 md:mt-0 md:p-4';
+  'backdrop-blur-2xs text-text-inverse fixed inset-0 z-1000 flex items-center justify-center bg-black/60 mt-18 md:mt-0 md:p-4';
 
 const dialogClassName =
-  'bg-bg-inverse border-border-inverse-500 relative z-500 flex h-full w-full flex-col items-center gap-8 overflow-y-auto overscroll-contain border px-4 py-12 md:h-fit md:max-h-[calc(100vh-32px)] md:w-fit md:rounded-2xl md:px-10 md:py-13';
+  'bg-bg-inverse border-border-inverse-500 relative z-1000 flex h-full w-full flex-col items-center gap-8 overflow-y-auto overscroll-contain border px-4 py-12 md:h-fit md:max-h-[calc(100vh-32px)] md:w-fit md:rounded-2xl md:px-10 md:py-13';
 
 const closeButtonClassName =
   'absolute top-4 right-4 flex cursor-pointer items-center gap-1 text-xs opacity-50 transition-opacity hover:opacity-100';
